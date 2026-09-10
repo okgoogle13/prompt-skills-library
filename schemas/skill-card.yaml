@@ -1,0 +1,67 @@
+# skill-card.yaml
+# Canonical schema for a reusable skill — a higher-level, surface-ready wrapper
+# around one or more prompt cards, designed for a specific runtime context.
+# Extend prompt-card.yaml fields where needed.
+
+skill_card:
+  # --- Identity ---
+  id: ""                     # Unique slug: e.g. "extract-page-claims"
+  title: ""                  # Short, action-oriented name
+  version: "v1.0"
+  status: "draft"            # draft | approved | deprecated
+  owner: ""
+  last_updated: ""           # YYYY-MM-DD
+  derived_from: []           # List of prompt-card IDs this skill wraps or adapts
+  source_refs: []
+
+  # --- Purpose ---
+  job_to_be_done: ""         # One sentence: the job this skill performs for the user
+  when_to_use: ""
+  when_not_to_use: ""
+
+  # --- Runtime surface ---
+  surface: ""                # chrome-gemini | claude | antigravity | local-llm | universal
+  trigger: ""                # How the skill is invoked: slash-command | hotkey | api-call | manual
+
+  # --- Inputs ---
+  context_source: ""         # page-content | selected-text | clipboard | file | api-response
+  inputs: []
+
+  # --- Prompt body ---
+  system_prompt: ""
+  prompt_template: ""
+
+  # --- Output ---
+  output_contract: ""
+  output_destination: ""     # chat | clipboard | file | antigravity-note | sidebar
+
+  # --- Model guidance ---
+  primary_model: ""
+  fallback_model: ""         # Model to use if primary is unavailable
+  model_notes: ""
+
+  # --- Local LLM variant ---
+  local_llm_safe: false      # true if this skill is adapted for small local models
+  local_llm_notes: ""        # What changes when running on local/small models
+  local_llm_template: ""     # Alternate prompt body for local model use
+
+  # --- Safety ---
+  safety_pattern: ""
+  safety_notes: ""
+  handles_untrusted_input: false  # true if page content may contain adversarial text
+
+  # --- Tags ---
+  tags: []
+  category: ""
+
+  # --- Eval ---
+  eval_status: ""
+  eval_notes: ""
+  example_input: ""
+  example_output: ""
+
+  # --- Change log ---
+  changelog:
+    - version: "v1.0"
+      date: ""
+      note: "Initial draft"

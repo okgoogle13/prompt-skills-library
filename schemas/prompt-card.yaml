@@ -1,0 +1,66 @@
+# prompt-card.yaml
+# Canonical schema for a single prompt entry.
+# Every prompt in this library must conform to this schema.
+# Based on: PromptQuorum 8-field template + Anthropic best-practice structure.
+# Source: https://www.promptquorum.com/prompt-engineering/build-a-prompt-library
+
+prompt_card:
+  # --- Identity ---
+  id: ""                     # Unique slug: kebab-case, e.g. "summarise-meeting-actions"
+  title: ""                  # Short, task-oriented label
+  version: "v1.0"            # Semantic: v<major>.<minor>
+  status: "draft"            # draft | approved | deprecated
+  owner: ""                  # GitHub username or team
+  last_updated: ""           # YYYY-MM-DD
+  source_refs: []            # List of source URLs this prompt was derived from
+
+  # --- Purpose ---
+  goal: ""                   # One or two sentences: what problem this solves
+  when_to_use: ""            # Conditions under which this prompt should be used
+  when_not_to_use: ""        # Conditions where this prompt is a poor fit
+
+  # --- Inputs ---
+  inputs: []                 # List of required input slots with descriptions
+  # Example:
+  # inputs:
+  #   - name: transcript
+  #     description: Raw meeting transcript text
+  #     required: true
+  #   - name: format
+  #     description: Desired output format override
+  #     required: false
+
+  # --- Prompt body ---
+  system_prompt: ""          # Optional system/role instruction block
+  prompt_template: ""        # Full prompt body with {{placeholder}} slots
+
+  # --- Output ---
+  output_contract: ""        # Expected output format: Markdown | JSON | bullets | table | prose
+  output_constraints: []     # e.g. "max 150 words", "valid JSON array", "no em dashes"
+
+  # --- Model guidance ---
+  primary_model: ""          # Recommended primary model, e.g. gemini-2.5-pro
+  model_notes: ""            # Any important model-specific behavior notes
+  surface: ""                # chrome-gemini | claude | antigravity | local-llm | universal
+
+  # --- Safety ---
+  safety_pattern: ""         # e.g. injection-safe | trust-boundary-noted | none
+  safety_notes: ""           # Any trust, privacy, or sensitivity notes
+
+  # --- Tags ---
+  tags: []                   # Task tags: summarise | extract | critique | plan | code-review | rewrite
+  category: ""               # Function area: research | writing | code | browser | agent | analysis
+
+  # --- Eval ---
+  eval_status: ""            # untested | tested-pass | tested-partial | needs-review
+  eval_notes: ""             # Brief notes on test results or known failure modes
+
+  # --- Example ---
+  example_input: ""          # One realistic example input
+  example_output: ""         # Expected good output for that input
+
+  # --- Change log ---
+  changelog:
+    - version: "v1.0"
+      date: ""
+      note: "Initial draft"
