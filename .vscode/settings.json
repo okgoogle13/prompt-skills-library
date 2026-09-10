@@ -1,0 +1,28 @@
+{
+  // YAML schema validation — auto-validates prompt and skill cards against canonical schemas
+  "yaml.schemas": {
+    "./schemas/prompt-card.yaml": "skills/**/*.yaml",
+    "./schemas/skill-card.yaml": "skills/**/*.yaml"
+  },
+  // Format on save for consistency across markdown and YAML files
+  "editor.formatOnSave": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.wordWrap": "on"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Markdownlint: ignore line length in tables (common in knowledge/ files)
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false
+  },
+  // Show YAML validation errors inline
+  "yaml.validate": true,
+  "yaml.hover": true,
+  "yaml.completion": true,
+  // Git: show inline blame on relevant files
+  "gitlens.currentLine.enabled": true,
+  "gitlens.hovers.currentLine.over": "line"
+}

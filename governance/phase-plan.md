@@ -18,6 +18,7 @@
 - Set `surface: chrome-gemini` or `surface: claude` or `surface: antigravity`
 - Set `local_llm_safe: false` on all skill cards until explicitly adapted
 - Always fill `local_llm_notes` with what would need to change for local model use
+- Do not create `.prompt.md` files yet — these are Phase 2 only
 - This ensures Phase 2 adaptation is low-friction
 
 **Done when:**
@@ -33,23 +34,37 @@
 **Goal:** Move primary editing to VS Code, begin local model testing.
 
 **Primary IDE:** VS Code
-**Extensions:** Continue.dev, GitLens, YAML, Markdown All in One
-**Local model stack:** Ollama + Continue.dev (or LM Studio)
+**Extensions (install on first open):** VS Code will prompt automatically via `.vscode/extensions.json`
+- `redhat.vscode-yaml` — YAML schema validation against prompt-card and skill-card schemas
+- `eamodio.gitlens` — inline git blame and version history for prompt artifacts
+- `DavidAnson.vscode-markdownlint` — markdown consistency across knowledge/ files
+- `esbenp.prettier-vscode` — format-on-save for YAML and markdown
+- `yzhang.markdown-all-in-one` — table formatting, TOC, preview
+- `Gruntfuggly.todo-tree` — surfaces TODOs across repo
+- `humao.rest-client` — test Firecrawl and Ollama API calls in-editor
+- `saoudrizwan.claude-dev` (Cline) — agentic file editing + local LLM + MCP tools
+
+**Note:** Continue.dev was acquired by Cursor in June 2026 and is no longer actively developed.
+Cline is the recommended replacement for local LLM agentic work in VS Code.
+
+**Local model stack:** Ollama + Cline
 **Version control:** Same GitHub repo — no migration needed
 
 **Focus areas:**
-- Clone existing repo in VS Code — no changes needed
-- Install Continue.dev and connect to Ollama
+- Clone existing repo in VS Code — extensions install automatically on first open
+- Connect Cline to Ollama local model endpoint
 - Adapt `local_llm_template` fields in existing skill cards
 - Test `skills/local-llm/` variants against real local models
-- Update `local_llm_safe` flags and `eval_status` based on real results
+- Update `local_llm_safe` flags and `eval_status` based on real testing
+- Create `.prompt.md` companions for approved skills (see `governance/prompt-file-spec.md`)
 
 **Transition checklist:**
 - [ ] New laptop provisioned
-- [ ] VS Code installed with Continue.dev, GitLens, YAML extensions
-- [ ] Ollama installed and at least one model pulled (e.g. llama3, mistral, qwen)
-- [ ] Repo cloned and Continue.dev connected to local model endpoint
+- [ ] VS Code installed — open repo, accept extension install prompts
+- [ ] Ollama installed and at least one model pulled (recommended: llama3.2, qwen2.5-coder, mistral)
+- [ ] Cline connected to local Ollama endpoint
 - [ ] First local skill card tested and eval result recorded
+- [ ] First `.prompt.md` created for top-used approved skill
 
 ---
 
@@ -61,6 +76,7 @@
 | Claude Code | Agentic file editing, critique, review |
 | Gemini in Chrome skills | Browser runtime, immediate page tasks |
 | Firecrawl | Source ingestion and extraction |
-| VS Code + Continue.dev | Phase 2 primary IDE + local model testing |
+| VS Code + Cline | Phase 2 primary IDE + local model testing |
+| Ollama | Phase 2 local model runtime |
 | Perplexity | External verification, capability research |
 | GitHub | Version control, canonical source of truth |

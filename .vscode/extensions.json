@@ -1,0 +1,14 @@
+{
+  // Recommended extensions for this repo.
+  // VS Code will prompt you to install these when you first open the project.
+  "recommendations": [
+    "redhat.vscode-yaml",
+    "eamodio.gitlens",
+    "DavidAnson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "yzhang.markdown-all-in-one",
+    "Gruntfuggly.todo-tree",
+    "humao.rest-client",
+    "saoudrizwan.claude-dev"
+  ]
+}
