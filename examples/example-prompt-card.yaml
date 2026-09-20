@@ -1,0 +1,49 @@
+prompt_card:
+  id: "summarise-meeting-actions"
+  title: "Summarise Meeting Actions"
+  version: "v1.0"
+  status: "approved"
+  owner: "octocat"
+  last_updated: "2026-09-20"
+  source_refs: 
+    - "https://example.com/meeting-summaries"
+
+  goal: "Extract action items and assignees from a meeting transcript."
+  when_to_use: "After a meeting to quickly share action items with the team."
+  when_not_to_use: "For highly technical design discussions where context is critical."
+
+  inputs:
+    - name: "transcript"
+      description: "Raw meeting transcript text"
+      required: true
+
+  system_prompt: "You are an executive assistant. Your job is to extract concise action items."
+  prompt_template: "Extract action items from the following transcript:\n\n{{transcript}}\n\nOutput as a markdown list."
+
+  output_contract: "Markdown"
+  output_constraints: 
+    - "Use bullet points"
+    - "Mention the assignee if stated"
+
+  primary_model: "gemini-1.5-pro"
+  model_notes: "Works well with long context windows."
+  surface: "universal"
+
+  safety_pattern: "none"
+  safety_notes: "Do not use with confidential PII."
+
+  tags: 
+    - "summarise"
+    - "extract"
+  category: "analysis"
+
+  eval_status: "tested-pass"
+  eval_notes: "Passed standard regression set."
+
+  example_input: "Alice: I'll write the script. Bob: I'll review it."
+  example_output: "- Alice: Write the script\n- Bob: Review the script"
+
+  changelog:
+    - version: "v1.0"
+      date: "2026-09-20"
+      note: "Initial version"

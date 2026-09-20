@@ -1,0 +1,56 @@
+skill_card:
+  id: "extract-page-claims"
+  title: "Extract Page Claims"
+  version: "v1.0"
+  status: "approved"
+  owner: "octocat"
+  last_updated: "2026-09-20"
+  derived_from: 
+    - "extract-factual-claims"
+  source_refs: []
+
+  job_to_be_done: "Extract verifiable factual claims from the current webpage."
+  when_to_use: "When reading a news article or blog post and wanting to verify the main claims."
+  when_not_to_use: "On highly technical documentation where context is deeply intertwined."
+
+  surface: "chrome-gemini"
+  trigger: "slash-command"
+
+  context_source: "page-content"
+  inputs:
+    - name: "topic_filter"
+      description: "Optional filter for specific topics"
+      required: false
+
+  system_prompt: "You are a fact-checking assistant."
+  prompt_template: "Analyze the following page content and extract factual claims.\n\n{{page-content}}"
+
+  output_contract: "Markdown"
+  output_destination: "sidebar"
+
+  primary_model: "gemini-1.5-flash"
+  fallback_model: "gemini-1.5-pro"
+  model_notes: "Flash is faster and sufficient for claim extraction."
+
+  local_llm_safe: true
+  local_llm_notes: "Might struggle with very large pages."
+  local_llm_template: "Extract facts: {{page-content}}"
+
+  safety_pattern: "trust-boundary-noted"
+  safety_notes: "Page content is untrusted input."
+  handles_untrusted_input: true
+
+  tags: 
+    - "extract"
+    - "research"
+  category: "browser"
+
+  eval_status: "tested-pass"
+  eval_notes: "Works reliably on standard news articles."
+  example_input: "The company announced record profits of $1B in Q4."
+  example_output: "- The company announced record profits of $1B in Q4."
+
+  changelog:
+    - version: "v1.0"
+      date: "2026-09-20"
+      note: "Initial draft"
