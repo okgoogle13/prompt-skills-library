@@ -8,7 +8,31 @@ Use this directory to track project work with the lightweight method in [`../gov
 - `in-progress.md`: the current active work.
 - `done.md`: completed work with evidence.
 
-## Task rule
+## Phase 1 outcome
+
+**Outcome:** A working, evidence-based skill library with at least 5 approved skill cards across
+`chrome-gemini`, `claude`, and `antigravity` surfaces — all traceable to ingested foundation sources.
+
+**Why:** Without a normalized knowledge foundation and validated skill cards, all downstream
+prompt work is untraceable and unreproducible.
+
+**In scope:** Ingestion of 6 foundation sources, creation of first skill cards, eval baseline.
+
+**Out of scope:** VS Code setup, local LLM testing, `.prompt.md` files (all Phase 2).
+
+**Done when:**
+- [ ] All 6 foundation sources normalized in `knowledge/` with `status: normalized`
+- [ ] At least 5 approved skill cards exist with `source_refs` and `eval_status` filled
+- [ ] At least 1 eval test case per approved skill card in `evals/`
+- [ ] `sources/registry.md` statuses reflect current ingestion state
+
+## Milestones
+
+- [ ] M1: Knowledge foundation — all 6 foundation sources normalized in `knowledge/`
+- [ ] M2: First skill cards — at least 3 approved skill cards (one per surface: chrome-gemini, claude, antigravity)
+- [ ] M3: Eval baseline — at least 1 eval test case per approved skill card
+
+
 
 Every non-trivial task should state:
 

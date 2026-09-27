@@ -80,6 +80,16 @@ Never delete. Mark deprecated first.
 5. Add to `tasks/in-progress.md`
 6. When tested and reviewed, move to `tasks/done.md` and set status: approved
 
+## Task tracking
+
+Before picking up or creating any task:
+1. Read `governance/task-planning-methodology.md` — all tasks must have a clear `Done when` criteria
+2. Check `tasks/backlog.md` for the next unblocked task in priority order (unresolved dependencies = blocked)
+3. Move the task to `tasks/in-progress.md` when started; move to `tasks/done.md` with evidence when complete
+4. Do not start P1-007, P1-008, or P1-009 until their `Depends on` tasks are done
+5. Read `governance/ingestion-workflow.md` before starting any ingestion task (P1-001 through P1-006)
+6. Use `tasks/README.md` for current Phase 1 milestones and outcome definition
+
 ## Preferred working style
 
 - Synthesise, classify, normalise, structure

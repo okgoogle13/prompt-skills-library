@@ -63,3 +63,4 @@ Never delete a working artifact without first marking it `deprecated`.
 3. Check the source registry at [`sources/registry.md`](sources/registry.md)
 4. Add new prompts to `skills/` using the canonical schema
 5. Add new knowledge artifacts to `knowledge/` with a source ref and retrieval date
+6. Track work in `tasks/` — see [`tasks/README.md`](tasks/README.md) for the Phase 1 milestones, outcome definition, and task format
