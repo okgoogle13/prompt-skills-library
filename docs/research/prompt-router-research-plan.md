@@ -128,7 +128,7 @@ At the start of every session:
 2. Read this entire orchestration plan.
 3. Inspect `research/` for existing phase outputs.
 4. Determine the current phase from the Research status table.
-5. Report:
+5. Report clearly and completely:
    - Current phase
    - Scope
    - Intended output file
@@ -136,7 +136,7 @@ At the start of every session:
    - Required PWM call
    - Expected quota cost
 6. Ask whether to execute, resume, review, or skip.
-7. Stop.
+7. Stop immediately and wait for user input (1 turn, 0 research tool calls).
 
 Do not execute any research query at this stage.
 
@@ -155,7 +155,7 @@ Before calling `pplx_deep_research`, output and await approval for:
 9. Stop conditions
 10. Model-guide integration constraints
 
-Proceed only after the user replies: `Approved.`
+Stop and proceed only after the user replies: `Approved.`
 
 ## Phase execution
 
@@ -168,15 +168,16 @@ For an approved phase:
    - Do not call `pplx_deep_research`.
    - Report the exact quota response.
    - Ask whether to stop, refresh usage once with `refresh=true`, or defer the phase.
+   - Stop immediately.
 5. Read the local `prompt-router/SKILL.md` and `migrate-prompt/SKILL.md`.
 6. Read only the research brief for the current phase.
 7. Confirm the exact output path does not already contain a usable report.
 8. Call `pplx_deep_research` exactly once with `source_focus="web"`.
 9. Save the full report to the phase’s specified output path.
-10. Append an extraction section titled `## Extraction — do not edit the full report above`.
-11. Present a concise implementation proposal.
+10. Append a complete, detailed extraction section titled `## Extraction — do not edit the full report above`.
+11. Present a concise implementation proposal with complete detail for each required field.
 12. Ask whether to proceed to implementation.
-13. Stop.
+13. Stop immediately (maximum 1 `pplx_deep_research` call per phase; do not iterate further).
 
 Do not call `pplx_ask`, `pplx_sonar`, `pplx_query`, `pplx_council`, `pplx_sources`, or `pplx_deep_research` again during the same phase.
 
@@ -200,7 +201,7 @@ After saving the full report, append or create a clearly separated section title
 ## Extraction — do not edit the full report above
 ```
 
-Include only:
+Provide comprehensive, structured detail for:
 
 1. Ranked improvement shortlist
 2. Recommended changes
@@ -217,19 +218,19 @@ Include only:
 If the user approves implementation:
 
 1. Select no more than 2–3 high-confidence changes.
-2. For each change, present:
+2. For each change, present in full detail:
    - Exact file and section
    - Minimal proposed diff
    - Reason
    - Validation cases
    - Revert plan
    - Effect on guide loading and registry resolution
-3. Wait for explicit approval of the exact diff.
+3. Wait for explicit approval of the exact diff and stop.
 4. Apply only the approved diff.
 5. Run or manually perform the relevant validation cases.
 6. Report results.
 7. Update the Research status table.
-8. Stop.
+8. Stop immediately.
 
 ## Failure and interruption
 
@@ -238,7 +239,7 @@ If a phase is interrupted:
 - Do not call Deep Research again unless the prior call demonstrably failed before producing a usable report.
 - Check whether the phase output file exists and contains a usable report.
 - If it does, resume from the extraction and proposal step.
-- If it does not, ask the user whether to retry the Deep Research call.
+- If it does not, ask the user whether to retry the Deep Research call and stop.
 
 ## Research status
 
@@ -331,22 +332,16 @@ Preserve the model-guide integration pattern:
 - Do not inline the combined corpus.
 - Do not replace guide content with registry metadata or a profile.
 
-Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+Based on the baseline skill and constraints above, execute the following steps:
 
-Then call pplx_usage(refresh=False).
-If Deep Research quota is unavailable, stop and report the quota status.
-
-Call pplx_deep_research exactly once with source_focus="web".
-
-Use the Research Call 1 brief in docs/research/prompt-router-research-plan.md.
-
-After research returns:
-
-1. Save the full report to research/01-router-optimise-improvements.md.
-2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
-3. Do not implement anything yet.
-4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
-5. Ask me whether to proceed.
+1. Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+2. Call pplx_usage(refresh=False). If Deep Research quota is unavailable, stop and report the quota status.
+3. Call pplx_deep_research exactly once with source_focus="web", using the Research Call 1 brief in docs/research/prompt-router-research-plan.md.
+4. Save the full report to research/01-router-optimise-improvements.md.
+5. Append a complete, detailed extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
+6. Do not implement anything yet.
+7. Present in full detail the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
+8. Ask me whether to proceed and stop immediately (maximum 1 pplx_deep_research call).
 
 Do not create any other files.
 Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
@@ -437,22 +432,16 @@ Preserve the model-guide integration pattern:
 - Do not inline the combined corpus.
 - Do not replace guide content with registry metadata or a profile.
 
-Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+Based on the baseline skill and constraints above, execute the following steps:
 
-Then call pplx_usage(refresh=False).
-If Deep Research quota is unavailable, stop and report the quota status.
-
-Call pplx_deep_research exactly once with source_focus="web".
-
-Use the Research Call 2 brief in docs/research/prompt-router-research-plan.md.
-
-After research returns:
-
-1. Save the full report to research/02-router-write-review-improvements.md.
-2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
-3. Do not implement anything yet.
-4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
-5. Ask me whether to proceed.
+1. Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+2. Call pplx_usage(refresh=False). If Deep Research quota is unavailable, stop and report the quota status.
+3. Call pplx_deep_research exactly once with source_focus="web", using the Research Call 2 brief in docs/research/prompt-router-research-plan.md.
+4. Save the full report to research/02-router-write-review-improvements.md.
+5. Append a complete, detailed extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
+6. Do not implement anything yet.
+7. Present in full detail the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
+8. Ask me whether to proceed and stop immediately (maximum 1 pplx_deep_research call).
 
 Do not create any other files.
 Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
@@ -593,22 +582,16 @@ Preserve the model-guide integration pattern:
 - Do not replace guide content with registry metadata or a profile.
 - Do not create a separate model-guide-router skill.
 
-Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+Based on the baseline skills and constraints above, execute the following steps:
 
-Then call pplx_usage(refresh=False).
-If Deep Research quota is unavailable, stop and report the quota status.
-
-Call pplx_deep_research exactly once with source_focus="web".
-
-Use the Research Call 3 brief in docs/research/prompt-router-research-plan.md.
-
-After research returns:
-
-1. Save the full report to research/03-router-portability.md.
-2. Append an extraction section containing the portability verdict, host capability matrix, portable-core changes, host adapters worth creating, exact SKILL.md sections to edit, integrity checks, eight validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
-3. Do not implement anything yet.
-4. Present the portable-core changes to make first, any host adapter worth creating, exact SKILL.md sections to edit, minimal proposed diff, integrity checks, eight validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
-5. Ask me whether to proceed.
+1. Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+2. Call pplx_usage(refresh=False). If Deep Research quota is unavailable, stop and report the quota status.
+3. Call pplx_deep_research exactly once with source_focus="web", using the Research Call 3 brief in docs/research/prompt-router-research-plan.md.
+4. Save the full report to research/03-router-portability.md.
+5. Append a complete, detailed extraction section containing the portability verdict, host capability matrix, portable-core changes, host adapters worth creating, exact SKILL.md sections to edit, integrity checks, eight validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
+6. Do not implement anything yet.
+7. Present in full detail the portable-core changes to make first, any host adapter worth creating, exact SKILL.md sections to edit, minimal proposed diff, integrity checks, eight validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
+8. Ask me whether to proceed and stop immediately (maximum 1 pplx_deep_research call).
 
 Do not create any other files.
 Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
