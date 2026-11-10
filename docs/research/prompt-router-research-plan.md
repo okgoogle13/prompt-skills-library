@@ -11,6 +11,26 @@ It uses the corrected architecture:
 
 There is no separate `optimize-prompt` skill. Prompt optimisation is the `optimise` route within `prompt-router`.
 
+## PWM skill versus direct MCP
+
+Use two distinct layers:
+
+| Layer | Purpose | When to use |
+|---|---|---|
+| PWM Agent Skill | Operational guidance: authentication, quota checking, MCP tool selection, `source_focus`, and failure handling | Once at session start, and for troubleshooting |
+| Direct MCP calls | Controlled research execution: `pplx_usage`, `pplx_sources` if explicitly approved, and `pplx_deep_research` | Inside an approved research phase |
+
+At session start, load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only. Do not use it to initiate, repeat, or broaden research.
+
+During an approved research phase, use direct MCP calls only:
+
+- `pplx_usage(refresh=False)`
+- `pplx_deep_research(query=..., source_focus="web")`
+
+Do not invoke `pplx_ask`, `pplx_sonar`, `pplx_query`, `pplx_council`, `pplx_sources`, or any other PWM query tool unless the user explicitly approves it.
+
+PWM provides 22 MCP tools, including `pplx_usage`, `pplx_deep_research`, `pplx_query`, `pplx_ask`, and `pplx_sources`. Its Agent Skill teaches agents how to use the CLI and MCP capabilities; it does not replace the need for explicit, user-approved research execution.
+
 ## Operating rules
 
 - Execute only one phase at a time.
@@ -27,38 +47,127 @@ There is no separate `optimize-prompt` skill. Prompt optimisation is the `optimi
 - Preserve code, paths, commands, URLs, identifiers, examples, and quoted strings exactly.
 - Flag uncertainty rather than asserting unsupported model behaviour.
 
+## Evidence hierarchy
+
+Use this hierarchy when assessing sources:
+
+1. Official vendor documentation.
+2. Primary technical research or benchmarks.
+3. Maintained open-source implementation with clear tests or documented behaviour.
+4. High-quality practitioner guidance from a credible maintainer.
+5. Community-created resource with evidence of effectiveness, maintenance, security, and relevance.
+6. Experimental or opinion-based material.
+
+Never treat a lower-tier source as sufficient support for a behavioural claim when a higher-tier source is available.
+
+Community-created resources are welcome when there is significant evidence they are effective and relevant: sustained maintenance, transparent methodology, credible authorship, adoption or citations, reproducible evaluation, clear documentation, and demonstrated fit.
+
+## Research decision rules
+
+Prioritise recommendations that:
+
+- Can be implemented as a small edit to an existing route or shared pattern.
+- Have a clear validation case.
+- Do not require a new skill, framework, persistent memory, or broad taxonomy.
+- Preserve literal user content.
+- Reduce ambiguity without increasing router complexity.
+
+Reject recommendations that:
+
+- Add a new skill.
+- Require a new persistent context system.
+- Introduce a broad prompt-quality taxonomy.
+- Cannot be validated with the specified cases.
+- Depend on unavailable host capabilities.
+
 ## Session start
 
 At the start of every session:
 
-1. Read this entire orchestration plan.
-2. Inspect the repository for existing research outputs.
-3. Determine the current phase from the Research status table.
-4. Report the current phase, its scope, its intended output file, and whether its output already exists.
-5. Ask the user whether to execute, resume, review, or skip the current phase.
-6. Stop after presenting that status.
+1. Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+2. Read this entire orchestration plan.
+3. Inspect `research/` for existing phase outputs.
+4. Determine the current phase from the Research status table.
+5. Report:
+   - Current phase
+   - Scope
+   - Intended output file
+   - Whether that output exists and is usable
+   - Required PWM call
+   - Expected quota cost
+6. Ask whether to execute, resume, review, or skip.
+7. Stop.
+
+Do not execute any research query at this stage.
+
+## Pre-research contract
+
+Before calling `pplx_deep_research`, output and await approval for:
+
+1. Research question
+2. Scope and exclusions
+3. Evidence hierarchy
+4. Intended `source_focus`
+5. Expected deliverable
+6. Exact output path
+7. Required validation cases
+8. Quota cost
+9. Stop conditions
+
+Proceed only after the user replies: `Approved.`
 
 ## Phase execution
 
 For an approved phase:
 
-1. Call `pplx_usage(refresh=False)`.
-2. Confirm that Deep Research quota is available.
-3. If quota is unavailable, stop and report the quota status.
-4. Read the local `prompt-router/SKILL.md` and `migrate-prompt/SKILL.md`.
-5. Read only the research brief for the current phase.
-6. Call `pplx_deep_research` exactly once with `source_focus="web"`.
-7. Save the full research report to the phase’s specified output path.
-8. Extract only:
-   - Ranked improvement shortlist
-   - Recommended changes
-   - Exact edit locations
-   - Validation cases
-   - Risks and uncertainty
-   - What not to build
-9. Present a concise implementation proposal.
-10. Ask the user whether to proceed to implementation.
-11. Stop.
+1. Load the installed PWM Agent Skill for operational guidance only.
+2. Call `pplx_usage(refresh=False)`.
+3. Report Deep Research and Pro Search quota status.
+4. If Deep Research quota is 0, unavailable, or cannot be verified:
+   - Do not call `pplx_deep_research`.
+   - Report the exact quota response.
+   - Ask whether to stop, refresh usage once with `refresh=true`, or defer the phase.
+5. Read the local `prompt-router/SKILL.md` and `migrate-prompt/SKILL.md`.
+6. Read only the research brief for the current phase.
+7. Confirm the exact output path does not already contain a usable report.
+8. Call `pplx_deep_research` exactly once with `source_focus="web"`.
+9. Save the full report to the phase’s specified output path.
+10. Append an extraction section titled `## Extraction — do not edit the full report above`.
+11. Present a concise implementation proposal.
+12. Ask whether to proceed to implementation.
+13. Stop.
+
+Do not call `pplx_ask`, `pplx_sonar`, `pplx_query`, `pplx_council`, `pplx_sources`, or `pplx_deep_research` again during the same phase.
+
+## Usable report definition
+
+A report is usable only if it contains:
+
+- A ranked improvement shortlist.
+- At least the required number of validation cases.
+- Concrete edit locations or implementation guidance.
+- Risks, uncertainty, and a “what not to build” section.
+
+A file containing only raw research output, an error message, or an incomplete report is not usable.
+
+## Extraction template
+
+After saving the full report, append or create a clearly separated section titled:
+
+```markdown
+## Extraction — do not edit the full report above
+```
+
+Include only:
+
+1. Ranked improvement shortlist
+2. Recommended changes
+3. Exact edit locations
+4. Validation cases
+5. Risks and uncertainty
+6. What not to build
+7. Two likely-wrong assumptions
+8. First 2–3 changes
 
 ## Implementation approval
 
@@ -111,9 +220,7 @@ Research practical, evidence-based improvements to the `optimise` route of the e
 
 Focus only on making the router’s `optimise` route produce better prompts: clearer intent, fewer missed requirements, less scope creep, better output specifications, and safer preservation of literal content.
 
-Include official vendor documentation, high-quality technical research, maintained open-source projects, credible practitioner guidance, and community-created resources where there is significant evidence of effectiveness, maintenance, security, and relevance.
-
-Label recommendations as official/primary source, high-quality practitioner guidance, open-source implementation, community-created resource, research/benchmark, experimental/opinion-based, or interesting but not actionable.
+Use the evidence hierarchy. Include official vendor documentation, high-quality technical research, maintained open-source projects, credible practitioner guidance, and community-created resources where there is significant evidence of effectiveness, maintenance, security, and relevance.
 
 The current `optimise` route resolves a target model, loads only its guide, applies shared patterns and target conventions, removes unnecessary source-model accommodations, preserves intent and literal payload, returns an optimised prompt and concise changelog, and flags uncertainty.
 
@@ -127,6 +234,7 @@ For each improvement, provide:
 - Change
 - Problem solved
 - Evidence
+- Evidence tier
 - Surface: router optimise route or shared patterns
 - Minimal implementation
 - Validation method
@@ -161,6 +269,11 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill. Treat prompt optimisation as the `optimise` route within `prompt-router`.
 
+Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+
+Then call pplx_usage(refresh=False).
+If Deep Research quota is unavailable, stop and report the quota status.
+
 Call pplx_deep_research exactly once with source_focus="web".
 
 Use the Research Call 1 brief in docs/research/prompt-router-research-plan.md.
@@ -168,13 +281,13 @@ Use the Research Call 1 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/01-router-optimise-improvements.md.
-2. Extract the ranked improvement shortlist.
+2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
 3. Do not implement anything yet.
 4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
-Do not use pplx_council.
+Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
 Do not call pplx_deep_research again.
 Do not modify any skill, guide, registry, or repository file without my explicit approval.
 ```
@@ -193,7 +306,7 @@ Research practical, evidence-based improvements to the `write` and `review` rout
 
 Focus only on helping the router turn rough notes into better prompts and identify material problems before a prompt is used.
 
-Include official vendor documentation, high-quality technical research, maintained open-source projects, credible practitioner guidance, and community-created prompt templates, review checklists, and workflows where there is significant evidence of effectiveness, maintenance, security, and relevance.
+Use the evidence hierarchy. Include official vendor documentation, high-quality technical research, maintained open-source projects, credible practitioner guidance, and community-created prompt templates, review checklists, and workflows where there is significant evidence of effectiveness, maintenance, security, and relevance.
 
 The current `write` route resolves a target model, loads only its guide, builds a complete prompt in the target guide’s style, preserves user goals and constraints, asks one clarifying question when necessary, marks assumptions, and returns the prompt, run settings, assumptions, changes, and Guide-Stand footer.
 
@@ -207,6 +320,7 @@ For each improvement, provide:
 - Change
 - Problem solved
 - Evidence
+- Evidence tier
 - Surface: router write route, router review route, or shared patterns
 - Minimal implementation
 - Validation method
@@ -241,6 +355,11 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill.
 
+Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+
+Then call pplx_usage(refresh=False).
+If Deep Research quota is unavailable, stop and report the quota status.
+
 Call pplx_deep_research exactly once with source_focus="web".
 
 Use the Research Call 2 brief in docs/research/prompt-router-research-plan.md.
@@ -248,13 +367,13 @@ Use the Research Call 2 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/02-router-write-review-improvements.md.
-2. Extract the ranked improvement shortlist.
+2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
 3. Do not implement anything yet.
 4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
-Do not use pplx_council.
+Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
 Do not call pplx_deep_research again.
 Do not modify any skill, guide, registry, or repository file without my explicit approval.
 ```
@@ -263,15 +382,13 @@ Do not modify any skill, guide, registry, or repository file without my explicit
 
 ### Scope
 
-Improve portability of `prompt-router/SKILL.md` across Claude Code, Gemini / Gemini Spark or equivalent Gemini skill environments, Perplexity Skills or equivalent mechanisms, and ChatGPT Skills or equivalent mechanisms.
+Assess portability of `prompt-router/SKILL.md` across Claude Code, the Gemini skill mechanisms actually available in the user’s current environment, Perplexity skill mechanisms actually available in the user’s current environment, and ChatGPT skill-like mechanisms actually available in the user’s current environment.
 
 Do not research general prompt optimisation, cross-model migration, model-guide registry design, or evaluation platforms.
 
 ### Research brief
 
 Research practical, evidence-based best practices for using a `SKILL.md`-based prompt-router skill across AI tools that support skills or similar skill/instruction mechanisms.
-
-Focus on Anthropic Claude Code, Google Gemini / Gemini Spark or equivalent Gemini skill environments, Perplexity Skills or equivalent mechanisms, and OpenAI ChatGPT Skills or equivalent custom-GPT / skill-like mechanisms.
 
 Do not aim for identical behaviour across every host. Aim for predictable, safe, and maintainable behaviour.
 
@@ -296,18 +413,17 @@ Prioritise:
 4. Clear user instructions for hosts with limited skill support.
 5. Avoidance of silent behavioural differences.
 
-Research:
+Do not claim compatibility without host-specific evidence.
 
-- Skill discovery and triggering
-- Frontmatter compatibility
-- Skill-relative path resolution
-- Reference-file access
-- Argument passing
-- Reasoning-effort controls
-- File, search, shell, web, and MCP capabilities
-- Trust-boundary enforcement
-- Safe failure behaviour
-- Minimal host adapters
+For every host capability marked uncertain:
+
+- State exactly what evidence is missing.
+- Recommend a safe fallback rather than assuming support.
+- Do not propose an adapter unless the missing capability causes a concrete failure.
+
+The deliverable is a minimal portable core plus, at most, one or two thin adapters. Do not design a universal skill framework.
+
+For Perplexity, assess only mechanisms actually available in the user’s current Perplexity environment. If skill-style invocation or file access is unavailable, mark it unsupported or uncertain and define safe degradation.
 
 Provide a host capability matrix with:
 
@@ -353,6 +469,11 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill.
 
+Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
+
+Then call pplx_usage(refresh=False).
+If Deep Research quota is unavailable, stop and report the quota status.
+
 Call pplx_deep_research exactly once with source_focus="web".
 
 Use the Research Call 3 brief in docs/research/prompt-router-research-plan.md.
@@ -360,13 +481,13 @@ Use the Research Call 3 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/03-router-portability.md.
-2. Extract the portability verdict and host capability matrix.
+2. Append an extraction section containing the portability verdict, host capability matrix, portable-core changes, host adapters worth creating, exact SKILL.md sections to edit, eight validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
 3. Do not implement anything yet.
 4. Present the portable-core changes to make first, any host adapter worth creating, exact SKILL.md sections to edit, minimal proposed diff, eight validation cases, revert plan, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
-Do not use pplx_council.
+Do not use pplx_ask, pplx_sonar, pplx_query, pplx_council, or pplx_sources.
 Do not call pplx_deep_research again.
 Do not modify any skill, guide, registry, or repository file without my explicit approval.
 ```
