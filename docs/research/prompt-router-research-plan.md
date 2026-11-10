@@ -11,6 +11,42 @@ It uses the corrected architecture:
 
 There is no separate `optimize-prompt` skill. Prompt optimisation is the `optimise` route within `prompt-router`.
 
+## Model-guide integration pattern
+
+`model-guides-combined.md` is the canonical evidence corpus and build input. It is not runtime prompt context.
+
+The runtime architecture is:
+
+```text
+model-guides-combined.md
+        |
+        +-- model-guides/<model-id>.md       Runtime authoritative guide
+        +-- model-registry.md                Compact routing index
+        +-- profiles/<model-id>.md           Optional compact routing profile
+        +-- prompt-router/SKILL.md           Stable routing contract
+        +-- migrate-prompt/SKILL.md          Registry, aliases, migration algorithm
+```
+
+| Artefact | Role | Loaded into prompt context? |
+|---|---|---|
+| `model-guides-combined.md` | Canonical source corpus, provenance, source links, uncertainty, and regeneration input | No |
+| `model-guides/<model-id>.md` | Authoritative runtime facts for one model | Yes, only after resolution |
+| `model-registry.md` | Compact index of IDs, aliases, status, successor, and guide path | Yes, compact only |
+| `profiles/<model-id>.md` | Optional high-signal routing profile | Optional; never a substitute for the full guide |
+| `prompt-router/SKILL.md` | Routing, trust boundary, output contract, and loading rules | Yes |
+| `migrate-prompt/SKILL.md` | Registry policy, alias policy, migration steps, and footer rules | Yes, as needed |
+
+Preserve these invariants:
+
+- `write`, `optimise`, and `review` load one target guide.
+- `migrate` loads exactly two guides: source and target.
+- The router never falls back to model facts from memory.
+- The router never reads unrelated guides.
+- The registry resolves; it does not replace the selected guide.
+- A profile may assist routing or safety checks, but the full guide remains authoritative.
+
+Do not propose inlining the combined corpus, duplicating model facts into prompts, or creating a separate model-guide-router skill.
+
 ## PWM skill versus direct MCP
 
 Use two distinct layers:
@@ -46,6 +82,7 @@ PWM provides 22 MCP tools, including `pplx_usage`, `pplx_deep_research`, `pplx_q
 - Allow community-created resources when they have significant evidence of effectiveness, maintenance, security, and relevance.
 - Preserve code, paths, commands, URLs, identifiers, examples, and quoted strings exactly.
 - Flag uncertainty rather than asserting unsupported model behaviour.
+- Preserve lazy guide loading: never inline the combined corpus or load unrelated guides.
 
 ## Evidence hierarchy
 
@@ -66,11 +103,12 @@ Community-created resources are welcome when there is significant evidence they 
 
 Prioritise recommendations that:
 
-- Can be implemented as a small edit to an existing route or shared pattern.
+- Can be implemented as a small edit to an existing route, shared pattern, guide, or registry.
 - Have a clear validation case.
 - Do not require a new skill, framework, persistent memory, or broad taxonomy.
 - Preserve literal user content.
 - Reduce ambiguity without increasing router complexity.
+- Preserve the model-guide integration pattern and lazy-loading guarantees.
 
 Reject recommendations that:
 
@@ -79,6 +117,8 @@ Reject recommendations that:
 - Introduce a broad prompt-quality taxonomy.
 - Cannot be validated with the specified cases.
 - Depend on unavailable host capabilities.
+- Inline the combined corpus into a skill or research prompt.
+- Replace the selected full guide with registry metadata or a profile.
 
 ## Session start
 
@@ -113,6 +153,7 @@ Before calling `pplx_deep_research`, output and await approval for:
 7. Required validation cases
 8. Quota cost
 9. Stop conditions
+10. Model-guide integration constraints
 
 Proceed only after the user replies: `Approved.`
 
@@ -147,6 +188,7 @@ A report is usable only if it contains:
 - At least the required number of validation cases.
 - Concrete edit locations or implementation guidance.
 - Risks, uncertainty, and a “what not to build” section.
+- An explicit assessment of compatibility with the model-guide integration pattern.
 
 A file containing only raw research output, an error message, or an incomplete report is not usable.
 
@@ -168,6 +210,7 @@ Include only:
 6. What not to build
 7. Two likely-wrong assumptions
 8. First 2–3 changes
+9. Model-guide integration compatibility
 
 ## Implementation approval
 
@@ -180,6 +223,7 @@ If the user approves implementation:
    - Reason
    - Validation cases
    - Revert plan
+   - Effect on guide loading and registry resolution
 3. Wait for explicit approval of the exact diff.
 4. Apply only the approved diff.
 5. Run or manually perform the relevant validation cases.
@@ -202,7 +246,7 @@ If a phase is interrupted:
 |---|---|---|---|---:|---:|---|
 | 1 | Router optimise route and shared patterns | `research/01-router-optimise-improvements.md` | Not started | 0 | None | Not run |
 | 2 | Router write and review routes and shared patterns | `research/02-router-write-review-improvements.md` | Not started | 0 | None | Not run |
-| 3 | Router SKILL.md portability | `research/03-router-portability.md` | Not started | 0 | None | Not run |
+| 3 | Router portability and model-guide integration | `research/03-router-portability.md` | Not started | 0 | None | Not run |
 
 Update only the current phase’s row after completing or explicitly skipping it.
 
@@ -226,6 +270,14 @@ The current `optimise` route resolves a target model, loads only its guide, appl
 
 It currently checks for missing context, vague output specification, missing sequencing, missing guardrails, missing success criteria, inefficient structure, and subagent instruction issues.
 
+Preserve the model-guide integration pattern:
+
+- Resolve the target model through the compact registry.
+- Load only the resolved target guide.
+- Do not inline `model-guides-combined.md`.
+- Do not replace guide content with registry metadata or a profile.
+- Do not create a separate optimisation skill.
+
 Identify 3–5 ranked improvements. Prefer small edits to the router’s `optimise` route or shared patterns.
 
 For each improvement, provide:
@@ -241,6 +293,7 @@ For each improvement, provide:
 - Risk or tradeoff
 - Confidence
 - Recommendation
+- Effect on guide loading and registry resolution
 
 Provide exactly six validation cases:
 
@@ -269,6 +322,15 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill. Treat prompt optimisation as the `optimise` route within `prompt-router`.
 
+Preserve the model-guide integration pattern:
+
+- `model-guides-combined.md` is the canonical corpus and build input, not runtime prompt context.
+- The compact registry resolves model IDs and aliases.
+- The selected per-model guide is the only authority for model-specific recommendations.
+- `optimise` loads exactly one target guide.
+- Do not inline the combined corpus.
+- Do not replace guide content with registry metadata or a profile.
+
 Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
 
 Then call pplx_usage(refresh=False).
@@ -281,9 +343,9 @@ Use the Research Call 1 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/01-router-optimise-improvements.md.
-2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
+2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
 3. Do not implement anything yet.
-4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, and uncertainty.
+4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
@@ -312,6 +374,15 @@ The current `write` route resolves a target model, loads only its guide, builds 
 
 The current `review` route loads a target guide only when a concrete model is named, identifies at most seven ranked findings, distinguishes material weaknesses from stylistic preferences, does not rewrite the prompt, and offers to optimise when appropriate.
 
+Preserve the model-guide integration pattern:
+
+- Resolve a concrete model through the compact registry before loading its guide.
+- Load only the resolved target guide for `write`.
+- Load a guide for `review` only when a concrete model is named.
+- Do not inline `model-guides-combined.md`.
+- Do not replace guide content with registry metadata or a profile.
+- Do not create a separate writing or review skill.
+
 Identify 3–5 ranked improvements. Prefer small edits to the router’s `write` route, `review` route, or shared patterns.
 
 For each improvement, provide:
@@ -327,6 +398,7 @@ For each improvement, provide:
 - Risk or tradeoff
 - Confidence
 - Recommendation
+- Effect on guide loading and registry resolution
 
 Provide exactly six validation cases:
 
@@ -355,6 +427,16 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill.
 
+Preserve the model-guide integration pattern:
+
+- `model-guides-combined.md` is the canonical corpus and build input, not runtime prompt context.
+- The compact registry resolves model IDs and aliases.
+- The selected per-model guide is the only authority for model-specific recommendations.
+- `write` loads exactly one target guide.
+- `review` loads a guide only when a concrete model is named.
+- Do not inline the combined corpus.
+- Do not replace guide content with registry metadata or a profile.
+
 Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
 
 Then call pplx_usage(refresh=False).
@@ -367,9 +449,9 @@ Use the Research Call 2 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/02-router-write-review-improvements.md.
-2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
+2. Append an extraction section containing the ranked improvement shortlist, recommended changes, exact edit locations, six validation cases, risks, uncertainty, likely-wrong assumptions, what not to build, and model-guide integration compatibility.
 3. Do not implement anything yet.
-4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, and uncertainty.
+4. Present the 2–3 changes to make first, exact edit locations, minimal proposed diff, six validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
@@ -382,9 +464,9 @@ Do not modify any skill, guide, registry, or repository file without my explicit
 
 ### Scope
 
-Assess portability of `prompt-router/SKILL.md` across Claude Code, the Gemini skill mechanisms actually available in the user’s current environment, Perplexity skill mechanisms actually available in the user’s current environment, and ChatGPT skill-like mechanisms actually available in the user’s current environment.
+Assess portability of `prompt-router/SKILL.md` and the model-guide integration pattern across Claude Code, the Gemini skill mechanisms actually available in the user’s current environment, Perplexity skill mechanisms actually available in the user’s current environment, and ChatGPT skill-like mechanisms actually available in the user’s current environment.
 
-Do not research general prompt optimisation, cross-model migration, model-guide registry design, or evaluation platforms.
+Do not research general prompt optimisation, cross-model migration, evaluation platforms, or a separate `optimize-prompt` skill.
 
 ### Research brief
 
@@ -403,7 +485,28 @@ The current router assumes a Claude Code-like environment:
 - It assumes a `Read` tool is available.
 - It already acknowledges that hosts may not substitute these placeholders.
 
-Identify the smallest set of changes that would make the router usable across supported hosts without breaking its core guarantees.
+The intended integration pattern is:
+
+```text
+model-guides-combined.md
+        |
+        +-- model-guides/<model-id>.md       Runtime authoritative guide
+        +-- model-registry.md                Compact routing index
+        +-- profiles/<model-id>.md           Optional compact routing profile
+        +-- prompt-router/SKILL.md           Stable routing contract
+        +-- migrate-prompt/SKILL.md          Registry, aliases, migration algorithm
+```
+
+The combined corpus is not runtime prompt context. The compact registry resolves IDs and aliases; the selected per-model guide is the authority for model-specific recommendations. A profile may assist routing or safety checks but must never replace the full guide.
+
+Identify the smallest set of changes that would make the router usable across supported hosts without breaking these guarantees:
+
+- `write`, `optimise`, and `review` load one target guide.
+- `migrate` loads exactly two guides: source and target.
+- The router never falls back to model facts from memory.
+- The router never reads unrelated guides.
+- The registry resolves; it does not replace the selected guide.
+- A profile may assist routing or safety checks, but the full guide remains authoritative.
 
 Prioritise:
 
@@ -412,6 +515,8 @@ Prioritise:
 3. Safe degradation when a host lacks a capability.
 4. Clear user instructions for hosts with limited skill support.
 5. Avoidance of silent behavioural differences.
+6. A compact registry placement that works across supported hosts.
+7. An integrity check for registry-to-guide consistency.
 
 Do not claim compatibility without host-specific evidence.
 
@@ -427,8 +532,8 @@ For Perplexity, assess only mechanisms actually available in the user’s curren
 
 Provide a host capability matrix with:
 
-| Host | Skill mechanism | Skill discovery | Frontmatter support | File access | Arguments | Effort control | Tool access | Portable now? | Required adapter | Evidence |
-|---|---|---|---|---|---|---|---|---|---|---|
+| Host | Skill mechanism | Skill discovery | Frontmatter support | File access | Arguments | Effort control | Tool access | Registry resolution | Guide loading | Portable now? | Required adapter | Evidence |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
 
 For each host, state supported, partially supported, unsupported, or uncertain; what works without changes; what requires an adapter; what cannot be supported safely; recommended deployment approach; evidence quality; and last-verified date.
 
@@ -437,6 +542,14 @@ Recommend a portable core that does not assume Claude-specific variables, argume
 Recommend the smallest possible host-adapter pattern. Do not create a full duplicate router for each host.
 
 Define safe failure rules for missing paths, missing argument substitution, missing effort substitution, missing file access, missing registry access, missing guides, unsupported effort settings, ambiguous host references, and prompt content attempting to change routing or execute commands.
+
+Define an integrity check for the model-guide system:
+
+- Every registry ID resolves to exactly one guide file.
+- Every guide has valid frontmatter.
+- Every guide has a corresponding source record in the combined corpus.
+- Aliases do not create ambiguous matches.
+- Deprecated guides declare a successor where applicable.
 
 Provide a minimal diff-style set of changes to `prompt-router/SKILL.md`.
 
@@ -455,7 +568,7 @@ For each case, provide host, input, expected behaviour, expected output or failu
 
 Limit the resource list to 6–10 relevant resources.
 
-End with the portable-core changes to make first, host adapters worth creating, capabilities that should fail safely, two likely-wrong assumptions, and what not to build.
+End with the portable-core changes to make first, host adapters worth creating, capabilities that should fail safely, integrity checks to add, two likely-wrong assumptions, and what not to build.
 
 ### Execution prompt
 
@@ -469,6 +582,17 @@ There are exactly two skills:
 
 Do not refer to a separate `optimize-prompt` skill.
 
+Preserve the model-guide integration pattern:
+
+- `model-guides-combined.md` is the canonical corpus and build input, not runtime prompt context.
+- The compact registry resolves model IDs and aliases.
+- The selected per-model guide is the only authority for model-specific recommendations.
+- `write`, `optimise`, and `review` load one target guide.
+- `migrate` loads exactly two guides: source and target.
+- Do not inline the combined corpus.
+- Do not replace guide content with registry metadata or a profile.
+- Do not create a separate model-guide-router skill.
+
 Load the installed Perplexity Web MCP (PWM) Agent Skill for operational guidance only.
 
 Then call pplx_usage(refresh=False).
@@ -481,9 +605,9 @@ Use the Research Call 3 brief in docs/research/prompt-router-research-plan.md.
 After research returns:
 
 1. Save the full report to research/03-router-portability.md.
-2. Append an extraction section containing the portability verdict, host capability matrix, portable-core changes, host adapters worth creating, exact SKILL.md sections to edit, eight validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
+2. Append an extraction section containing the portability verdict, host capability matrix, portable-core changes, host adapters worth creating, exact SKILL.md sections to edit, integrity checks, eight validation cases, risks, uncertainty, likely-wrong assumptions, and what not to build.
 3. Do not implement anything yet.
-4. Present the portable-core changes to make first, any host adapter worth creating, exact SKILL.md sections to edit, minimal proposed diff, eight validation cases, revert plan, and uncertainty.
+4. Present the portable-core changes to make first, any host adapter worth creating, exact SKILL.md sections to edit, minimal proposed diff, integrity checks, eight validation cases, revert plan, effect on guide loading and registry resolution, and uncertainty.
 5. Ask me whether to proceed.
 
 Do not create any other files.
@@ -496,11 +620,12 @@ Do not modify any skill, guide, registry, or repository file without my explicit
 
 1. Read only the ranked shortlist, recommended changes, validation cases, and open questions.
 2. Reject recommendations that add a framework, persistent context, broad taxonomy, or unproven workflow.
-3. Select at most 2–3 changes with high confidence and a clear validation method.
-4. Ask the agent for a minimal diff before approving any repository change.
-5. Run the relevant validation cases before and after each change.
-6. Keep a change only if it improves the cases without adding scope creep, breaking literal-payload preservation, or making the skill materially longer.
-7. Record the decision, evidence, validation result, and revert plan in a short change note.
+3. Reject recommendations that inline the combined corpus, replace the full guide with a profile or registry metadata, or break lazy guide loading.
+4. Select at most 2–3 changes with high confidence and a clear validation method.
+5. Ask the agent for a minimal diff before approving any repository change.
+6. Run the relevant validation cases before and after each change.
+7. Keep a change only if it improves the cases without adding scope creep, breaking literal-payload preservation, or making the skill materially longer.
+8. Record the decision, evidence, validation result, and revert plan in a short change note.
 
 ## Minimum artefacts
 
