@@ -1,6 +1,13 @@
 # CLAUDE.md
 # Instructions for Claude Code working in this repo
 
+## Commands
+
+- Bootstrap env: `uv sync`
+- Validate all prompt/skill cards against schema (runs in CI on push/PR to `main`): `.venv/bin/python scripts/validate_cards.py`
+  - Checks `examples/*prompt-card.yaml` and `examples/*skill-card.yaml` for the required root key (`prompt_card`/`skill_card`) and required fields (`id`, `title`, `version`, `status`)
+- No test suite, linter, or formatter is configured yet.
+
 ## Project identity
 
 This is a curated, evidence-based prompt and skills library.

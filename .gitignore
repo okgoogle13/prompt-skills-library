@@ -1,2 +1,11 @@
 .venv/
 .envrc
+
+# OS metadata
+.DS_Store
+
+# Scratch reference area
+sources/intake/
+
+# Local untracked backups
+.backups/
