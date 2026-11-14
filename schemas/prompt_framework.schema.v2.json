@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PromptFrameworkV2",
+  "type": "object",
+  "description": "Reusable schema for prompt engineering and chain-of-thought configurations, updated for model-aware routing, verification, cost, context, and agentic workflows.",
+  "properties": {
+    "id": {"type": "string", "description": "Unique identifier for the prompt."},
+    "name": {"type": "string", "description": "Human-readable name for the prompt."},
+    "version": {"type": "string", "description": "Prompt version for tracking changes and regressions."},
+    "role": {"type": "string", "description": "Expert persona or system role to assign to the model."},
+    "objective": {"type": "string", "description": "Precise description of the task or desired output."},
+    "context": {"type": "string", "description": "Domain, background information, and usage context."},
+    "instructions": {"type": "array", "description": "Ordered list of instructions and rules for the model.", "items": {"type": "string"}},
+    "constraints": {
+      "type": "object",
+      "description": "Limits and safety rules governing the output.",
+      "properties": {
+        "length": {"type": "string"},
+        "style": {"type": "string"},
+        "allowed_outputs": {"type": "array", "items": {"type": "string"}},
+        "forbidden": {"type": "array", "items": {"type": "string"}},
+        "safety": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "model_routing": {
+      "type": "object",
+      "description": "Model-aware routing configuration.",
+      "properties": {
+        "model_type": {"type": "string", "enum": ["reasoning", "non_reasoning", "local"]},
+        "reasoning_mode": {"type": "string", "enum": ["adaptive", "extended", "off"]},
+        "effort": {"type": "string", "enum": ["none", "low", "medium", "high", "xhigh", "max"]}
+      }
+    },
+    "techniques": {
+      "type": "array",
+      "description": "Prompt engineering techniques applied to this prompt.",
+      "items": {
+        "type": "string",
+        "enum": ["zero_shot", "few_shot", "chain_of_thought", "tree_of_thought", "self_consistency", "react", "role_prompting", "structured_output", "constraint_based"]
+      }
+    },
+    "verification": {
+      "type": "object",
+      "description": "Verification and self-check configuration.",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "criteria": {"type": "array", "items": {"type": "string"}},
+        "max_revisions": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    },
+    "cost_gate": {
+      "type": "object",
+      "description": "Cost and latency budgeting for expensive techniques.",
+      "properties": {
+        "techniques": {"type": "array", "items": {"type": "string"}},
+        "min_accuracy_gain": {"type": "number"},
+        "max_token_budget": {"type": "integer"}
+      }
+    },
+    "context_policy": {
+      "type": "object",
+      "description": "Context engineering policy.",
+      "properties": {
+        "essential_context": {"type": "array", "items": {"type": "string"}},
+        "summarizable_context": {"type": "array", "items": {"type": "string"}},
+        "persisted_state": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "agentic_completion": {
+      "type": "object",
+      "description": "Agentic workflow completion criteria.",
+      "properties": {
+        "definition_of_done": {"type": "string"},
+        "verification_steps": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "output_format": {
+      "type": "object",
+      "description": "Structure and serialization of model outputs.",
+      "properties": {
+        "type": {"type": "string", "enum": ["text", "markdown", "json", "yaml", "table"]},
+        "schema": {"type": "object"},
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {"name": {"type": "string"}, "description": {"type": "string"}},
+            "required": ["name"]
+          }
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "description": "Few-shot examples showing desired behavior or reasoning.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "input": {"type": "string"},
+          "output": {"type": "string"},
+          "reasoning": {"type": "string"}
+        },
+        "required": ["input", "output"]
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "description": "Prompt quality evaluation configuration.",
+      "properties": {
+        "success_criteria": {"type": "string"},
+        "test_set": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "category": {"type": "string", "enum": ["happy_path", "edge_case", "adversarial"]},
+              "input": {"type": "string"},
+              "expected": {"type": "string"}
+            },
+            "required": ["id", "category", "input"]
+          }
+        },
+        "scoring_method": {"type": "string", "enum": ["binary", "rubric_1_5", "llm_as_judge"]},
+        "baseline_pass_rate": {"type": "number"},
+        "regression_threshold": {"type": "number"}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for tooling integration.",
+      "properties": {
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "created_by": {"type": "string"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "last_updated_at": {"type": "string", "format": "date-time"},
+        "models_tested": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "name", "objective", "instructions", "output_format", "model_routing"],
+  "additionalProperties": false
+}
