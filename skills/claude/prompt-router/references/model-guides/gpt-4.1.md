@@ -10,63 +10,63 @@ status: legacy
 # GPT-4.1
 
 ## Reasoning / Thinking
-- **Typ: keins.** GPT-4.1 ist KEIN Reasoning-Modell — OpenAI bezeichnet es ausdrücklich als „smartest non-reasoning model" und empfiehlt auf der Modellseite, für komplexe Aufgaben mit GPT-5 zu starten („we recommend starting with GPT-5 for complex tasks"). Es gibt keinen internen Thinking-/Scratchpad-Schritt vor der Antwort.
-- Schritt-für-Schritt-Denken muss daher **explizit per Prompt angestoßen** werden („induced chain-of-thought"). Das hebt die Output-Qualität, kostet aber zusätzliche Tokens und Latenz.
-- Konkrete Anstöße aus dem OpenAI-Prompting-Guide:
-  - Generischer Starter: „First, think carefully step by step about what documents are needed to answer the query."
-  - Optionaler Planning-Reminder für agentische Abläufe: „You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls."
-- Empfohlenes Vorgehen: Reasoning-Strategie iterativ aus beobachteten Fehlern ableiten und im Prompt fest kodifizieren („audit failures and codify effective reasoning strategies"). Typische Fehlerquellen, die durch explizites Reasoning entschärft werden: Missverständnis der User-Intention, unvollständiges Context-Gathering, fehlerhafte schrittweise Ableitung.
+- **Type: none.** GPT-4.1 is NOT a reasoning model — OpenAI explicitly calls it the "smartest non-reasoning model" and, on the model page, recommends starting with GPT-5 for complex tasks ("we recommend starting with GPT-5 for complex tasks"). There is no internal thinking/scratchpad step before the answer.
+- Step-by-step reasoning must therefore be **explicitly triggered in the prompt** ("induced chain-of-thought"). This raises output quality but costs extra tokens and latency.
+- Concrete prompts from the OpenAI prompting guide:
+  - Generic starter: "First, think carefully step by step about what documents are needed to answer the query."
+  - Optional planning reminder for agentic flows: "You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls."
+- Recommended approach: derive the reasoning strategy iteratively from observed failures and hard-code it in the prompt ("audit failures and codify effective reasoning strategies"). Typical failure sources that explicit reasoning mitigates: misreading user intent, incomplete context gathering, faulty step-by-step derivation.
 
-## Prompting-Stil
-- **Sehr präskriptiv / literal.** GPT-4.1 „is trained to follow instructions more closely and more literally than its predecessors". Konsequenzen:
-  - Implizite Regelableitung ist reduziert — alles muss **explizit** spezifiziert werden; das Modell „liest" weniger zwischen den Zeilen als GPT-4o.
-  - Weicht das Verhalten ab, genügt fast immer ein einziger, klarer Korrektursatz: „a single sentence firmly and unequivocally clarifying your desired behavior is almost always sufficient".
-  - Übersteuerte Absolut-Anweisungen können nach hinten losgehen: Sagt man z. B. „immer ein Tool aufrufen", erfindet (halluziniert) das Modell ggf. Tool-Calls, wenn Informationen fehlen. Fix: Eskalationsklausel ergänzen, z. B. „If you don't have enough information, ask the user for what you need."
-- **System-Message-Treue:** Das Modell hält sich in agentischen Settings eng an User- *und* System-Prompt. Bei widersprüchlichen Anweisungen folgt es tendenziell denen **näher am Ende** des Prompts.
-- **Agentic-Prompting:** OpenAI empfiehlt drei feste Reminder im Agenten-Systemprompt; sie steigerten intern den SWE-bench-Verified-Score um ~20 %:
-  - *Persistence:* „You are an agent - please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user."
-  - *Tool-Calling:* „If you are not sure about file content or codebase structure pertaining to the user's request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer."
-  - *Planning (optional):* „You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls."
-- **Tools immer über das `tools`-API-Feld** übergeben, nicht als Textbeschreibung in den Prompt injizieren („exclusively use the tools field"): hält das Modell in-distribution und brachte intern +2 % auf SWE-bench Verified. Klare Namen und ausführliche Beschreibungen für Tools und Parameter verwenden.
-- **Lange Kontexte:** effektiv bis ~1 Mio. Tokens nutzbar. Bei langen Kontexten Instruktionen **am Anfang UND am Ende** platzieren („at both the beginning and end of the provided context") — das schlägt einmalige Platzierung. Die Performance fällt mit steigender Retrieval-Komplexität bzw. bei graph-search-artigem Reasoning über viele verstreute Fakten.
+## Prompting Style
+- **Very prescriptive / literal.** GPT-4.1 "is trained to follow instructions more closely and more literally than its predecessors". Consequences:
+  - Implicit rule inference is reduced — everything must be **explicitly** specified; the model "reads between the lines" less than GPT-4o did.
+  - If behaviour deviates, a single, clear corrective sentence is almost always enough: "a single sentence firmly and unequivocally clarifying your desired behavior is almost always sufficient".
+  - Overridden absolute instructions can backfire: if you say e.g. "always call a tool", the model may invent (hallucinate) tool calls when information is missing. Fix: add an escalation clause, e.g. "If you don't have enough information, ask the user for what you need."
+- **System message fidelity:** In agentic settings the model sticks closely to both user and system prompts. With contradictory instructions it tends to follow the ones **closer to the end** of the prompt.
+- **Agentic prompting:** OpenAI recommends three fixed reminders in the agent system prompt; they reportedly increased its internal SWE-bench Verified score by ~20%:
+  - *Persistence:* "You are an agent - please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user."
+  - *Tool-calling:* "If you are not sure about file content or codebase structure pertaining to the user's request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer."
+  - *Planning (optional):* "You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls."
+- **Pass tools via the `tools` API field**, not as text descriptions injected into the prompt ("exclusively use the tools field"): this keeps the model in-distribution and gave +2% on SWE-bench Verified internally. Use clear names and detailed descriptions for tools and parameters.
+- **Long contexts:** effectively usable up to ~1M tokens. For long contexts, place instructions **at both the beginning AND the end** ("at both the beginning and end of the provided context") — this beats placing them once. Performance drops as retrieval complexity rises or with graph-search-style reasoning across many scattered facts.
 
-## Stärken & Schwächen (prompt-relevant)
-- **Stärken:**
-  - Sehr starke, präzise Instruction-Following-Fähigkeit — Outputs lassen sich eng steuern.
-  - Coding/agentic: deutlich besser als GPT-4o (lt. OpenAI +21,4 % auf SWE-bench Verified gegenüber GPT-4o (unbelegt)); zuverlässiges Befolgen von Diff-Formaten, weniger überflüssige Edits, konsistente Tool-Nutzung.
-  - Sehr großes Kontextfenster (1.047.576 Tokens) mit gutem Verständnis langer Dokumente.
-- **Schwächen (prompt-relevant):**
-  - Literalität ist ein zweischneidiges Schwert: unter- oder widersprüchlich spezifizierte Prompts führen schneller zu unerwünschtem Verhalten als bei „interpretierfreudigeren" Vorgängern.
-  - Halluzinierte Tool-Calls bei zu absoluten Anweisungen ohne Eskalationspfad.
-  - Wiederholte Beispiel-Phrasen werden wörtlich übernommen → ggf. repetitiv; Fix: „instruct model to vary phrases as necessary".
-  - Hang zu ausschweifender Erklär-Prosa / übermäßigem Formatting, wenn nicht explizit knapp gehalten.
-  - Kein eingebautes Reasoning → komplexe mehrstufige Logik muss per Prompt erzwungen werden.
+## Strengths & Weaknesses (prompt-relevant)
+- **Strengths:**
+  - Very strong, precise instruction following — outputs can be steered tightly.
+  - Coding/agentic: clearly better than GPT-4o (per OpenAI +21.4% on SWE-bench Verified vs. GPT-4o (unverified)); reliable adherence to diff formats, fewer superfluous edits, consistent tool use.
+  - Very large context window (1,047,576 tokens) with good comprehension of long documents.
+- **Weaknesses (prompt-relevant):**
+  - Literalness is double-edged: under-specified or contradictory prompts lead to unwanted behaviour faster than with more "interpretive" predecessors.
+  - Hallucinated tool calls when absolute instructions have no escalation path.
+  - Repeated example phrases get copied verbatim → can become repetitive; fix: "instruct model to vary phrases as necessary".
+  - Tendency toward verbose explanatory prose / excessive formatting unless explicitly kept terse.
+  - No built-in reasoning → complex multi-step logic must be forced through the prompt.
 
-## Output- & Format-Konventionen
-- Kontextfenster 1.047.576 Tokens, **max. Output 32.768 Tokens**; Knowledge Cutoff 1. Juni 2024 (Modellseite).
-- **Delimiter / Strukturierung** (empfohlene Reihenfolge zum Ausprobieren):
-  - **Markdown** (Startpunkt): Section-Titel, Code in Backticks.
-  - **XML**: funktioniert sehr gut, erlaubt präzises Wrapping/Nesting von Inhalten.
-  - **JSON**: verbose und schnitt in Long-Context-Tests schlecht ab → für große Dokumentsammlungen meiden.
-  - Für Dokumentsammlungen schlugen **XML** und das Format `ID|TITLE|CONTENT` das JSON-Format.
-- **Empfohlene Prompt-Struktur** (Sektionen nach Bedarf hinzufügen/entfernen): Role and Objective → Instructions (mit Unterkategorien) → Reasoning Steps → Output Format → Examples → Context → abschließende „think step by step"-Instruktion.
-- **Diff-Formate (Coding):** empfohlen wird das **V4A-Format** — kontextbasierte Identifikation **ohne Zeilennummern**, mit klaren Vorher/Nachher-Delimitern. Ebenfalls gut: **SEARCH/REPLACE** und Pseudo-XML — beide ohne Zeilennummern und mit klarer Alt/Neu-Abgrenzung.
+## Output & Format Conventions
+- Context window 1,047,576 tokens, **max. output 32,768 tokens**; knowledge cutoff 1 Jun 2024 (model page).
+- **Delimiters / structuring** (recommended order to try):
+  - **Markdown** (starting point): section titles, code in backticks.
+  - **XML**: works very well, allows precise wrapping/nesting of content.
+  - **JSON**: verbose and performed poorly in long-context tests → avoid for large document collections.
+  - For document collections, **XML** and the format `ID|TITLE|CONTENT` beat JSON.
+- **Recommended prompt structure** (add/remove sections as needed): Role and Objective → Instructions (with subcategories) → Reasoning Steps → Output Format → Examples → Context → closing "think step by step" instruction.
+- **Diff formats (coding):** the **V4A format** is recommended — context-based identification **without line numbers**, with clear before/after delimiters. Also good: **SEARCH/REPLACE** and pseudo-XML — both without line numbers and with a clear old/new boundary.
 
-## Migrations-Hinweise
-- **Kein `successor`**: OpenAI dokumentiert keinen direkten Nachfolger für gpt-4.1 — die Deprecations-Seite führt nur `gpt-4.1-nano` (→ `gpt-5.6-luna`), nicht gpt-4.1 selbst; die Modellseite verweist lediglich für komplexe Aufgaben auf GPT-5 (das seinerseits abgekündigt ist).
-- **Wenn man VON GPT-4.1 wegmigriert:**
-  - Zu einem **Reasoning-Modell** (z. B. die GPT-5-Reihe): manuell injizierte „think step by step"-Anweisungen und explizite Planning-Reminder können entfallen oder reduziert werden, da das Reasoning intern erfolgt; ggf. stattdessen Reasoning-Effort/-Parameter steuern (modellabhängig).
-  - Prompts, die stark auf GPT-4.1s wörtliche Literalität getrimmt sind (sehr enge Absolut-Anweisungen), auf dem Zielmodell neu evaluieren — andere Modelle interpretieren freier.
-- **Wenn man ZU GPT-4.1 migriert:**
-  - Für ältere Modelle (z. B. GPT-4o) optimierte Prompts können Anpassung erfordern, da GPT-4.1 wörtlicher folgt: „prompts optimized for prior models may require migration."
-  - Implizite Annahmen explizit machen; vages Verhalten mit einem klaren Korrektursatz nachschärfen.
-  - Tool-Beschreibungen aus dem Prompt-Text ins `tools`-API-Feld überführen.
-  - Bei langen Kontexten Instruktionen an Anfang UND Ende duplizieren.
-  - Da kein Reasoning eingebaut ist: explizite Step-by-step-/Planning-Anweisungen ergänzen, wo zuvor ein Reasoning-Modell die Logik selbst übernahm.
-- **Allgemein:** OpenAI betont „AI engineering is inherently an empirical discipline" — bei jeder Migration informative Evals aufbauen und iterieren; parallele Tool-Calls testen und bei Problemen ggf. deaktivieren.
+## Migration Notes
+- **No `successor`**: OpenAI documents no direct successor for gpt-4.1 — the deprecations page lists only `gpt-4.1-nano` (→ `gpt-5.6-luna`), not gpt-4.1 itself; the model page merely points to GPT-5 for complex tasks (which is itself deprecated).
+- **When migrating AWAY from GPT-4.1:**
+  - To a **reasoning model** (e.g. the GPT-5 series): manually injected "think step by step" instructions and explicit planning reminders can be dropped or reduced, since reasoning happens internally; instead, control reasoning effort/parameters if needed (model-dependent).
+  - Prompts heavily tuned to GPT-4.1's literal reading (very narrow absolute instructions) should be re-evaluated on the target model — other models interpret more freely.
+- **When migrating TO GPT-4.1:**
+  - Prompts optimised for older models (e.g. GPT-4o) may need adjustment, since GPT-4.1 follows more literally: "prompts optimized for prior models may require migration."
+  - Make implicit assumptions explicit; sharpen vague behaviour with one clear corrective sentence.
+  - Move tool descriptions from prompt text into the `tools` API field.
+  - For long contexts, duplicate instructions at the start AND the end.
+  - As no reasoning is built in: add explicit step-by-step/planning instructions where a reasoning model previously handled the logic itself.
+- **General:** OpenAI stresses "AI engineering is inherently an empirical discipline" — build informative evals and iterate on every migration; test parallel tool calls and disable them if they cause problems.
 
-## Quellen
-- https://developers.openai.com/cookbook/examples/gpt4-1_prompting_guide — offizieller GPT-4.1 Prompting Guide (OpenAI Cookbook): literale Instruktionsbefolgung, drei agentische Reminder (Persistence/Tool-Calling/Planning), `tools`-Feld statt Prompt-Injektion, Long-Context-Platzierung am Anfang/Ende, induced Chain-of-Thought, empfohlene Prompt-Struktur, Delimiter (Markdown/XML/JSON), Diff-Formate (V4A/SEARCH-REPLACE/Pseudo-XML), Failure-Modes & Fixes.
-- https://developers.openai.com/api/docs/models/gpt-4.1 — offizielle Modell-Spezifikation: Kontextfenster 1.047.576 Tokens, max. Output 32.768 Tokens, Knowledge Cutoff 1. Juni 2024, Einstufung als „smartest non-reasoning model", Snapshot gpt-4.1-2025-04-14, „we recommend starting with GPT-5 for complex tasks", kein Deprecation-Hinweis.
-- https://openai.com/index/gpt-4-1/ — offizielle Ankündigung „Introducing GPT-4.1 in the API": Modellfamilie, Coding/Instruction-Following/Long-Context-Stärken, +21,4 % auf SWE-bench Verified vs. GPT-4o. (Direktabruf HTTP 403; Inhalte über OpenAI-Suchsnippets verifiziert.)
-- https://developers.openai.com/api/docs/deprecations — kein Eintrag für gpt-4.1 / gpt-4.1-2025-04-14 (nur gpt-4.1-nano → gpt-5.6-luna, Shutdown 23.10.2026); gpt-5-2025-08-07 Shutdown 11.12.2026
+## Sources
+- https://developers.openai.com/cookbook/examples/gpt4-1_prompting_guide — official GPT-4.1 Prompting Guide (OpenAI Cookbook): literal instruction following, three agentic reminders (Persistence/Tool-calling/Planning), `tools` field instead of prompt injection, long-context placement at start/end, induced chain-of-thought, recommended prompt structure, delimiters (Markdown/XML/JSON), diff formats (V4A/SEARCH-REPLACE/pseudo-XML), failure modes & fixes.
+- https://developers.openai.com/api/docs/models/gpt-4.1 — official model spec: context window 1,047,576 tokens, max. output 32,768 tokens, knowledge cutoff 1 Jun 2024, classification as "smartest non-reasoning model", snapshot gpt-4.1-2025-04-14, "we recommend starting with GPT-5 for complex tasks", no deprecation notice.
+- https://openai.com/index/gpt-4-1/ — official announcement "Introducing GPT-4.1 in the API": model family, coding/instruction-following/long-context strengths, +21.4% on SWE-bench Verified vs. GPT-4o. (Direct fetch HTTP 403; content verified via OpenAI search snippets.)
+- https://developers.openai.com/api/docs/deprecations — no entry for gpt-4.1 / gpt-4.1-2025-04-14 (only gpt-4.1-nano → gpt-5.6-luna, shutdown 23 Oct 2026); gpt-5-2025-08-07 shutdown 11 Dec 2026

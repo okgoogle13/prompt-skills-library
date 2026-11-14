@@ -11,44 +11,44 @@ successor: claude-haiku-5-5
 # Claude Haiku 4.5
 
 ## Reasoning / Thinking
-- Typ: **Extended Thinking (manuell)** über `thinking: {type: "enabled", budget_tokens: N}`; `budget_tokens` mindestens 1.024 und kleiner als `max_tokens`. Ohne `thinking`-Feld läuft kein Thinking; `{type: "adaptive"}` → 400 (`adaptive thinking is not supported on this model`).
-- Der **`effort`-Parameter wird nicht unterstützt** (Modellseite: Default effort „Not supported") — anders als Haiku 5.5 sowie die Opus-Modelle ab 4.5, die Sonnet-Modelle ab 4.6 und die Fable-Modelle. Tiefe nur über `budget_tokens`. Das konkrete Fehlerbild beim Senden von `effort` ist auf den geprüften Seiten nicht beschrieben (unbelegt).
-- Budget-Tuning laut Doku: bei einfachen Aufgaben nahe 1.024 starten und schrittweise erhöhen, bei komplexen ab ~16.000; Budgets über 32k per Batch-API fahren. Das Budget ist ein Ziel, keine harte Obergrenze; `max_tokens` bleibt die Decke.
-- **Kein Interleaved Thinking** (der Beta-Header wird auf der Claude API akzeptiert, aber ignoriert). Erzwungenes `tool_choice` (`any`/`tool`) ist mit Extended Thinking nicht kombinierbar (Fehler); nur `auto` oder `none`.
-- Thinking-Blöcke: nur die des letzten Assistant-Turns bleiben erhalten, ältere entfernt die API automatisch. `thinking.display` Default `"summarized"`.
-- Sampling: `temperature`, `top_p`, `top_k` werden akzeptiert; **bei aktivem Thinking** sind `temperature` und `top_k` inkompatibel und `top_p` nur zwischen 0.95 und 1 erlaubt.
+- Type: **Extended Thinking (manual)** via `thinking: {type: "enabled", budget_tokens: N}`; `budget_tokens` at least 1,024 and less than `max_tokens`. Without a `thinking` field no thinking runs; `{type: "adaptive"}` → 400 (`adaptive thinking is not supported on this model`).
+- The **`effort` parameter is not supported** (model page: default effort "Not supported") — unlike Haiku 5.5 and the Opus models from 4.5, the Sonnet models from 4.6 and the Fable models. Depth is controlled only via `budget_tokens`. The specific error when sending `effort` is not described on the pages checked (unverified).
+- Budget tuning per the docs: for simple tasks start near 1,024 and increase gradually; for complex ones from about 16,000; run budgets above 32k via the Batch API. The budget is a target, not a hard cap; `max_tokens` remains the ceiling.
+- **No interleaved thinking** (the beta header is accepted on the Claude API but ignored). Forced `tool_choice` (`any`/`tool`) cannot be combined with extended thinking (error); only `auto` or `none`.
+- Thinking blocks: only those of the last assistant turn are kept; the API removes older ones automatically. `thinking.display` defaults to `"summarized"`.
+- Sampling: `temperature`, `top_p`, `top_k` are accepted; **with thinking active**, `temperature` and `top_k` are incompatible and `top_p` is allowed only between 0.95 and 1.
 
-## Prompting-Stil
-- Klare, direkte, explizite Instruktionen: Claude-4-und-spätere Modelle kommunizieren knapper und direkter und brauchen ausdrückliche Anweisungen statt implizierter Erwartungen.
-- Knapp und einfach halten; für komplexes mehrstufiges Reasoning ist ein größeres Modell besser geeignet. (unbelegt)
-- Für feste Ausgabeformate Structured Outputs nutzen; Assistant-Prefill funktioniert nur bei abgeschaltetem Thinking.
+## Prompting style
+- Clear, direct, explicit instructions: Claude 4 and later models communicate more concisely and directly and need explicit instructions rather than implied expectations.
+- Keep it short and simple; for complex multi-step reasoning a larger model is better suited. (unverified)
+- Use Structured Outputs for fixed output formats; assistant prefill only works with thinking turned off.
 
-## Stärken & Schwächen (prompt-relevant)
-- Stärken: schnelles, kosteneffizientes Modell der 4.5-Generation ($1 / $5 pro MTok); laut Modellübersicht hat inzwischen Haiku 5.5 die niedrigste Latenz („Fastest") und niedrigere Listenpreise. Gut für hochvolumige, klar umrissene Aufgaben. (unbelegt: Einsatzprofil)
-- Schwächen: kein `effort`, kein adaptives und kein interleaved Thinking; 200K Kontext; Reliable Knowledge Cutoff Feb 2025 (Training Data Cutoff Jul 2025). Geringere Reasoning-Tiefe als Opus/Sonnet — komplexe Logik explizit per Prompt strukturieren. (unbelegt)
+## Strengths & weaknesses (prompt-relevant)
+- Strengths: fast, cost-efficient model of the 4.5 generation ($1 / $5 per MTok); according to the model overview, Haiku 5.5 now has the lowest latency ("Fastest") and lower list prices. Good for high-volume, clearly bounded tasks. (unverified: usage profile)
+- Weaknesses: no `effort`, no adaptive and no interleaved thinking; 200K context; reliable knowledge cutoff Feb 2025 (training data cutoff Jul 2025). Lower reasoning depth than Opus/Sonnet — structure complex logic explicitly in the prompt. (unverified)
 
-## Output- & Format-Konventionen
-- 200K Kontextfenster, bis 64K Output-Tokens; keine 300k-Batch-Output-Beta. Input: Text und Bilder → Text; Bilder in der Standard-Auflösungsstufe (Downscaling über 1.568 px Langkante bzw. 1.568 Visual Tokens).
-- Structured Outputs werden unterstützt (`output_config.format`). Auf Amazon Bedrock nur über die Legacy-Integration (InvokeModel), nicht über „Claude in Amazon Bedrock".
-- Assistant-Prefill wird bei abgeschaltetem Thinking akzeptiert; bei aktivem Thinking ist Prefill nicht möglich.
-- Computer Use über `computer_20250124` mit Beta-Header `computer-use-2025-01-24`; das Browser-Use-Tool wird nicht unterstützt.
-- Preise pro MTok: Input $1, Output $5, 5m-Cache-Write $1.25, 1h-Cache-Write $2, Cache-Read $0.10; Batch −50 %. Minimal cachebares Prompt: 4.096 Tokens.
-- Model IDs: Claude API `claude-haiku-4-5-20251001` (Alias `claude-haiku-4-5`); Amazon Bedrock `anthropic.claude-haiku-4-5` (InvokeModel `anthropic.claude-haiku-4-5-20251001-v1:0`); Google Cloud `claude-haiku-4-5@20251001`; Microsoft Foundry und Claude Platform on AWS `claude-haiku-4-5`.
+## Output & format conventions
+- 200K context window, up to 64K output tokens; no 300k batch output beta. Input: text and images → text; images at the standard resolution tier (downscaling above 1,568 px on the long edge or 1,568 visual tokens).
+- Structured Outputs are supported (`output_config.format`). On Amazon Bedrock only via the legacy integration (InvokeModel), not via "Claude in Amazon Bedrock".
+- Assistant prefill is accepted with thinking turned off; with thinking active, prefill is not possible.
+- Computer use via `computer_20250124` with beta header `computer-use-2025-01-24`; the browser-use tool is not supported.
+- Prices per MTok: input $1, output $5, 5m cache write $1.25, 1h cache write $2, cache read $0.10; batch −50%. Minimum cacheable prompt: 4,096 tokens.
+- Model IDs: Claude API `claude-haiku-4-5-20251001` (alias `claude-haiku-4-5`); Amazon Bedrock `anthropic.claude-haiku-4-5` (InvokeModel `anthropic.claude-haiku-4-5-20251001-v1:0`); Google Cloud `claude-haiku-4-5@20251001`; Microsoft Foundry and Claude Platform on AWS `claude-haiku-4-5`.
 
-## Migrations-Hinweise
-- **Lifecycle**: Modellübersicht und Modellseite führen Haiku 4.5 als **Legacy** (Status „Active (legacy)", Nachfolger Claude Haiku 5.5); die Deprecations-Tabelle listet `claude-haiku-4-5-20251001` als Active mit Retirement nicht vor dem 15. Oktober 2026. Vor einer Migration ZU Haiku 4.5 den aktuellen Stand auf der Deprecations-Seite prüfen.
-- **VON Haiku 4.5 weg (zu Haiku 5.5)**: Anthropic zufolge laufen bestehende Haiku-4.5-Prompts ohne Änderung gut; die Pflichtänderungen sind API-seitig — `budget_tokens` → adaptives Thinking + effort, Sampling-Parameter und Prefill entfernen, `computer_20250124` ersetzen, ~30 % mehr Tokens und Thinking in `max_tokens` einplanen (Details im Guide `claude-haiku-5-5`).
-- **VON Haiku 4.5 weg (zu Opus/Sonnet)**: `effort` und adaptives Thinking werden verfügbar — Tiefe lässt sich feiner steuern; je nach Zielmodell gelten dort eigene Einschränkungen (Sampling, Prefill, `budget_tokens`).
-- **ZU Haiku 4.5 migrieren**: `effort`-Parameter aus Requests entfernen; adaptives Thinking durch `enabled`+`budget_tokens` ersetzen (sonst 400); Kontext auf 200K und Output auf 64K begrenzen; Thinking-Text kommt wieder als Zusammenfassung; Prompts vereinfachen und Aufgaben eng umreißen. (unbelegt: letzter Punkt)
+## Migration notes
+- **Lifecycle**: the model overview and model page list Haiku 4.5 as **legacy** (status "Active (legacy)", successor Claude Haiku 5.5); the deprecations table lists `claude-haiku-4-5-20251001` as Active with retirement not before 15 Oct 2026. Before migrating TO Haiku 4.5, check the current status on the deprecations page.
+- **AWAY FROM Haiku 4.5 (to Haiku 5.5)**: according to Anthropic, existing Haiku 4.5 prompts run well without changes; the mandatory changes are API-side — `budget_tokens` → adaptive thinking + effort, remove sampling parameters and prefill, replace `computer_20250124`, plan for ~30% more tokens and thinking within `max_tokens` (details in the `claude-haiku-5-5` guide).
+- **AWAY FROM Haiku 4.5 (to Opus/Sonnet)**: `effort` and adaptive thinking become available — depth can be controlled more finely; depending on the target model, its own restrictions apply (sampling, prefill, `budget_tokens`).
+- **MIGRATING TO Haiku 4.5**: remove the `effort` parameter from requests; replace adaptive thinking with `enabled` + `budget_tokens` (otherwise 400); cap context at 200K and output at 64K; thinking text comes back as a summary again; simplify prompts and narrow the task scope. (unverified: last point)
 
-## Quellen
-- https://platform.claude.com/docs/en/models/haiku-4-5/overview — Legacy-Status („Active (legacy)"), Nachfolger Haiku 5.5, Model IDs je Plattform inkl. Alias, 200K Kontext, 64K Output, $1/$5 plus Cache-Preise, Thinking „Extended", Default effort „Not supported", Knowledge Cutoff Feb 2025 / Training Jul 2025, Retirement nicht vor 15.10.2026.
-- https://platform.claude.com/docs/en/build-with-claude/thinking — Konfigurationsmatrix (ohne Feld kein Thinking, `adaptive` 400, `enabled` = Extended Thinking), `display`-Default `"summarized"` für ältere Modelle, Sampling- und Prefill-Regeln bei aktivem Thinking, kein Interleaved Thinking, nur letzter Turn erhalten, `tool_choice`-Einschränkung im manuellen Modus.
-- https://platform.claude.com/docs/en/build-with-claude/extended-thinking — `budget_tokens` ≥ 1.024 und < `max_tokens`, Budget-Tuning (1.024 / 16.000 / Batch über 32k), Interleaved-Header auf Haiku 4.5 ignoriert, Migration zu adaptivem Thinking.
-- https://platform.claude.com/docs/en/build-with-claude/effort — `supportedModels` ohne Haiku 4.5 (enthält Haiku 5.5, Opus ab 4.5, Sonnet ab 4.6, Fable).
-- https://platform.claude.com/docs/en/build-with-claude/structured-outputs — `claude-haiku-4-5-20251001` unterstützt, `output_config.format`, auf Bedrock nur über die Legacy-Integration.
-- https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide — Haiku 4.5 akzeptiert Sampling-Parameter und Prefill bei Thinking aus, `computer_20250124` + `computer-use-2025-01-24`, Standard-Bildstufe, kein Browser-Use-Tool auf Haiku 4.5, Haiku-4.5→5.5-Checkliste, Claude-4+-Modelle brauchen explizite Anweisungen.
-- https://platform.claude.com/docs/en/models/haiku-5-5/whats-new-haiku-5-5 — Cache-Minimum 4.096 Tokens auf Haiku 4.5.
-- https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5 — bestehende Haiku-4.5-Prompts laufen auf Haiku 5.5 ohne Änderung gut.
-- https://platform.claude.com/docs/en/about-claude/model-deprecations — `claude-haiku-4-5-20251001` Active, Retirement nicht vor 15.10.2026.
-- https://platform.claude.com/docs/en/models/overview — Haiku 4.5 unter „Legacy models (still available)", Haiku 5.5 „Fastest".
+## Sources
+- https://platform.claude.com/docs/en/models/haiku-4-5/overview — legacy status ("Active (legacy)"), successor Haiku 5.5, model IDs per platform including alias, 200K context, 64K output, $1/$5 plus cache prices, thinking "Extended", default effort "Not supported", knowledge cutoff Feb 2025 / training Jul 2025, retirement not before 15 Oct 2026.
+- https://platform.claude.com/docs/en/build-with-claude/thinking — configuration matrix (no field means no thinking, `adaptive` 400, `enabled` = extended thinking), `display` default `"summarized"` for older models, sampling and prefill rules with thinking active, no interleaved thinking, only last turn kept, `tool_choice` restriction in manual mode.
+- https://platform.claude.com/docs/en/build-with-claude/extended-thinking — `budget_tokens` ≥ 1,024 and < `max_tokens`, budget tuning (1,024 / 16,000 / batch above 32k), interleaved header on Haiku 4.5 ignored, migration to adaptive thinking.
+- https://platform.claude.com/docs/en/build-with-claude/effort — `supportedModels` without Haiku 4.5 (includes Haiku 5.5, Opus from 4.5, Sonnet from 4.6, Fable).
+- https://platform.claude.com/docs/en/build-with-claude/structured-outputs — `claude-haiku-4-5-20251001` supported, `output_config.format`, on Bedrock only via the legacy integration.
+- https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide — Haiku 4.5 accepts sampling parameters and prefill with thinking, `computer_20250124` + `computer-use-2025-01-24`, standard image tier, no browser-use tool on Haiku 4.5, Haiku 4.5→5.5 checklist, Claude 4+ models need explicit instructions.
+- https://platform.claude.com/docs/en/models/haiku-5-5/whats-new-haiku-5-5 — cache minimum 4,096 tokens on Haiku 4.5.
+- https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5 — existing Haiku 4.5 prompts run well on Haiku 5.5 without changes.
+- https://platform.claude.com/docs/en/about-claude/model-deprecations — `claude-haiku-4-5-20251001` Active, retirement not before 15 Oct 2026.
+- https://platform.claude.com/docs/en/models/overview — Haiku 4.5 under "Legacy models (still available)", Haiku 5.5 "Fastest".

@@ -7,35 +7,35 @@ last_verified: 2026-11-07
 status: current
 ---
 
-# Perplexity Standard Search (Sonar / Agent API, niedriger Effort)
+# Perplexity Standard Search (Sonar / Agent API, low effort)
 
-> ⚠ Die Perplexity-Doku wurde nur über Websuche-Zusammenfassungen geprüft, nicht direkt abgerufen. Parameternamen (`effort`, `reasoning.effort`, `search_mode`, `search_domain_filter`, `search_recency_filter`) vor Einsatz gegen die aktuelle Doku verifizieren (unbelegt). Laut Recherche löst die Agent API die älteren Sonar-Chat-Completions-Modelle ab.
+> ⚠ The Perplexity docs were only checked via web search summaries, not fetched directly. Verify the parameter names (`effort`, `reasoning.effort`, `search_mode`, `search_domain_filter`, `search_recency_filter`) against the current docs before use (unverified). According to research, the Agent API replaces the older Sonar chat-completions models.
 
 ## Reasoning / Thinking
-- Standardsuche = schnelles, live belegtes Web-Grounding mit Inline-Zitaten; Legacy-Modelle `sonar`, `sonar-pro`.
-- Agent API: `effort` bündelt Modell, Suche, Tools und Schrittgrenzen: `fast` (Einzelfakt, Definitionen), `low` (Alltagsrecherche, leichte Mehrschritt-Suche), `medium` (Allzweck-Default). Standardsuche entspricht `fast`–`medium`.
-- Davon getrennt: `reasoning.effort` steuert interne Denktiefe (providerabhängig, unbelegt).
+- Standard search = fast, live-sourced web grounding with inline citations; legacy models `sonar`, `sonar-pro`.
+- Agent API: `effort` bundles model, search, tools and step limits: `fast` (single fact, definitions), `low` (everyday research, light multi-step search), `medium` (general-purpose default). Standard search corresponds to `fast`–`medium`.
+- Separate from this: `reasoning.effort` controls internal thinking depth (provider-dependent, unverified).
 
-## Prompting-Stil
-- **Kurz, atomar, spezifisch**: Der `input` seedet die erste Suchanfrage. Schwach: „Erzähl mir etwas über Apples Umsatz“; besser: „Apple FY2025 10-K Umsatz nach Segmenten“.
-- **Eine Frage pro Request**; mehrteilige Aufträge in separate Requests teilen. Überladene Mehrfach-Anweisungen führen auf niedrigem Effort zu verwirrten Suchpfaden.
-- `instructions` (System-Ebene) für Rolle, Format, Sprache und Grundierungsregeln; eigene `instructions` **ersetzen** das Standard-System-Prompt des Effort-Levels.
-- **Anti-Halluzination**: ausdrücklich erlauben zu antworten „keine ausreichenden Belege gefunden“.
-- **Zitate nicht per Prosa erzwingen**: native Zitatformate nicht bekämpfen; Domänenvorgaben über `search_domain_filter`, Zeitbezug über `search_recency_filter` (z. B. `week`, `month`) statt nur „aktuell“ im Text.
-- `search_mode`: `web` (Default), `academic`, `sec`.
-- Kein Few-Shot/CoT nötig; Prompt-Text soll Suchbegriffe enthalten, nicht Anweisungen zum Suchen.
+## Prompting style
+- **Short, atomic, specific**: The `input` seeds the first search query. Weak: "Tell me something about Apple's revenue"; better: "Apple FY2025 10-K revenue by segment".
+- **One question per request**; split multi-part tasks into separate requests. Overloaded multi-instruction prompts lead to confused search paths at low effort.
+- `instructions` (system level) for role, format, language and grounding rules; your own `instructions` **replace** the default system prompt of the effort level.
+- **Anti-hallucination**: explicitly allow answering with "no sufficient evidence found".
+- **Don't force citations via prose**: don't fight the native citation formats; control domains via `search_domain_filter`, time relevance via `search_recency_filter` (e.g. `week`, `month`) instead of just writing "current" in the text.
+- `search_mode`: `web` (default), `academic`, `sec`.
+- No few-shot/CoT needed; the prompt text should contain search terms, not instructions about searching.
 
-## Stärken & Schwächen (prompt-relevant)
-- Stärken: Geschwindigkeit, aktuelle Quellen, Inline-Zitate.
-- Schwächen: flache Analyse bei komplexen Fragen; bei vagen Prompts schlechte Treffer; keine tiefe Multi-Source-Synthese (dafür `perplexity-deep-research`).
+## Strengths & weaknesses (prompt-relevant)
+- Strengths: speed, current sources, inline citations.
+- Weaknesses: shallow analysis on complex questions; poor results with vague prompts; no deep multi-source synthesis (use `perplexity-deep-research` for that).
 
-## Output- & Format-Konventionen
-- Antwort mit Zitaten/Quellenliste; Format (Liste, Tabelle, kurze Absätze) in `instructions` festlegen.
-- Strukturierte Ausgaben: Verfügbarkeit je Modell prüfen (unbelegt).
+## Output & format conventions
+- Answer with citations/source list; set the format (list, table, short paragraphs) in `instructions`.
+- Structured outputs: check availability per model (unverified).
 
-## Migrations-Hinweise
-- **VON Perplexity Search weg**: Suchfilter-Parameter in Tool-/Retrieval-Konfiguration des Ziels übersetzen; Hinweis „nur belegte Fakten“ behalten; wenn das Ziel keine Websuche hat, Such-Tool oder Kontext ergänzen.
-- **ZU Perplexity Search migrieren**: Prompt auf eine konkrete, suchbegriffsreiche Frage kürzen; CoT/Rollenspiel streichen; Quellen-/Zeitvorgaben in Filter-Parameter verlagern; „kein Beleg gefunden“-Klausel ergänzen; Format in `instructions`.
+## Migration notes
+- **FROM Perplexity Search**: translate the search filter parameters into the target's tool/retrieval configuration; keep the "only verified facts" note; if the target has no web search, add a search tool or context.
+- **TO Perplexity Search**: shorten the prompt to a concrete, search-term-rich question; remove CoT/role-play; move source/time requirements into filter parameters; add a "no evidence found" clause; set the format in `instructions`.
 
-## Quellen
-- https://docs.perplexity.ai — Agent API, Effort-Level `fast/low/medium`, `instructions` vs. `input`, Prompt-Hinweise (per Websuche zusammengefasst).
+## Sources
+- https://docs.perplexity.ai — Agent API, effort levels `fast/low/medium`, `instructions` vs. `input`, prompt tips (summarised via web search).

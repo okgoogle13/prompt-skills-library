@@ -11,50 +11,50 @@ successor: grok-4.3
 # Grok 4
 
 ## Reasoning / Thinking
-- **Typ: Reasoning-Modell ohne Abschalter.** xAI führt `grok-4-0709` in der Retirement-Tabelle unter den Reasoning-Modellen (Routing auf `grok-4.3` mit `low`, nicht mit `none`), OCI nennt „Has Reasoning: Yes". Einen Schalter zum Abschalten dokumentiert keine offizielle Quelle; dass es überhaupt keinen Non-Reasoning-Modus gibt, ist darüber hinaus (unbelegt — nur Sekundärquelle; die xAI-Modellseiten für grok-4 sind offline).
-- **Tiefensteuerung: nicht parametrisierbar.** Das ursprüngliche `grok-4` unterstützt **kein** `reasoning_effort`. Wird der Parameter über die API gesendet, liefert das Modell eine Fehlerantwort. (Hinweis: `reasoning_effort` ist bei xAI für andere Modelle dokumentiert — laut OCI für Grok 3 mini, laut Modellseite für `grok-4.3` (`none`…`xhigh`, Default `low`), laut Reasoning-Seite für `grok-4.5`/`grok-4.6`/`grok-4.7`; für `grok-4.20` ist kein `reasoning_effort` dokumentiert — nicht für `grok-4`.)
-- **Praktische Tiefensteuerung:** Da kein Effort-Schalter existiert, regelt man die Reasoning-Tiefe indirekt über das Output-Budget — für anspruchsvolle Reasoning-Aufgaben das `max_tokens`/Maximum-Output-Limit erhöhen, damit genügend Spielraum für interne Thinking-Tokens bleibt.
-- **Thinking-Traces nicht abrufbar:** dass Grok 4 seinen internen Denkprozess nicht offenlegt und kein separates `reasoning_content`-/Chain-of-Thought-Feld liefert, ist (unbelegt — nur Sekundärquelle; die xAI-Modellseiten für grok-4 sind offline).
+- **Type: reasoning model with no off switch.** xAI lists `grok-4-0709` in the retirement table among the reasoning models (routing to `grok-4.3` with `low`, not with `none`), OCI states "Has Reasoning: Yes". No official source documents a switch to turn it off; that there is no non-reasoning mode at all is beyond that (unverified — secondary source only; the xAI model pages for grok-4 are offline).
+- **Depth control: not parameterisable.** The original `grok-4` does **not** support `reasoning_effort`. If the parameter is sent via the API, the model returns an error response. (Note: `reasoning_effort` is documented by xAI for other models — per OCI for Grok 3 mini, per the model page for `grok-4.3` (`none`…`xhigh`, default `low`), per the reasoning page for `grok-4.5`/`grok-4.6`/`grok-4.7`; for `grok-4.20` no `reasoning_effort` is documented — and not for `grok-4`.)
+- **Practical depth control:** since no effort switch exists, reasoning depth is controlled indirectly via the output budget — for demanding reasoning tasks raise the `max_tokens`/maximum output limit so there is enough room for internal thinking tokens.
+- **Thinking traces not retrievable:** that Grok 4 does not disclose its internal reasoning and returns no separate `reasoning_content`/chain-of-thought field is (unverified — secondary source only; the xAI model pages for grok-4 are offline).
 
-## Prompting-Stil
-- **Tool-augmentiertes Reasoning ist nativ.** Grok 4 wurde per Reinforcement Learning darauf trainiert, beim Denken Tools zu nutzen — u. a. einen Code-Interpreter und Web-Browsing — und dabei autonom eigene Suchanfragen zu formulieren. Prompts sollten dem Modell daher klar sagen, *welche* Tools/Quellen es nutzen darf, statt jeden Zwischenschritt vorzuschreiben.
-- **Live Search ist opt-in, nicht automatisch.** Web-Suche läuft über den Tools-Parameter (z. B. `tools=[web_search()]` im xAI-SDK bzw. `{"type": "web_search"}` in der Responses-API). Ohne aktiviertes Such-Tool hat Grok laut Modellübersicht keinen Zugriff auf aktuelle Ereignisse.
-- **Funktionsumfang:** Function Calling und Structured Outputs werden unterstützt; multimodaler Input aus Text und Bildern (Output: Text).
-- **System-Prompt-Eigenheiten:** Spezifische, von xAI dokumentierte Aussagen zu System-Prompt-Treue oder Instruktionsbefolgung *für grok-4 konkret* liegen aus Primärquellen nicht vor (unbelegt). xAI hebt „strict prompt adherence" und die niedrigste Halluzinationsrate erst für Grok 4.20 bzw. starkes Instruction Following für Grok 4.3 explizit hervor — nicht rückwirkend für grok-4.
+## Prompting style
+- **Tool-augmented reasoning is native.** Grok 4 was trained via reinforcement learning to use tools while reasoning — including a code interpreter and web browsing — and to formulate its own search queries autonomously. Prompts should therefore clearly say *which* tools/sources it may use, rather than prescribing every intermediate step.
+- **Live search is opt-in, not automatic.** Web search runs via the tools parameter (e.g. `tools=[web_search()]` in the xAI SDK or `{"type": "web_search"}` in the Responses API). Without an enabled search tool Grok has no access to current events, per the model overview.
+- **Feature set:** function calling and structured outputs are supported; multimodal input of text and images (output: text).
+- **System prompt quirks:** specific statements from xAI about system prompt fidelity or instruction following *for grok-4 specifically* are not available from primary sources (unverified). xAI only explicitly highlights "strict prompt adherence" and the lowest hallucination rate for Grok 4.20, and strong instruction following for Grok 4.3 — not retroactively for grok-4.
 
-## Stärken & Schwächen (prompt-relevant)
-- **Stärken:** Starkes mehrstufiges Reasoning, multimodales Verständnis und Zugriff auf aktuelle Informationen (via Tool-/Web-Integration); agentische Nutzung möglich, da das Modell autonom Code-Interpreter und Browser einsetzt. Trainiert auf verifizierbaren Daten in vielen Domänen.
-- **Schwächen / Einschränkungen (prompt-relevant):**
-  - Keine Feinsteuerung der Denktiefe (`reasoning_effort` nicht verfügbar) — weniger Kontrolle über Latenz vs. Gründlichkeit als bei grok-4.3 und den 4.5+-Modellen.
-  - Kein dokumentierter Reasoning-Trace → schwerer zu debuggen (unbelegt, s. o.).
-  - `presence_penalty`, `frequency_penalty` und `stop` sind bei xAI-Reasoning-Modellen nicht nutzbar — entsprechend nicht für die Output-Steuerung von grok-4 einplanen.
-  - Wissensstichtag November 2024; für neuere Fakten ist das Such-Tool nötig.
+## Strengths & weaknesses (prompt-relevant)
+- **Strengths:** strong multi-step reasoning, multimodal understanding and access to current information (via tool/web integration); agentic use possible, since the model autonomously uses code interpreter and browser. Trained on verifiable data across many domains.
+- **Weaknesses / limitations (prompt-relevant):**
+  - No fine control over reasoning depth (`reasoning_effort` unavailable) — less control over latency vs. thoroughness than with grok-4.3 and the 4.5+ models.
+  - No documented reasoning trace → harder to debug (unverified, see above).
+  - `presence_penalty`, `frequency_penalty` and `stop` are not usable with xAI reasoning models — so do not plan on them for output control with grok-4.
+  - Knowledge cutoff November 2024; for newer facts the search tool is required.
 
-## Output- & Format-Konventionen
-- Liefert die finale Antwort; strukturierte Ausgaben über Structured Outputs (JSON-Schema) statt über manuell geparste Freitext-Formate anfordern.
-- Formatvorgaben (Tabelle, JSON, Länge) gehören explizit in den Prompt; zur Begrenzung der Antwortlänge `max_tokens` nutzen, da `stop`-Sequenzen nicht zur Verfügung stehen.
-- **Kontextfenster:** Laut xAI-Ankündigung bietet die Grok-4-API **256.000 Tokens** (Text + Bilder). Auf Drittplattformen ist das nutzbare Fenster teils niedriger — Oracle OCI nennt für `xai.grok-4` „128.000 Tokens"; das ist eine plattformspezifische Grenze.
+## Output & format conventions
+- Returns the final answer; request structured output via Structured Outputs (JSON schema) rather than manually parsed free-text formats.
+- Format requirements (table, JSON, length) belong explicitly in the prompt; to limit response length use `max_tokens`, since `stop` sequences are not available.
+- **Context window:** per xAI's announcement the Grok 4 API offers **256,000 tokens** (text + images). On third-party platforms the usable window is sometimes lower — Oracle OCI lists "128,000 tokens" for `xai.grok-4`; that is a platform-specific limit.
 
-## Migrations-Hinweise
-- **Abgeschaltet (xAI-API):** `grok-4-0709` wurde am 15. Mai 2026, 12:00 PT zurückgezogen; der Slug löst weiter auf, Requests darauf bedient xAI seitdem automatisch mit `grok-4.3` bei `reasoning_effort: low` (Abrechnung zu grok-4.3-Preisen) — ein unveränderter grok-4-Prompt läuft also bereits auf flacherem Reasoning. Der 15.08.2026 ist nur das Retirement-Datum auf Oracle OCI (`xai.grok-4`).
-- **WEG von Grok 4 (xAI-Empfehlung: grok-4.3; alternativ Grok 4.20):**
-  - grok-4.3: `none`/`low`/`medium`/`high` (Default `low` laut Modellseite); für grok-4.20 ist kein `reasoning_effort` dokumentiert. Bei Bedarf an tieferem Reasoning `medium`/`high` explizit setzen statt das geroutete `low` zu akzeptieren.
-  - Deutlich größeres Kontextfenster verfügbar (grok-4.3 und grok-4.20: 1.000.000 Tokens).
-  - xAI bewirbt für Grok 4.20 strikte Prompt-Adhärenz und niedrige Halluzinationsraten → bestehende, defensiv formulierte Prompts können oft verschlankt werden.
-  - Für Code und Chat empfiehlt xAI inzwischen grok-4.7 (500k Kontext, kein `none`, Default `high`).
-- **ZU Grok 4 (von einem Nicht-Reasoning- oder älteren Grok-Modell):**
-  - Auf der xAI-API nicht mehr möglich — Requests landen auf grok-4.3 (s. o.); auf OCI seit dem 15.08.2026 ebenfalls retired. Die folgenden Punkte gelten nur noch für etwaige Restbestände auf anderen Plattformen (unbelegt).
-  - Modell denkt immer — keine Annahme treffen, einen Effort-/Thinking-Schalter setzen zu können; `reasoning_effort` führt zum Fehler und muss aus Requests entfernt werden.
-  - `presence_penalty`/`frequency_penalty`/`stop` aus bestehenden Requests entfernen (bei Reasoning-Modellen nicht erlaubt).
-  - Für Live-Web-Zugriff das Such-Tool explizit aktivieren; nicht auf automatisches Browsen verlassen.
-  - Prompts können knapper/zielorientierter werden (Ziel statt Schritt-für-Schritt-Mikromanagement), da das Modell Tool-Auswahl und Suchqueries selbst übernimmt.
+## Migration notes
+- **Retired (xAI API):** `grok-4-0709` was withdrawn on 15 May 2026, 12:00 PT; the slug still resolves, and since then xAI automatically serves requests to it with `grok-4.3` at `reasoning_effort: low` (billed at grok-4.3 prices) — an unchanged grok-4 prompt therefore already runs on shallower reasoning. 15 Aug 2026 is only the retirement date on Oracle OCI (`xai.grok-4`).
+- **AWAY FROM Grok 4 (xAI recommendation: grok-4.3; alternatively Grok 4.20):**
+  - grok-4.3: `none`/`low`/`medium`/`high` (default `low` per the model page); no `reasoning_effort` is documented for grok-4.20. If deeper reasoning is needed, set `medium`/`high` explicitly rather than accepting the routed `low`.
+  - Much larger context window available (grok-4.3 and grok-4.20: 1,000,000 tokens).
+  - xAI promotes strict prompt adherence and low hallucination rates for Grok 4.20 → existing defensively worded prompts can often be trimmed.
+  - For code and chat xAI now recommends grok-4.7 (500k context, no `none`, default `high`).
+- **TO Grok 4 (from a non-reasoning or older Grok model):**
+  - No longer possible on the xAI API — requests land on grok-4.3 (see above); on OCI retired since 15 Aug 2026 as well. The following points apply only to any remaining deployments on other platforms (unverified).
+  - Model always thinks — make no assumption that an effort/thinking switch can be set; `reasoning_effort` causes an error and must be removed from requests.
+  - Remove `presence_penalty`/`frequency_penalty`/`stop` from existing requests (not allowed on reasoning models).
+  - For live web access, explicitly enable the search tool; do not rely on automatic browsing.
+  - Prompts can become shorter and more goal-oriented (goal instead of step-by-step micromanagement), since the model handles tool selection and search queries itself.
 
-## Quellen
-- https://x.ai/news/grok-4 — offizielle Grok-4-Ankündigung (09.07.2025): RL-Training zur Tool-Nutzung (Code-Interpreter, Web-Browsing, eigene Suchqueries), verifizierbare Trainingsdaten in vielen Domänen, Grok-4-API mit „a 256,000 context window" und multimodalem Verständnis.
-- https://docs.x.ai/developers/migration/may-15-retirement — Retirement von `grok-4-0709` am 15.05.2026 12:00 PT, Slug löst weiter auf, Routing auf `grok-4.3` mit `low`, Abrechnung zu grok-4.3-Preisen, Empfehlung grok-4.3 für Reasoning-Workloads.
-- https://docs.x.ai/developers/model-capabilities/text/reasoning — `reasoning_effort` dokumentiert für grok-4.7/4.6/4.5 (nicht für grok-4); Fehler bei `presencePenalty`/`frequencyPenalty`/`stop` bei Reasoning-Modellen.
-- https://docs.x.ai/developers/tools/web-search — Web-Suche über das Tool `web_search` (xAI-SDK und Responses API).
-- https://docs.x.ai/developers/models — aktuelles Roster ohne grok-4; kein Echtzeitwissen ohne aktivierte Such-Tools; Empfehlung grok-4.7 für Code und Chat.
-- https://docs.x.ai/developers/models/grok-4.3 — Efforts `none`–`xhigh`, Default `low`, 1M Kontext, „strong tool calling and instruction following".
-- https://docs.x.ai/developers/models/grok-4.20-0309-reasoning — 1M Kontext, keine Effort-Stufen gelistet, „the lowest hallucination rate on the market with strict prompt adherence".
-- https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4.htm — Oracle-OCI-Doku: Reasoning ja, `reasoning_effort` nicht unterstützt (Fehler bei Übergabe; für Grok 3 mini vorhanden), Output-Limit für Reasoning erhöhen, Function Calling + Structured Outputs, Wissensstichtag November 2024, plattformseitig 128k, Deprecation 15.05.2026 / Retirement 15.08.2026.
+## Sources
+- https://x.ai/news/grok-4 — official Grok 4 announcement (9 Jul 2025): RL training for tool use (code interpreter, web browsing, own search queries), verifiable training data across many domains, Grok 4 API with "a 256,000 context window" and multimodal understanding.
+- https://docs.x.ai/developers/migration/may-15-retirement — Retirement of `grok-4-0709` on 15 May 2026 12:00 PT, slug still resolves, routing to `grok-4.3` with `low`, billing at grok-4.3 prices, grok-4.3 recommended for reasoning workloads.
+- https://docs.x.ai/developers/model-capabilities/text/reasoning — `reasoning_effort` documented for grok-4.7/4.6/4.5 (not for grok-4); errors for `presencePenalty`/`frequencyPenalty`/`stop` on reasoning models.
+- https://docs.x.ai/developers/tools/web-search — Web search via the `web_search` tool (xAI SDK and Responses API).
+- https://docs.x.ai/developers/models — current roster without grok-4; no real-time knowledge without enabled search tools; recommendation grok-4.7 for code and chat.
+- https://docs.x.ai/developers/models/grok-4.3 — Efforts `none`–`xhigh`, default `low`, 1M context, "strong tool calling and instruction following".
+- https://docs.x.ai/developers/models/grok-4.20-0309-reasoning — 1M context, no effort levels listed, "the lowest hallucination rate on the market with strict prompt adherence".
+- https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4.htm — Oracle OCI docs: reasoning yes, `reasoning_effort` not supported (error when passed; present for Grok 3 mini), increase output limit for reasoning, function calling + structured outputs, knowledge cutoff November 2024, platform-side 128k, deprecation 15 May 2026 / retirement 15 Aug 2026.

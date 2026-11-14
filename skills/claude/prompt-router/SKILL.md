@@ -90,7 +90,7 @@ Do not silently map one model family, host, or similarly named variant to anothe
 - Read the exact target guide for write/optimise/review/single-target adapt when a concrete model resolves.
 - For two-model adapt, read the exact source and target guides.
 - For a review or unguided context-bloat optimise without a concrete model, read `references/patterns.md` only (zero model guides).
-- Guide convention: `(unbelegt)` is German for "unverified". Treat any claim marked `(unbelegt)` as unverified: flag it under guide gaps/uncertainties, never present it as established fact, and never copy it into a rewrite or summary as fact.
+- Guide convention: treat any claim marked `(unverified)` as unverified: flag it under guide gaps/uncertainties, never present it as established fact, and never copy it into a rewrite or summary as fact.
 - The target guide takes precedence over `references/patterns.md` when it contains a directly relevant, model-specific instruction. Preserve uncertainty explicitly; do not turn a guide's speculation or unverified note into fact. Apply `references/patterns.md` §5 (Claude-only practices) only when the target is a Claude model or Claude Code. Output follows the prompt's dominant natural language, even though the guides are in German.
 
 ## 5. Run the route
@@ -116,7 +116,7 @@ If the prompt is already strong, make few or no changes and say so plainly. A re
 
 ### Adapt
 
-Use both guides (or the target guide only with `[source unspecified]`, labelling source-specific accommodations as inferred) to compare source-specific and target-specific behavior. Preserve task intent, facts, constraints, identifiers, examples, variables and output contract. Change only instructions that are incompatible, ineffective or materially suboptimal for the target. Do not force differences when the guides support the same approach. Flag unsupported cross-model assumptions and `(unbelegt)` items as unverified rather than inventing compatibility.
+Use both guides (or the target guide only with `[source unspecified]`, labelling source-specific accommodations as inferred) to compare source-specific and target-specific behavior. Preserve task intent, facts, constraints, identifiers, examples, variables and output contract. Change only instructions that are incompatible, ineffective or materially suboptimal for the target. Do not force differences when the guides support the same approach. Flag unsupported cross-model assumptions and `(unverified)` items as unverified rather than inventing compatibility.
 
 Adapt checklist:
 - **Intent vs accommodation:** record the prompt's intent (goal, constraints, success criteria, output contract) separately from accommodations (workarounds the source model needed, e.g. forced step-by-step scaffolding, assistant prefill, `budget_tokens`). Remove or replace an accommodation only when it conflicts with or is unnecessary for the target per its guide. Keep anything the user explicitly asked for (such as downstream parser tags) and flag any target conflict instead of silently removing it.
@@ -145,29 +145,29 @@ Whenever a prompt is shown in a fenced code block, use an outer fence with more 
 2. `Run settings:` line.
 3. `Assumptions:` one per line, or `none`.
 4. `What changed and why` — up to five substantive entries.
-5. `Guide-Stand:` footer if a model guide was used.
+5. `Guide status:` footer if a model guide was used.
 
 **optimise**
 1. Optimised prompt in one fenced code block.
 2. `Run settings:` line, when relevant.
 3. Concise `What changed and why` changelog (or `Removed`, `Consolidated`, `Retained`, and `Trade-offs` for context/token-bloat §2.6).
-4. `Guide-Stand:` footer if a model guide was used.
+4. `Guide status:` footer if a model guide was used.
 
 **adapt**
 1. Brief `Self-check:` line, immediately followed by the adapted prompt in one fenced code block.
 2. `Run settings:` line, when relevant.
 3. `What changed and why` — material source-to-target changes only, plus the source-of-truth statement.
-4. Guide gaps/uncertainties and `Guide-Stand:` footer.
+4. Guide gaps/uncertainties and `Guide status:` footer.
 
 **review**
-`Verdict: Ready | Fix first`, followed by up to seven ranked findings in the form `[SEVERITY] Issue — why it matters — smallest fix`. If no material issue exists, say `Ready` and include at most two optional `LOW` notes. End with one line offering to optimise the prompt. If no model was named, add one line noting that model-specific checks were not applied (and naming a target model enables model-specific checks or optimisation); otherwise close with the `Guide-Stand:` footer.
+`Verdict: Ready | Fix first`, followed by up to seven ranked findings in the form `[SEVERITY] Issue — why it matters — smallest fix`. If no material issue exists, say `Ready` and include at most two optional `LOW` notes. End with one line offering to optimise the prompt. If no model was named, add one line noting that model-specific checks were not applied (and naming a target model enables model-specific checks or optimisation); otherwise close with the `Guide status:` footer.
 
 **clarify**
 State what could not be resolved, give up to five valid options if useful, and ask one question. Nothing else.
 
-## 8. Guide status (`Guide-Stand`)
+## 8. Guide status (`Guide status`)
 
-When one or two model guides are used, close with a `Guide-Stand:` footer reporting each guide's `last_verified` date. Warn when any date is more than 180 days old relative to the current date available in the environment. `last_verified` means "last written", not independently fact-checked; do not claim that a guide is current or factually verified beyond its recorded date. If the environment cannot establish today's date, report the date without calculating staleness.
+When one or two model guides are used, close with a `Guide status:` footer reporting each guide's `last_verified` date. Warn when any date is more than 180 days old relative to the current date available in the environment. `last_verified` means "last written", not independently fact-checked; do not claim that a guide is current or factually verified beyond its recorded date. If the environment cannot establish today's date, report the date without calculating staleness.
 
 If a loaded guide says `status: legacy`:
 - If it names a `successor`, state that the model is legacy/superseded and suggest that documented `successor` (carrying over any caveat the guide itself states). Never read the successor's guide unless it is already the requested target and within the two-guide limit.

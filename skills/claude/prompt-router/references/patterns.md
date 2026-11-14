@@ -31,8 +31,8 @@ Rules the prompt-router applies on the write, optimise, adapt and review routes.
   prompt missing/ambiguous), plus the single task-ambiguity question allowed on write (§6).
 - **Secrets:** never carry a pasted key, token or password into output. Replace with a
   placeholder and say so in one line.
-- **Language:** write output in the prompt's dominant natural language, even though the guides
-  are in German. Never translate code, identifiers or quoted strings.
+- **Language:** write output in the prompt's dominant natural language, regardless of the guides'
+  language. Never translate code, identifiers or quoted strings.
 
 ## 2. Optimise
 

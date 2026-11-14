@@ -9,35 +9,35 @@ status: current
 
 # Gemini 3.8 Flash in Google AI Studio
 
-> ⚠ Einordnung: Modell ist `gemini-3.8-flash` (siehe Guide `gemini-3.8-flash`); dieser Guide betrifft nur die **AI-Studio-Oberfläche** (Playground, Run Settings, „Get code“). Die UI-Details stammen aus Websuche-Zusammenfassungen, nicht aus direkt abgerufener Doku; Bezeichnungen und Defaults der UI können sich ändern (unbelegt). Standard-Defaults im Studio vor Übernahme in Prompts/Code prüfen.
+> ⚠ Note: the model is `gemini-3.8-flash` (see guide `gemini-3.8-flash`); this guide covers only the **AI Studio interface** (Playground, Run Settings, "Get code"). The UI details come from web search summaries, not directly retrieved documentation; UI labels and defaults may change (unverified). Check Studio defaults before carrying them over into prompts or code.
 
 ## Reasoning / Thinking
-- Run Settings enthalten **Thinking level** mit `low | medium | high`; `minimal` nicht unterstützt (Fehler). Der Default im Studio wird je Quelle als `medium` oder `high` genannt (unbelegt) — API-Default laut Modell-Guide ist `medium`; Level im Studio explizit setzen, damit Studio und Code übereinstimmen.
-- Thinking-Tokens werden als Output-Tokens abgerechnet; `low` für einfache Textaufgaben senkt Latenz und Kosten.
-- Max-Output-Tokens deckelt Thinking + Antwort gemeinsam; zu niedrig gesetzte Werte können die Antwort abschneiden (Empfehlung ≥ 32.768, Modell-Limit 65.536).
+- Run Settings include **Thinking level** with `low | medium | high`; `minimal` is not supported (error). The Studio default is cited per source as `medium` or `high` (unverified) — the API default per the model guide is `medium`; set the level explicitly so Studio and code match.
+- Thinking tokens are billed as output tokens; `low` for simple text tasks lowers latency and cost.
+- Max output tokens caps thinking and response together; values set too low can truncate the answer (recommended ≥ 32,768, model limit 65,536).
 
-## Prompting-Stil
-- **System Instructions** (eigenes Feld) für Rolle, Format, Ton und Grenzen; Aufgabe/Daten in den User-Turn. Kurze, direkte, strukturierte Regeln; keine CoT-Scaffolds („Denke Schritt für Schritt“).
-- Bei langen Daten: Referenzmaterial zuerst, Frage/Aufgabe ans Ende nach dem Datenblock.
-- **Temperature**: AI Studio erlaubt `0.0–2.0` (UI-Schieberegler). Für Gemini-3-Modelle empfiehlt Google **1.0 beizubehalten**; niedrigere Werte können Loops/Qualitätsverlust auslösen. Beispiele im Netz mit `0.2` sind generisch, nicht Google-Empfehlung für 3.8 Flash.
-- Kein Assistant-Prefill: „Prefill“ im Studio-Chat nicht als Formatsteuerung nutzen; Format über System Instructions oder **Structured Output** erzwingen.
-- Tonalität nüchtern-knapp; ausführlichere Antworten explizit anfordern.
-- `top_p`/`top_k` nicht verstellen.
+## Prompting style
+- **System Instructions** (own field) for role, format, tone and limits; task/data in the user turn. Short, direct, structured rules; no CoT scaffolds ("Think step by step").
+- With long data: reference material first, question/task at the end after the data block.
+- **Temperature**: AI Studio allows `0.0–2.0` (UI slider). For Gemini 3 models Google recommends **keeping 1.0**; lower values can cause loops or quality loss. Examples online with `0.2` are generic, not Google's recommendation for 3.8 Flash.
+- No assistant prefill: do not use "prefill" in the Studio chat as format control; enforce format via System Instructions or **Structured Output**.
+- Tone sober and concise; request longer answers explicitly.
+- Do not change `top_p`/`top_k`.
 
-## Stärken & Schwächen (prompt-relevant)
-- Stärken: schnelles Prototyping, Run Settings (Thinking, Temperature, Structured Output, Grounding), „Get code“ erzeugt `google-genai`-Code mit `GenerateContentConfig`.
-- Schwächen: Studio-Chat ist kein Produktions-Setup: Studio-Defaults und Session-State können vom API-Default abweichen; Thought Signatures/Multi-Turn mit Function Calling im eigenen Code selbst handhaben bzw. `previous_interaction_id` nutzen; Free-/Paid-Tier-Limits und Preise unterscheiden sich (Preise siehe Modell-Guide, unbelegt für Studio-Free-Tier).
+## Strengths & weaknesses (prompt-relevant)
+- Strengths: fast prototyping, Run Settings (Thinking, Temperature, Structured Output, Grounding), "Get code" generates `google-genai` code with `GenerateContentConfig`.
+- Weaknesses: Studio chat is not a production setup: Studio defaults and session state can differ from API defaults; handle thought signatures and multi-turn function calling in your own code, or use `previous_interaction_id`; free and paid tier limits and prices differ (prices see model guide; unverified for Studio free tier).
 
-## Output- & Format-Konventionen
-- **Structured Output** im Run-Settings-Panel: JSON-Schema eingeben bzw. generieren; garantiert schemakonforme Antworten für Parsing.
-- **Grounding with Google Search** im Panel zuschaltbar (Quellen/Citations); zusätzlich URL Context und Code Execution unter Tools (Verfügbarkeit im UI unbelegt).
-- Multimodale Eingaben (Text, Bild, Video, Audio, PDF) per Upload; `media_resolution` für dichte Dokumente (`high`) prüfen.
-- Einstellungen vor Übernahme mit **Get code** in Python/JS-Code übersetzen lassen und gegen den Prompt prüfen.
+## Output & format conventions
+- **Structured Output** in the Run Settings panel: enter or generate a JSON schema; guarantees schema-conformant responses for parsing.
+- **Grounding with Google Search** can be enabled in the panel (sources/citations); additionally URL Context and Code Execution under Tools (availability in UI unverified).
+- Multimodal inputs (text, image, video, audio, PDF) via upload; check `media_resolution` for dense documents (`high`).
+- Before carrying settings over, translate them with **Get code** into Python/JS and check against the prompt.
 
-## Migrations-Hinweise
-- **VON AI Studio (3.8 Flash) weg**: Run-Settings in Parameter des Zielsystems überführen (Thinking level → Effort/Budget, System Instructions → System-Prompt, Structured Output → Schema-/JSON-Modus des Ziels); Studio-spezifische Defaults nicht annehmen; Prefill ggf. wieder verfügbar.
-- **ZU AI Studio (3.8 Flash) migrieren**: Prompt aufteilen in System Instructions (stabile Regeln) und User-Turn (Aufgabe/Daten); CoT streichen; Thinking level explizit setzen; Temperature auf 1.0 lassen; `top_p`/`top_k`/`candidate_count`/Prefill entfernen; Format über Structured Output; nach Test per **Get code** exportieren.
+## Migration notes
+- **FROM AI Studio (3.8 Flash)**: map Run Settings to the target system's parameters (Thinking level → effort/budget, System Instructions → system prompt, Structured Output → target's schema/JSON mode); do not adopt Studio-specific defaults; prefill may be available again.
+- **TO AI Studio (3.8 Flash)**: split the prompt into System Instructions (stable rules) and user turn (task/data); remove CoT; set Thinking level explicitly; leave Temperature at 1.0; remove `top_p`/`top_k`/`candidate_count`/prefill; enforce format via Structured Output; after testing, export via **Get code**.
 
-## Quellen
-- https://aistudio.google.com — Run Settings, Thinking level, System Instructions, Structured Output, Grounding (per Websuche zusammengefasst, nicht direkt abgerufen).
-- https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash — Modellkarte (siehe Guide `gemini-3.8-flash`).
+## Sources
+- https://aistudio.google.com — Run Settings, Thinking level, System Instructions, Structured Output, Grounding (summarised from web search, not directly retrieved).
+- https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash — model card (see guide `gemini-3.8-flash`).

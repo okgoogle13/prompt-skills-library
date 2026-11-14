@@ -39,7 +39,7 @@ These are account-specific observations, not universal plan guarantees. Re-check
 
 ## Conventions
 
-- `(unbelegt)` in a guide is German for "unverified": flag it, never present it as established fact.
+- `(unverified)` in a guide marks an unverified claim: flag it, never present it as established fact.
 - Bare `spark` is not an alias. It asks whether Gemini Spark (host, no guide) or `muse-spark-1.3` is meant.
 
 ## Migration note

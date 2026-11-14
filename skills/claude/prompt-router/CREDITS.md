@@ -7,7 +7,7 @@ source file is copied into this folder. Packaging and dependency audit completed
 
 | Source | What is used | Licence |
 |---|---|---|
-| `~/.claude/skills/migrate-prompt/` — local copy of prompt-brain 0.8.0 by Tarek Steiß (`tarekst/prompt-brain`, manifest-stated) | Model registry and alias policy (`SKILL.md` BEGIN/END block), `model-guides/*.md` (authoritative for this skill), migration Steps 3–5, Guide-Stand and legacy-successor footer rules | MIT |
+| `~/.claude/skills/migrate-prompt/` — local copy of prompt-brain 0.8.0 by Tarek Steiß (`tarekst/prompt-brain`, manifest-stated) | Model registry and alias policy (`SKILL.md` BEGIN/END block), `model-guides/*.md` (authoritative for this skill), migration Steps 3–5, Guide status and legacy-successor footer rules | MIT |
 
 All 85 supplied model guides are packaged in `references/model-guides/`. Four OpenAI guides (`gpt-6.1-sol`, `gpt-6-luna`, `gpt-5.6-terra`, `gpt-5.6-luna`) include additive Codex CLI notes to distinguish API behavior from the CLI surface. The separate `migrate-prompt` workflow and its examples are not included; model adaptation is integrated into this skill. Guide facts were not independently re-verified in this packaging step.
 
