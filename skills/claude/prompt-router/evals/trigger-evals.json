@@ -1,0 +1,90 @@
+[
+  {
+    "query": "Optimise this prompt for Gemini 3.8 Flash high: summarise the attached board minutes into decisions, owners and dates",
+    "should_trigger": true
+  },
+  {
+    "query": "can u make this system prompt work in sonnet 5.5? it was written for gpt-5 and keeps over-explaining: 'You are a concise assistant...'",
+    "should_trigger": true
+  },
+  {
+    "query": "Migrate the prompt in ~/work/prompts/triage.md from Claude Opus 5.5 to Gemini 3.8 Flash",
+    "should_trigger": false
+  },
+  {
+    "query": "Review this prompt before I paste it into a Gem — it's going on Gemini 3.8 Flash: 'Act as my career coach and rewrite my CV bullets...'",
+    "should_trigger": true
+  },
+  {
+    "query": "is this prompt any good for qwen? Translate {{text}} to Japanese, formal register, keep product names",
+    "should_trigger": true
+  },
+  {
+    "query": "tighten this prompt before I run it in Claude Code: 'look at the auth module and fix whatever is broken'",
+    "should_trigger": true
+  },
+  {
+    "query": "Review this prompt before I use it in Claude Code: Review the git diff for security issues before pushing to production",
+    "should_trigger": true
+  },
+  {
+    "query": "Optimise this prompt for Claude Code: Write a python script to parse server logs and extract 500 errors",
+    "should_trigger": true
+  },
+  {
+    "query": "I've got a prompt that works on Opus 5.5 but our team is moving to GPT-5 — what needs to change? here it is: ...",
+    "should_trigger": true
+  },
+  {
+    "query": "Check my agent instructions for Haiku 5.5 — they're in prompts/router-agent.txt",
+    "should_trigger": true
+  },
+  {
+    "query": "optimise this SQL query, it's slow on postgres: SELECT * FROM orders WHERE customer_id IN (SELECT id FROM customers WHERE region='EU')",
+    "should_trigger": false
+  },
+  {
+    "query": "review my diff before I push — git diff main...feature/auth-refresh",
+    "should_trigger": false
+  },
+  {
+    "query": "optimise this function for speed, it's in src/utils/parse.ts and takes 2s on large inputs",
+    "should_trigger": false
+  },
+  {
+    "query": "which model is cheaper for batch summarisation, Gemini 3.8 Flash or Haiku 5.5?",
+    "should_trigger": false
+  },
+  {
+    "query": "draft an email to my landlord about the broken heater, polite but firm",
+    "should_trigger": false
+  },
+  {
+    "query": "audit CLAUDE.md in this repo and tell me what's stale",
+    "should_trigger": false
+  },
+  {
+    "query": "migrate our Postgres schema from v12 to v16, the migrations are in db/migrations",
+    "should_trigger": false
+  },
+  {
+    "query": "what's a good book on prompt engineering for a beginner?",
+    "should_trigger": false
+  },
+  {
+    "query": "turn these notes into a prompt for gemini 3.8 flash: weekly digest of our github issues, group by label, flag anything stale over 30 days",
+    "should_trigger": true
+  },
+  {
+    "query": "Create a system prompt for Sonnet 5.5 from this sketch — it's a support bot for our booking app, polite, escalates refunds to a human, never promises dates",
+    "should_trigger": true
+  },
+  {
+    "query": "Optimise this prompt for GitHub Copilot: Create a custom React hook for debouncing inputs",
+    "should_trigger": true
+  },
+  {
+    "query": "write a short story about a lighthouse keeper who finds a message in a bottle",
+    "should_trigger": false
+  }
+]
