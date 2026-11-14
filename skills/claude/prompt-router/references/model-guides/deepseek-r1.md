@@ -11,51 +11,51 @@ successor: deepseek-v4.1-flash
 # DeepSeek-R1
 
 ## Reasoning / Thinking
-- **Typ: immer an (Reasoning-Modell).** DeepSeek-R1 ist ein dediziertes Reasoning-Modell, das vor der eigentlichen Antwort eine Chain-of-Thought (CoT) in einem `<think>...</think>`-Block erzeugt. Es gibt keinen Schalter zum vollständigen Abschalten des Thinkings.
-- **Kein System-Prompt.** Offizielle Empfehlung: „Avoid adding a system prompt; all instructions should be contained within the user prompt." Sämtliche Anweisungen gehören also in den User-Prompt, nicht in eine System-Rolle.
-- **Kein few-shot.** Laut Paper ist R1 promptsensitiv: „Few-shot prompting consistently degrades its performance." Empfehlung: „We recommend users directly describe the problem and specify the output format using a zero-shot setting for optimal results."
-- **Temperatur-Empfehlung: 0.5–0.7, empfohlen 0.6** („to prevent endless repetitions or incoherent outputs"); im Paper wird zur Evaluation `temperature = 0.6` und `top_p = 0.95` verwendet.
-- **`<think>`-Start erzwingen.** „To ensure that the model engages in thorough reasoning, we recommend enforcing the model to initiate its response with `<think>\n` at the beginning of every output." Hintergrund: Die R1-Serie umgeht teils das Thinking, indem sie einen leeren Block (`<think>\n\n</think>`) ausgibt, was die Leistung verschlechtert.
-- **Mathe-Prompts.** Für mathematische Aufgaben wird ein expliziter Hinweis empfohlen: „Please reason step by step, and put your final answer within `\boxed{}`."
-- **API: `reasoning_content`.** Über die API (Modellname `deepseek-reasoner`) liefert das Modell die CoT separat im Feld `reasoning_content` (gleiche Strukturebene wie `content`, das die finale Antwort enthält). In Folge-Runden wurde die CoT der Vorrunden NICHT in den Kontext übernommen; das Feld `reasoning_content` musste laut früherer Reasoning-Doku vor dem nächsten Request aus der Message entfernt werden, sonst gab es einen 400-Fehler (unbelegt — die Seite ist offline; die heutige Thinking-Mode-Doku sagt für Requests ohne `tools`, dass zurückgereichtes `reasoning_content` ignoriert wird).
-- **Hinweis zur API-Identität:** Die API-ID `deepseek-reasoner` ist seit 2026-07-24 15:59 UTC abgeschaltet (zuletzt auf den Thinking-Modus von `deepseek-v4-flash` geroutet); R1 ist nur noch als Open-Weights-Modell nutzbar. Alias-Semantik laut Change Log: `deepseek-reasoner` = R1 (ab 2025-01-20), R1-0528 (ab 2025-05-28), Thinking-Modus von V3.1/V3.1-Terminus/V3.2-Exp/V3.2 (ab 2025-08-21) und V4-Flash (ab 2026-04-24) — Prompts nach 2025-08-21 zielten auf ein Hybrid-Modell mit System-Prompt- und Tool-Support. Die API-Angaben in diesem Guide beschreiben den historischen Endpunkt. Das ursprüngliche Open-Weights-Modell „DeepSeek-R1" (arXiv 2501.12948, HF-Modelkarte) ist davon zu unterscheiden; die obigen Reasoning-Empfehlungen stammen aus dessen Modelkarte/Paper.
+- **Type: always on (reasoning model).** DeepSeek-R1 is a dedicated reasoning model that produces a chain of thought (CoT) in a `<think>...</think>` block before the actual answer. There is no switch to turn thinking off completely.
+- **No system prompt.** Official recommendation: "Avoid adding a system prompt; all instructions should be contained within the user prompt." All instructions therefore belong in the user prompt, not in a system role.
+- **No few-shot.** According to the paper, R1 is prompt-sensitive: "Few-shot prompting consistently degrades its performance." Recommendation: "We recommend users directly describe the problem and specify the output format using a zero-shot setting for optimal results."
+- **Temperature recommendation: 0.5–0.7, 0.6 recommended** ("to prevent endless repetitions or incoherent outputs"); the paper uses `temperature = 0.6` and `top_p = 0.95` for evaluation.
+- **Force a `<think>` start.** "To ensure that the model engages in thorough reasoning, we recommend enforcing the model to initiate its response with `<think>\n` at the beginning of every output." Background: the R1 series sometimes bypasses thinking by emitting an empty block (`<think>\n\n</think>`), which degrades performance.
+- **Math prompts.** For math tasks an explicit hint is recommended: "Please reason step by step, and put your final answer within `\boxed{}`."
+- **API: `reasoning_content`.** Via the API (model name `deepseek-reasoner`) the model returns the CoT separately in the field `reasoning_content` (same structural level as `content`, which contains the final answer). In follow-up rounds the CoT of earlier rounds was NOT carried into the context; according to earlier reasoning docs, the `reasoning_content` field had to be removed from the message before the next request, otherwise a 400 error occurred (unverified — the page is offline; today's thinking-mode docs say that for requests without `tools`, returned `reasoning_content` is ignored).
+- **Note on API identity:** the API ID `deepseek-reasoner` has been retired since 2026-07-24 15:59 UTC (last routed to the thinking mode of `deepseek-v4-flash`); R1 is only usable now as an open-weights model. Alias semantics per the change log: `deepseek-reasoner` = R1 (from 2025-01-20), R1-0528 (from 2025-05-28), thinking mode of V3.1/V3.1-Terminus/V3.2-Exp/V3.2 (from 2025-08-21) and V4-Flash (from 2026-04-24) — prompts after 2025-08-21 targeted a hybrid model with system prompt and tool support. The API details in this guide describe the historical endpoint. The original open-weights model "DeepSeek-R1" (arXiv 2501.12948, HF model card) must be distinguished from this; the reasoning recommendations above come from its model card/paper.
 
-## Prompting-Stil
-- **Mäßig präskriptiv, aber mit klaren Regeln.** DeepSeek gibt wenige, dafür harte Vorgaben: kein System-Prompt, kein few-shot, Temperatur im engen Band 0.6, Ausgabeformat explizit im User-Prompt verlangen.
-- **Empfohlen:** Aufgabe direkt und in einfacher Sprache beschreiben (zero-shot); gewünschtes Ausgabeformat ausdrücklich angeben; bei Mathe `\boxed{}`-Direktive ergänzen; Antwort mit `<think>\n` beginnen lassen.
-- **Abgeraten:** Few-shot-Beispiele („consistently degrades performance"), System-Prompts, sehr hohe oder sehr niedrige Temperatur (außerhalb 0.5–0.7).
-- **Evaluation:** Mehrere Durchläufe fahren und mitteln, da das Modell promptsensitiv ist.
+## Prompting style
+- **Moderately prescriptive, but with clear rules.** DeepSeek gives few but firm requirements: no system prompt, no few-shot, temperature in the narrow band around 0.6, output format explicitly requested in the user prompt.
+- **Recommended:** describe the task directly and in plain language (zero-shot); state the desired output format explicitly; for math add the `\boxed{}` directive; have the answer begin with `<think>\n`.
+- **Discouraged:** few-shot examples ("consistently degrades performance"), system prompts, very high or very low temperature (outside 0.5–0.7).
+- **Evaluation:** run several passes and average, since the model is prompt-sensitive.
 
-## Stärken & Schwächen (prompt-relevant)
-- **Stärken:** Starkes mehrstufiges Reasoning (Mathematik, Code, Logik) dank RL-Training; profitiert von schlanken, direkten Zero-Shot-Anweisungen; liefert nachvollziehbare CoT, die über `reasoning_content` getrennt abgreifbar ist.
-- **Schwächen / Fallstricke:** Promptsensitiv — few-shot und überladener Kontext schaden eher; neigt bei manchen Anfragen dazu, das Thinking zu überspringen (leerer `<think>`-Block); kann bei Temperatur außerhalb 0.5–0.7 in Wiederholungen/Inkohärenz kippen; System-Prompt laut Modelkarte zu vermeiden.
-- **API-Einschränkungen (historisch, API `deepseek-reasoner`):** Original-R1-API: kein Function Calling, kein FIM, `logprobs` → Fehler (unbelegt — die frühere Reasoning-Doku ist offline); laut Change Log brachte das R1-0528-Upgrade „JSON Output & Function Calling Support".
+## Strengths & weaknesses (prompt-relevant)
+- **Strengths:** strong multistep reasoning (mathematics, code, logic) thanks to RL training; benefits from lean, direct zero-shot instructions; produces traceable CoT that can be read separately via `reasoning_content`.
+- **Weaknesses / pitfalls:** prompt-sensitive — few-shot and overloaded context tend to hurt; for some requests it tends to skip thinking (empty `<think>` block); at temperatures outside 0.5–0.7 it can slip into repetition/incoherence; a system prompt should be avoided according to the model card.
+- **API limitations (historical, API `deepseek-reasoner`):** original R1 API: no function calling, no FIM, `logprobs` → error (unverified — the earlier reasoning docs are offline); according to the change log, the R1-0528 upgrade brought "JSON Output & Function Calling Support".
 
-## Output- & Format-Konventionen
-- **`<think>...</think>` + Antwort.** Roh-Output enthält den CoT-Block, gefolgt von der finalen Antwort. Über die API wird die CoT als `reasoning_content` ausgeliefert, die Endantwort als `content`.
-- **`max_tokens`** (historisch, API `deepseek-reasoner`) umfasste die CoT mit. Default 32K Tokens, Maximum 64K Tokens (unbelegt — die frühere Reasoning-Doku ist offline).
-- **Kontextlänge** des Modells: 128K Tokens (HF-Modelkarte).
-- **Mathe-Ausgabe** in `\boxed{}`, wenn per Direktive angefordert.
-- **Nicht wirksame Sampling-Parameter über die API (historisch, API `deepseek-reasoner`; unbelegt — die frühere Reasoning-Doku ist offline):** `temperature`, `top_p`, `presence_penalty`, `frequency_penalty` lösen keinen Fehler aus, haben aber keine Wirkung; `logprobs`, `top_logprobs` lösen einen Fehler aus. (Die Temperatur-Empfehlung 0.6 gilt für lokale/Open-Weights-Nutzung bzw. Drittanbieter-Inferenz.)
+## Output & format conventions
+- **`<think>...</think>` + answer.** Raw output contains the CoT block, followed by the final answer. Via the API the CoT is delivered as `reasoning_content`, the final answer as `content`.
+- **`max_tokens`** (historical, API `deepseek-reasoner`) included the CoT. Default 32K tokens, maximum 64K tokens (unverified — the earlier reasoning docs are offline).
+- **Context length** of the model: 128K tokens (HF model card).
+- **Math output** in `\boxed{}` when requested via directive.
+- **Ineffective sampling parameters via the API (historical, API `deepseek-reasoner`; unverified — the earlier reasoning docs are offline):** `temperature`, `top_p`, `presence_penalty`, `frequency_penalty` do not raise an error but have no effect; `logprobs`, `top_logprobs` raise an error. (The 0.6 temperature recommendation applies to local/open-weights use or third-party inference.)
 
-## Migrations-Hinweise
-- **WEG von DeepSeek-R1 (zu Nicht-Reasoning-/Instruct-Modellen):**
-  - System-Prompt wieder einführen: Bei Zielmodellen mit System-Rolle Anweisungen aus dem User-Prompt in einen System-Prompt heben.
-  - Few-shot reaktivieren: Bei vielen Instruct-Modellen helfen Beispiele wieder.
-  - Thinking-Spezifika entfernen: `<think>\n`-Erzwingung, `\boxed{}`-Direktive und das Parsen von `reasoning_content` entfernen bzw. anpassen.
-  - Temperatur neu wählen: Das enge Band 0.6 ist R1-spezifisch; Zielmodell nach dessen eigenen Defaults konfigurieren.
-- **ZU DeepSeek-R1 (von Instruct-/Chat-Modellen):**
-  - System-Prompt auflösen: Inhalte des System-Prompts in den User-Prompt verschieben (Modelkarte: „Avoid adding a system prompt").
-  - Few-shot entfernen: Beispielblöcke streichen, stattdessen Aufgabe + Ausgabeformat direkt (zero-shot) beschreiben.
-  - Temperatur auf 0.5–0.7 (0.6) setzen, top_p ~0.95.
-  - Output mit `<think>\n` beginnen lassen; bei Mathe `\boxed{}`-Direktive ergänzen.
-  - Mehrrunden-Handling anpassen: CoT der Vorrunde nicht in den Kontext zurückspielen; nur für den historischen `deepseek-reasoner`-Endpunkt: `reasoning_content` vor dem nächsten API-Call entfernen (sonst 400 — unbelegt, Doku offline).
-  - Nur für Original-R1: Function Calling / FIM nicht nutzen (unbelegt, s. o.; R1-0528 bekam laut Change Log Function Calling); falls genutzt, durch Prompt-Formatierung ersetzen.
+## Migration notes
+- **AWAY FROM DeepSeek-R1 (to non-reasoning/instruct models):**
+  - Reintroduce a system prompt: for target models with a system role, move instructions from the user prompt into a system prompt.
+  - Reactivate few-shot: for many instruct models, examples help again.
+  - Remove thinking-specific elements: remove or adapt the `<think>\n` enforcement, the `\boxed{}` directive and the parsing of `reasoning_content`.
+  - Choose temperature anew: the narrow band around 0.6 is R1-specific; configure the target model with its own defaults.
+- **MIGRATING TO DeepSeek-R1 (from instruct/chat models):**
+  - Dissolve the system prompt: move the contents of the system prompt into the user prompt (model card: "Avoid adding a system prompt").
+  - Remove few-shot: delete example blocks and instead describe the task + output format directly (zero-shot).
+  - Set temperature to 0.5–0.7 (0.6), top_p ~0.95.
+  - Have the output begin with `<think>\n`; for math add the `\boxed{}` directive.
+  - Adjust multi-round handling: do not feed the CoT of earlier rounds back into the context; only for the historical `deepseek-reasoner` endpoint: remove `reasoning_content` before the next API call (otherwise 400 — unverified, docs offline).
+  - Original R1 only: do not use function calling / FIM (unverified, see above; R1-0528 got function calling according to the change log); if used, replace with prompt formatting.
 
-## Quellen
-- https://huggingface.co/deepseek-ai/DeepSeek-R1 — Offizielle Modelkarte: Usage Recommendations (kein System-Prompt, Temperatur 0.5–0.7/0.6, `<think>\n`-Erzwingung, leerer-Think-Block-Hinweis, `\boxed{}`-Direktive), Kontextlänge 128K.
-- https://github.com/deepseek-ai/DeepSeek-R1/blob/main/README.md — Identischer Usage-Recommendations-Abschnitt im offiziellen Repo.
-- https://arxiv.org/html/2501.12948v1 — DeepSeek-R1-Paper (§5): „it is sensitive to prompts", „Few-shot prompting consistently degrades its performance", zero-shot-Empfehlung; Evaluations-Setup: `temperature = 0.6`, `top_p = 0.95`.
-- https://api-docs.deepseek.com/guides/thinking_mode — Nachfolgeseite der offline genommenen Reasoning-Doku (`guides/reasoning_model`): `reasoning_content` neben `content`, ohne `tools` wird zurückgereichtes `reasoning_content` ignoriert, im Thinking-Modus wirkungslose Sampling-Parameter. Die R1-spezifischen API-Angaben (32K/64K, `logprobs`-Fehler, 400 bei zurückgereichtem `reasoning_content`) belegt sie nicht.
-- https://api-docs.deepseek.com/news/news260424 — Abschaltung von `deepseek-reasoner` am 2026-07-24 15:59 UTC, bis dahin Routing auf den Thinking-Modus von `deepseek-v4-flash`.
-- https://api-docs.deepseek.com/updates — Alias-Historie `deepseek-reasoner` (R1, R1-0528, V3.1 bis V3.2, V4-Flash), R1-0528 mit „JSON Output & Function Calling Support".
+## Sources
+- https://huggingface.co/deepseek-ai/DeepSeek-R1 — official model card: usage recommendations (no system prompt, temperature 0.5–0.7/0.6, `<think>\n` enforcement, empty-think-block note, `\boxed{}` directive), context length 128K.
+- https://github.com/deepseek-ai/DeepSeek-R1/blob/main/README.md — identical usage recommendations section in the official repo.
+- https://arxiv.org/html/2501.12948v1 — DeepSeek-R1 paper (§5): "it is sensitive to prompts", "Few-shot prompting consistently degrades its performance", zero-shot recommendation; evaluation setup: `temperature = 0.6`, `top_p = 0.95`.
+- https://api-docs.deepseek.com/guides/thinking_mode — successor page to the taken-offline reasoning doc (`guides/reasoning_model`): `reasoning_content` alongside `content`, without `tools` returned `reasoning_content` is ignored, sampling parameters with no effect in thinking mode. It does not confirm the R1-specific API details (32K/64K, `logprobs` error, 400 on returned `reasoning_content`).
+- https://api-docs.deepseek.com/news/news260424 — shutdown of `deepseek-reasoner` on 2026-07-24 15:59 UTC, until then routing to the thinking mode of `deepseek-v4-flash`.
+- https://api-docs.deepseek.com/updates — alias history of `deepseek-reasoner` (R1, R1-0528, V3.1 to V3.2, V4-Flash), R1-0528 with "JSON Output & Function Calling Support".

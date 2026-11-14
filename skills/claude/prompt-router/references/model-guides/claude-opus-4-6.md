@@ -11,47 +11,47 @@ successor: claude-opus-5-5
 # Claude Opus 4.6
 
 ## Reasoning / Thinking
-- Typ: **adaptiv (Extended deprecated), per Default aus**. Ohne `thinking`-Feld kein Thinking; empfohlen ist `thinking: {type: "adaptive"}`. `thinking: {type: "enabled", budget_tokens: N}` funktioniert noch, ist aber deprecated; `{type: "disabled"}` ist erlaubt. Kein `thinking.type` wird mit 400 abgelehnt.
-- Tiefensteuerung über `output_config.effort`: `low | medium | high | max`, Default `high`. `xhigh` ist für Opus 4.6 nicht gelistet.
-- `thinking.display` ist standardmäßig `"summarized"`; die ersten Zeilen des Thinking-Outputs sind ausführlicher (für Prompt-Engineering nützlich).
-- Mehr Vorab-Exploration als Vorgänger, besonders bei hohem effort: sammelt teils ungefragt viel Kontext oder verfolgt mehrere Recherchestränge; kann ausgiebig denken und so Thinking-Tokens und Latenz aufblähen. Gegenmittel: Reasoning per Anweisung begrenzen oder effort senken. Eine harte Kostenobergrenze via `budget_tokens` geht noch, ist aber deprecated — besser effort senken oder `max_tokens` als hartes Limit nutzen.
-- Interleaved Thinking ist mit adaptivem Thinking automatisch (kein Beta-Header).
-- Sampling-Parameter: Die 400-Regel für Nicht-Default-Werte gilt erst ab Claude 4.7. Auf Opus 4.6 gilt die Einschränkung nur bei aktivem Thinking: `temperature`/`top_k` sind dann inkompatibel, `top_p` nur zwischen 0,95 und 1.
+- Type: **adaptive (extended deprecated), off by default**. Without a `thinking` field there is no thinking; `thinking: {type: "adaptive"}` is recommended. `thinking: {type: "enabled", budget_tokens: N}` still works but is deprecated; `{type: "disabled"}` is allowed. No `thinking.type` is rejected with 400.
+- Depth control via `output_config.effort`: `low | medium | high | max`, default `high`. `xhigh` is not listed for Opus 4.6.
+- `thinking.display` defaults to `"summarized"`; the first lines of the thinking output are more detailed (useful for prompt engineering).
+- More upfront exploration than predecessors, especially at high effort: sometimes gathers a lot of context unasked or pursues several research threads; can think at length, inflating thinking tokens and latency. Countermeasures: limit reasoning by instruction or lower effort. A hard cost cap via `budget_tokens` still works but is deprecated — better lower effort or use `max_tokens` as the hard limit.
+- Interleaved thinking is automatic with adaptive thinking (no beta header).
+- Sampling parameters: the 400 rule for non-default values only applies from Claude 4.7. On Opus 4.6 the restriction applies only with thinking active: `temperature`/`top_k` are then incompatible, `top_p` only between 0.95 and 1.
 
-## Prompting-Stil
-- **Aggressive Sprache abmildern**: Opus 4.6 reagiert stärker auf den System-Prompt als frühere Modelle; gegen Undertriggering geschriebene Prompts führen zu Overtriggering. „CRITICAL: You MUST use this tool when…" → „Use this tool when…".
-- **Gezielte statt pauschaler Defaults**: „Default to using [tool]" durch „Use [tool] when it would enhance your understanding of the problem" ersetzen; Over-Prompting wie „If in doubt, use [tool]" streichen.
-- **Entscheidungsdisziplin**: Gegen ausuferndes Abwägen hilft eine Anweisung, einen Ansatz zu wählen und dabei zu bleiben, solange keine widersprechende Information auftaucht.
-- **Sub-Agenten deckeln**: starke Neigung, Sub-Agenten auch dort zu starten, wo ein direkter Weg (z. B. ein `grep`) reicht — explizit sagen, wann Delegation sinnvoll ist und wann nicht.
-- **Overengineering bremsen**: Tendenz zu Zusatzdateien, unnötigen Abstraktionen und ungefragter Flexibilität — Anweisung ergänzen, Lösungen minimal zu halten.
-- **Riskante Aktionen absichern**: Ohne Vorgabe kann das Modell schwer umkehrbare Aktionen ausführen (Dateien löschen, Force-Push, Posten auf externen Diensten). Bestätigungspflicht für destruktive, schwer umkehrbare oder für andere sichtbare Aktionen in den Prompt schreiben.
-- **Kein Assistant-Prefill**: ab Opus 4.6 liefert ein vorbefüllter letzter Assistant-Turn 400 — Structured Outputs oder System-Prompt-Anweisungen nutzen.
+## Prompting style
+- **Soften aggressive language**: Opus 4.6 responds more strongly to the system prompt than earlier models; prompts written against undertriggering lead to overtriggering. "CRITICAL: You MUST use this tool when…" → "Use this tool when…".
+- **Targeted instead of blanket defaults**: replace "Default to using [tool]" with "Use [tool] when it would enhance your understanding of the problem"; remove over-prompting such as "If in doubt, use [tool]".
+- **Decision discipline**: against sprawling deliberation, an instruction to choose one approach and stick with it unless contradicting information appears helps.
+- **Cap sub-agents**: strong tendency to start sub-agents even where a direct path (e.g. a `grep`) is enough — state explicitly when delegation makes sense and when it does not.
+- **Curb overengineering**: tendency toward extra files, unnecessary abstractions and unrequested flexibility — add an instruction to keep solutions minimal.
+- **Safeguard risky actions**: without guidance the model may run hard-to-reverse actions (deleting files, force-pushes, posting to external services). Write a confirmation requirement into the prompt for destructive, hard-to-reverse or otherwise visible actions.
+- **No assistant prefill**: from Opus 4.6 a prefilled last assistant turn returns 400 — use Structured Outputs or system prompt instructions.
 
-## Stärken & Schwächen (prompt-relevant)
-- Stärken: verbesserte Vision, besonders bei Bildverarbeitung und Datenextraktion mit mehreren Bildern im Kontext; zuverlässigeres Lesen von Screenshots und UI-Elementen bei Computer Use; baut komplexe Web-Apps mit starkem Frontend-Design.
-- Schwächen/Eigenheiten: ohne Design-Vorgaben generische Muster („AI slop"-Ästhetik); Overtriggering bei Tools, Sub-Agenten-Übernutzung, Overengineering, Overthinking (s. o.).
-- Reliable Knowledge Cutoff Mai 2025 (Training-Data-Cutoff August 2025).
+## Strengths & weaknesses (prompt-relevant)
+- Strengths: improved vision, especially for image processing and data extraction across multiple images in context; more reliable reading of screenshots and UI elements in computer use; builds complex web apps with strong frontend design.
+- Weaknesses/quirks: without design guidance, generic patterns ("AI slop" aesthetic); overtriggering on tools, sub-agent overuse, overengineering, overthinking (see above).
+- Reliable knowledge cutoff May 2025 (training data cutoff August 2025).
 
-## Output- & Format-Konventionen
-- 1M Kontextfenster, 128K Output-Tokens synchron; über die Message-Batches-API bis 300K mit Beta-Header `output-300k-2026-03-24`. Input Text und Bilder, Output Text.
-- Tokenizer der Generation vor Opus 4.7: 1M Tokens entsprechen rund 750k Wörtern; dieselben Texte brauchen ab Opus 4.7 bis zu ~35 % mehr Tokens.
-- Kein Prefill; feste Formate über Structured Outputs (`output_config.format`) oder System-Prompt.
-- Tool-Call-Argumente können anders escaped sein als bei Vorgängern (Unicode, Slash) — `input` immer per JSON-Parser lesen, nie als Raw-String matchen.
-- Forced Tool Use (`tool_choice` `any`/`tool`) funktioniert mit adaptivem Thinking, mit Extended Thinking nur `auto`/`none`.
-- Bedrock nur über die InvokeModel-Integration (`anthropic.claude-opus-4-6-v1`).
+## Output & format conventions
+- 1M context window, 128K output tokens synchronously; via the Message Batches API up to 300K with beta header `output-300k-2026-03-24`. Input text and images, output text.
+- Tokenizer of the generation before Opus 4.7: 1M tokens correspond to roughly 750k words; the same texts need up to ~35% more tokens from Opus 4.7 onward.
+- No prefill; fixed formats via Structured Outputs (`output_config.format`) or the system prompt.
+- Tool-call arguments may be escaped differently than in predecessors (Unicode, slashes) — always read `input` with a JSON parser, never match it as a raw string.
+- Forced tool use (`tool_choice` `any`/`tool`) works with adaptive thinking; with extended thinking only `auto`/`none`.
+- Bedrock only via the InvokeModel integration (`anthropic.claude-opus-4-6-v1`).
 
-## Migrations-Hinweise
-- **Lifecycle**: Legacy, Status Active; Retirement nicht vor dem 5. Februar 2027. Anthropic empfiehlt die Migration zu Claude Opus 5.5.
-- **VON Opus 4.6 zu Opus 4.7+/Opus 5.5**: `budget_tokens` liefert ab 4.7 400 → adaptive plus effort, effort-Sweep statt Budget-Übersetzung; `temperature`/`top_p`/`top_k` entfernen; `display` wird stillschweigend `omitted` → bei UI-Anzeige `display: "summarized"` setzen; neuer Tokenizer (bis ~1,35×): `max_tokens`, Compaction-Trigger und clientseitige Token-Schätzungen neu prüfen; Bild-Tokens bis ~3× höher, Koordinaten-Skalierung entfernen; erzwungenes Progress-Scaffolding streichen; Cyber-Safeguards einplanen. Für Opus 5.5 zusätzlich: Thinking immer an, effort-Default `medium`, Forced Tool Use abgelehnt.
-- **VON Opus 4.6 zu Opus 4.5**: `adaptive` → 400, nur `budget_tokens`; Kontext 200K, Output 64K, kein `max`/`xhigh`; Prefill wieder erlaubt (nur ohne aktives Thinking).
-- **ZU Opus 4.6 migrieren** (von 4.5 oder älter): Prefills entfernen; Tool-Input per JSON-Parser lesen; auf adaptives Thinking plus effort umstellen; aggressive Tool-Sprache und Anti-Laziness-Prompts zurückfahren; Minimal-, Sub-Agenten- und Bestätigungsregeln ergänzen.
+## Migration notes
+- **Lifecycle**: legacy, status Active; retirement not before 5 Feb 2027. Anthropic recommends migrating to Claude Opus 5.5.
+- **AWAY FROM Opus 4.6 to Opus 4.7+/Opus 5.5**: `budget_tokens` returns 400 from 4.7 → adaptive plus effort, run an effort sweep instead of translating the budget; remove `temperature`/`top_p`/`top_k`; `display` silently becomes `omitted` → set `display: "summarized"` for UI display; new tokenizer (up to ~1.35×): recheck `max_tokens`, compaction triggers and client-side token estimates; image tokens up to ~3× higher, remove coordinate scaling; remove forced progress scaffolding; plan for cyber safeguards. For Opus 5.5 additionally: thinking always on, effort default `medium`, forced tool use rejected.
+- **AWAY FROM Opus 4.6 to Opus 4.5**: `adaptive` → 400, only `budget_tokens`; context 200K, output 64K, no `max`/`xhigh`; prefill allowed again (only without active thinking).
+- **MIGRATING TO Opus 4.6** (from 4.5 or older): remove prefills; read tool input with a JSON parser; switch to adaptive thinking plus effort; scale back aggressive tool language and anti-laziness prompts; add minimal-change, sub-agent and confirmation rules.
 
-## Quellen
-- https://platform.claude.com/docs/en/models/opus-4-6/overview — Legacy-Status, Model-ID `claude-opus-4-6`, 1M Kontext, 128K Output (300K Batch-Beta), Thinking „Adaptive (extended deprecated)", effort-Default `high`, Knowledge Cutoff Mai 2025, Retirement nicht vor 05.02.2027, Bedrock-InvokeModel-ID, Migrationsempfehlung zu Opus 5.5.
-- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-46 — Breaking Changes ab Opus 4.7 (`budget_tokens`, Sampling-Parameter, Thinking-Display, Tokenizer, Prefill seit 4.6), Verhaltensänderungen (Progress-Updates, Cyber-Safeguards, High-Res-Bilder), Tool-Parameter-Escaping ab 4.6.
-- https://platform.claude.com/docs/en/about-claude/model-deprecations — Status Active, Retirement „Not sooner than February 5, 2027"; Sampling-Parameter-400 erst ab Claude 4.7.
-- https://platform.claude.com/docs/en/about-claude/models/overview — Opus 4.6 in der Liste „Legacy models (still available)"; Extended Thinking auf Opus 4.6 deprecated; Wörter-pro-Token vor dem Opus-4.7-Tokenizer.
-- https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices — Opus-4.6-spezifisch: System-Prompt-Responsiveness/Overtriggering, Overthinking und Vorab-Exploration, `budget_tokens` deprecated, Sub-Agenten-Neigung, Overengineering, riskante Aktionen, Vision, Frontend-Design.
-- https://platform.claude.com/docs/en/build-with-claude/effort — effort-Stufen (`max` ja, `xhigh` nicht für Opus 4.6), Default `high`.
-- https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting — Opus 4.6: adaptiv plus Extended (deprecated), Default aus, keine abgelehnten Thinking-Typen.
-- https://platform.claude.com/docs/en/build-with-claude/thinking — `display`-Default `summarized` auf Opus 4.6, Sampling-Regeln älterer Modelle, Prefill ab Claude 4.6 → 400, Forced Tool Use nur mit adaptivem Thinking.
+## Sources
+- https://platform.claude.com/docs/en/models/opus-4-6/overview — legacy status, model ID `claude-opus-4-6`, 1M context, 128K output (300K batch beta), thinking "Adaptive (extended deprecated)", effort default `high`, knowledge cutoff May 2025, retirement not before 5 Feb 2027, Bedrock InvokeModel ID, migration recommendation to Opus 5.5.
+- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-46 — breaking changes from Opus 4.7 (`budget_tokens`, sampling parameters, thinking display, tokenizer, prefill since 4.6), behavior changes (progress updates, cyber safeguards, high-res images), tool-parameter escaping from 4.6.
+- https://platform.claude.com/docs/en/about-claude/model-deprecations — status Active, retirement "Not sooner than February 5, 2027"; sampling-parameter 400 only from Claude 4.7.
+- https://platform.claude.com/docs/en/about-claude/models/overview — Opus 4.6 in the list "Legacy models (still available)"; extended thinking on Opus 4.6 deprecated; words per token before the Opus 4.7 tokenizer.
+- https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices — Opus 4.6-specific: system prompt responsiveness/overtriggering, overthinking and upfront exploration, `budget_tokens` deprecated, sub-agent tendency, overengineering, risky actions, vision, frontend design.
+- https://platform.claude.com/docs/en/build-with-claude/effort — effort levels (`max` yes, `xhigh` not for Opus 4.6), default `high`.
+- https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting — Opus 4.6: adaptive plus extended (deprecated), default off, no rejected thinking types.
+- https://platform.claude.com/docs/en/build-with-claude/thinking — `display` default `summarized` on Opus 4.6, sampling rules of older models, prefill from Claude 4.6 → 400, forced tool use only with adaptive thinking.

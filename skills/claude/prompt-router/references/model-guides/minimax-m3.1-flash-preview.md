@@ -10,43 +10,43 @@ status: current
 # MiniMax-M3.1-Flash-Preview
 
 ## Reasoning / Thinking
-- Typ: **Thinking immer an, Tiefe per effort-Leiter**. „Thinking is on by default and needs no configuration"; es lässt sich nicht abschalten. `thinking: {"type": "disabled"}` bzw. effort `none` liefern HTTP 400 mit `model "MiniMax-M3.1-Flash-Preview" requires adaptive thinking; thinking.type="disabled" (including reasoning.effort=none) is not allowed (2013)`. Wird `thinking` gesendet, muss es `{"type": "adaptive"}` sein.
-- Tiefe: `low`, `medium`, `high`, `xhigh`, `max` — höhere Stufen denken gründlicher, erzeugen mehr Output-Tokens und mehr Latenz. **Default ohne Angabe ist `max`.** Feldname je Protokoll: Anthropic-kompatibel `output_config.effort`, OpenAI-kompatibel `reasoning_effort`, OpenAI Responses `reasoning.effort`. Latenz/Tokens senkt man laut Vendor über eine niedrigere Stufe, nicht über Abschalten.
-- Rückgabe des Thinkings: Anthropic-Pfad als `thinking`-Content-Block (mit `signature`); OpenAI-Pfad **immer** getrennt in `reasoning_content`, `content` enthält nur die Antwort. `reasoning_split=false` (Thinking als `<think>` in `content`) wird für dieses Modell derzeit nicht unterstützt.
-- Multi-Turn: Thinking-Blöcke unverändert zurückgeben („preserve them unchanged in later turns, especially in tool-use conversations"); auf dem OpenAI-Pfad muss `reasoning_content` vollständig erhalten bleiben. Die OpenAI-SDK-Seite verweist für Tool Use und Interleaved Thinking dieses Modells auf den M3-Tool-Use-Guide.
+- Type: **thinking always on, depth via effort ladder**. "Thinking is on by default and needs no configuration"; it cannot be switched off. `thinking: {"type": "disabled"}` or effort `none` returns HTTP 400 with `model "MiniMax-M3.1-Flash-Preview" requires adaptive thinking; thinking.type="disabled" (including reasoning.effort=none) is not allowed (2013)`. If `thinking` is sent, it must be `{"type": "adaptive"}`.
+- Depth: `low`, `medium`, `high`, `xhigh`, `max` — higher levels think more thoroughly, produce more output tokens and more latency. **Default when unspecified is `max`.** Field name per protocol: Anthropic-compatible `output_config.effort`, OpenAI-compatible `reasoning_effort`, OpenAI Responses `reasoning.effort`. Per the vendor, latency/tokens are reduced via a lower level, not by switching off.
+- Return of thinking: Anthropic path as a `thinking` content block (with `signature`); OpenAI path **always** separated into `reasoning_content`, `content` contains only the answer. `reasoning_split=false` (thinking as `<think>` in `content`) is currently not supported for this model.
+- Multi-turn: return thinking blocks unchanged ("preserve them unchanged in later turns, especially in tool-use conversations"); on the OpenAI path `reasoning_content` must be kept in full. The OpenAI SDK page refers this model's tool use and interleaved thinking to the M3 tool-use guide.
 
-## Prompting-Stil
-- **Keine modellspezifische Prompting-Seite.** Die frühere „M-series Usage Tips"-Seite ist entfernt (HTTP 404, Stand 2026-10-13); Empfehlungen wie „Aufgabe ans Ende" oder „Sektionen labeln" sind für dieses Modell (unbelegt).
-- Offiziell vorhanden sind nur die allgemeinen „Better Prompts"-Hinweise der MiniMax-Code-App, in der das Modell debütierte: gewünschtes Ergebnis beschreiben, nicht nur Schritte; bei Coding-Aufgaben Stack, Constraints und Validierungskriterien nennen; bei Research Ausgabeformat und Quellenanforderungen angeben. Das sind Produkt-, keine Modellhinweise.
-- Tiefensteuerung gehört in den effort-Parameter, nicht in Prompt-Text; ob zusätzliche „denke gründlich"-Anweisungen bei hohem effort etwas bewirken, ist (unbelegt).
+## Prompting style
+- **No model-specific prompting page.** The former "M-series Usage Tips" page has been removed (HTTP 404, as of 2026-10-13); recommendations such as "task at the end" or "label sections" are (unverified) for this model.
+- Officially there are only the general "Better Prompts" notes of the MiniMax Code app, in which the model debuted: describe the desired result, not just steps; for coding tasks name stack, constraints and validation criteria; for research give output format and source requirements. These are product notes, not model notes.
+- Depth control belongs in the effort parameter, not in prompt text; whether additional "think thoroughly" instructions do anything at high effort is (unverified).
 
-## Stärken & Schwächen (prompt-relevant)
-- Laut Vendor das neueste M-Series-Sprachmodell „for agentic reasoning, tool use, coding, and long-context tasks"; „Frontier multimodal coding model with 1M context window and tunable thinking depth". Input Text, Bild und Video (wie M3).
-- **Preview mit eingeschränktem Zugang**: „available only through M Plan and MiniMax Code for now"; Aufruf mit Subscription Key, kein Pay-as-you-go-Preis veröffentlicht. Die M-Plan-FAQ empfiehlt Pay-as-you-go für Produktion — dort ist M3 das Gegenstück.
-- Kosten-/Quotenhebel: je höher die Thinking-Tiefe, desto mehr Thinking-Content und desto mehr M-Plan-Verbrauch — der `max`-Default ist die teuerste Stufe.
-- Nicht veröffentlicht: Parameterzahl, Benchmarks, Output-Geschwindigkeit, Knowledge Cutoff (unbelegt). Passives Prompt Caching listet MiniMax nur für M3 und M2.x, nicht für dieses Modell (unbelegt); explizites `cache_control` ebenfalls nur für M2.x.
+## Strengths & weaknesses (prompt-relevant)
+- Per the vendor the newest M-series language model "for agentic reasoning, tool use, coding, and long-context tasks"; "Frontier multimodal coding model with 1M context window and tunable thinking depth". Input text, image and video (as M3).
+- **Preview with restricted access**: "available only through M Plan and MiniMax Code for now"; called with a Subscription Key, no pay-as-you-go price published. The M-Plan FAQ recommends pay-as-you-go for production — there M3 is the counterpart.
+- Cost/quota lever: the higher the thinking depth, the more thinking content and the more M-Plan usage — the `max` default is the most expensive level.
+- Not published: parameter count, benchmarks, output speed, knowledge cutoff (unverified). Passive prompt caching is listed by MiniMax only for M3 and M2.x, not for this model (unverified); explicit `cache_control` likewise only for M2.x.
 
-## Output- & Format-Konventionen
-- Model ID (API, exakte Schreibweise): `MiniMax-M3.1-Flash-Preview`. Kontextfenster 1.000.000 Tokens. MiniMax' Claude-Code-Anleitung setzt `MiniMax-M3.1-Flash-Preview[1m]`.
-- `max_tokens` (Anthropic) bzw. `max_completion_tokens` (OpenAI; `max_tokens` dort deprecated): empfohlen 131072, Maximum 524288. Thinking-Tokens zählen mit — zu klein gewählt → `stop_reason: "max_tokens"` ohne Text bzw. `finish_reason: "length"` mit leerem `content`.
-- `temperature` [0, 2], Default 1; `top_p` Default 0.95. Anthropic-Pfad: `stop_sequences` und `top_k` werden ignoriert, `tool_choice` nur `auto`/`none`. Structured Outputs/JSON-Schema-Modus sind nicht dokumentiert (unbelegt).
-- Endpoints: `https://api.minimax.io/anthropic` (empfohlen) und `https://api.minimax.io/v1`. Bild bis 10 MB, Video bis 50 MB per URL/base64, größere Videos über die Files API (`mm_file://{file_id}`); Token-Schätzung über `POST /anthropic/v1/messages/count_tokens`.
+## Output & format conventions
+- Model ID (API, exact spelling): `MiniMax-M3.1-Flash-Preview`. Context window 1,000,000 tokens. MiniMax's Claude Code guide uses `MiniMax-M3.1-Flash-Preview[1m]`.
+- `max_tokens` (Anthropic) or `max_completion_tokens` (OpenAI; `max_tokens` deprecated there): recommended 131,072, maximum 524,288. Thinking tokens count — set too small → `stop_reason: "max_tokens"` with no text, or `finish_reason: "length"` with empty `content`.
+- `temperature` [0, 2], default 1; `top_p` default 0.95. Anthropic path: `stop_sequences` and `top_k` are ignored, `tool_choice` only `auto`/`none`. Structured outputs/JSON schema mode are not documented (unverified).
+- Endpoints: `https://api.minimax.io/anthropic` (recommended) and `https://api.minimax.io/v1`. Image up to 10 MB, video up to 50 MB per URL/base64, larger videos via the Files API (`mm_file://{file_id}`); token estimation via `POST /anthropic/v1/messages/count_tokens`.
 
-## Migrations-Hinweise
-- **VON MiniMax-M3 hierher**: `thinking: {"type": "disabled"}` entfernen (sonst HTTP 400); effort **explizit** setzen, statt den teuren `max`-Default zu erben; prompt-basierte Tiefensteuerung durch die effort-Stufe ersetzen. Auf dem OpenAI-Pfad nicht mehr auf `<think>` in `content` bauen — Thinking kommt in `reasoning_content`, `reasoning_split=false` geht nicht. API-Key gegen Subscription Key tauschen.
-- **ZU MiniMax-M3 zurück** (z. B. für Pay-as-you-go/Produktion): effort-Felder streichen — M3 ignoriert sie stillschweigend; Tiefe wieder über `thinking` an/aus plus Prompt-Text steuern und `thinking` explizit setzen (M3-Default kippt zwischen den Endpoints).
-- **VON anderen Anbietern**: ein abgeschaltetes Reasoning der Quelle lässt sich nicht 1:1 abbilden — nächstliegend ist die Stufe `low`; Latenz und `max_tokens` neu bemessen. Sichtbares CoT-Scaffolding („denke Schritt für Schritt") streichen. Claude-`cache_control`-Breakpoints nicht als wirksam einplanen.
-- **Hiervon weg**: `output_config.effort`/`reasoning_effort` auf die Leiter des Ziels mappen (Stufennamen sind nicht standardisiert); Thinking-Block-/`reasoning_content`-Handling an das Ziel anpassen; Bild-/Video-Input prüfen.
+## Migration notes
+- **FROM MiniMax-M3 to this model**: remove `thinking: {"type": "disabled"}` (otherwise HTTP 400); set effort **explicitly** instead of inheriting the expensive `max` default; replace prompt-based depth control with the effort level. On the OpenAI path do not rely on `<think>` in `content` any more — thinking arrives in `reasoning_content`, `reasoning_split=false` does not work. Swap the API key for a Subscription Key.
+- **BACK TO MiniMax-M3** (e.g. for pay-as-you-go/production): remove the effort fields — M3 ignores them silently; control depth again via `thinking` on/off plus prompt text, and set `thinking` explicitly (M3 default flips between endpoints).
+- **FROM other providers**: a switched-off reasoning of the source cannot be mapped 1:1 — the nearest equivalent is level `low`; resize latency and `max_tokens`. Remove visible CoT scaffolding ("think step by step"). Do not plan on Claude `cache_control` breakpoints being effective.
+- **AWAY FROM this model**: map `output_config.effort`/`reasoning_effort` onto the target's ladder (level names are not standardised); adapt thinking-block/`reasoning_content` handling to the target; check image/video input.
 
-## Quellen
-- https://platform.minimax.io/docs/guides/text-generation — Modelltabelle (1M Kontext, „tunable thinking depth"), „latest M-series language model …", „available only through M Plan and MiniMax Code for now", Thinking immer an, effort-Stufen mit Default `max` und Feldnamen je Protokoll, `reasoning_content` auf dem OpenAI-Pfad, 400-Fehler bei `disabled`/`none`.
-- https://platform.minimax.io/docs/api-reference/text-chat-anthropic — Messages-Schema: Model-ID, `thinking` nur `adaptive`, `output_config.effort` (Default `max`, `none` → 400), `max_tokens` 131072/524288, `top_p` 0.95, `temperature` [0, 2], `tool_choice` nur `auto`/`none`.
-- https://platform.minimax.io/docs/api-reference/text-anthropic-api — Thinking-Control-Tabelle, vollständige Fehlermeldung (2013), „preserve them unchanged in later turns", Thinking-Tokens in `max_tokens`, ignorierte `stop_sequences`/`top_k`, Medienlimits, `count_tokens`.
-- https://platform.minimax.io/docs/api-reference/text-chat-openai — `reasoning_effort` („Only `MiniMax-M3.1-Flash-Preview` supports real thinking-depth tuning"), `reasoning_split=false` nicht unterstützt, `max_completion_tokens` 131072/524288, `max_tokens` deprecated.
-- https://platform.minimax.io/docs/api-reference/text-openai-api — `reasoning_content` vollständig erhalten, Thinking-Tokens in `max_tokens` (`finish_reason: "length"`), Verweis auf den Tool-Use-/Interleaved-Thinking-Guide für M3.1.
-- https://platform.minimax.io/docs/api-reference/text-prompt-caching — Cache Comparison: passives Caching für M3 und M2.x, explizites nur für M2.x (M3.1 nicht gelistet).
-- https://platform.minimax.io/docs/m-plan/faq — M3.1 Flash Preview in allen M-Plan-Stufen, höhere Thinking-Tiefe verbraucht mehr, „Pay-as-you-go is recommended for production use", Subscription Keys getrennt von Pay-as-you-go-Keys.
-- https://platform.minimax.io/docs/m-plan/claude-code — `MiniMax-M3.1-Flash-Preview[1m]`, „always enables thinking and cannot turn it off".
-- https://platform.minimax.io/docs/guides/pricing-paygo — Pay-as-you-go-Tabelle führt nur M3 und M2.7 (kein M3.1-Preis).
-- https://agent.minimax.io/docs/code/get-started/first-task — „Better Prompts"-Hinweise der MiniMax-Code-App.
-- https://agent.minimax.io/docs/changelog — v3.0.74 (2026-09-28): M3.1-Flash-Preview debütiert in MiniMax Code; CLI: Standardmodell `MiniMax-M3.1-Flash-Preview`.
+## Sources
+- https://platform.minimax.io/docs/guides/text-generation — Model table (1M context, "tunable thinking depth"), "latest M-series language model …", "available only through M Plan and MiniMax Code for now", thinking always on, effort levels with default `max` and field names per protocol, `reasoning_content` on the OpenAI path, 400 errors for `disabled`/`none`.
+- https://platform.minimax.io/docs/api-reference/text-chat-anthropic — Messages schema: model ID, `thinking` only `adaptive`, `output_config.effort` (default `max`, `none` → 400), `max_tokens` 131072/524288, `top_p` 0.95, `temperature` [0, 2], `tool_choice` only `auto`/`none`.
+- https://platform.minimax.io/docs/api-reference/text-anthropic-api — Thinking-control table, full error message (2013), "preserve them unchanged in later turns", thinking tokens in `max_tokens`, ignored `stop_sequences`/`top_k`, media limits, `count_tokens`.
+- https://platform.minimax.io/docs/api-reference/text-chat-openai — `reasoning_effort` ("Only `MiniMax-M3.1-Flash-Preview` supports real thinking-depth tuning"), `reasoning_split=false` not supported, `max_completion_tokens` 131072/524288, `max_tokens` deprecated.
+- https://platform.minimax.io/docs/api-reference/text-openai-api — `reasoning_content` fully retained, thinking tokens in `max_tokens` (`finish_reason: "length"`), reference to the tool-use/interleaved-thinking guide for M3.1.
+- https://platform.minimax.io/docs/api-reference/text-prompt-caching — Cache comparison: passive caching for M3 and M2.x, explicit only for M2.x (M3.1 not listed).
+- https://platform.minimax.io/docs/m-plan/faq — M3.1 Flash Preview in all M-Plan tiers, higher thinking depth consumes more, "Pay-as-you-go is recommended for production use", Subscription Keys separate from pay-as-you-go keys.
+- https://platform.minimax.io/docs/m-plan/claude-code — `MiniMax-M3.1-Flash-Preview[1m]`, "always enables thinking and cannot turn it off".
+- https://platform.minimax.io/docs/guides/pricing-paygo — Pay-as-you-go table lists only M3 and M2.7 (no M3.1 price).
+- https://agent.minimax.io/docs/code/get-started/first-task — "Better Prompts" notes of the MiniMax Code app.
+- https://agent.minimax.io/docs/changelog — v3.0.74 (2026-09-28): M3.1-Flash-Preview debuts in MiniMax Code; CLI: default model `MiniMax-M3.1-Flash-Preview`.

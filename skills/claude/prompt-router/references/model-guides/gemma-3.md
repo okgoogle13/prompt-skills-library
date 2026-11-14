@@ -11,59 +11,59 @@ successor: gemma-4
 # Gemma 3
 
 ## Reasoning / Thinking
-- Typ: **keins** (kein dediziertes „Thinking"- oder Reasoning-Modus). Gemma 3 ist ein open-weight Modell (frei verfügbare Gewichte, pre-trained und instruction-tuned) und besitzt keinen eingebauten Chain-of-Thought-/Thinking-Schalter wie neuere „thinking"-Modelle.
-- Schritt-für-Schritt-Denken muss klassisch über das Prompting angestoßen werden: explizite Anweisungen wie „Denke Schritt für Schritt" / „Begründe deine Antwort vor dem Ergebnis" bzw. Few-shot-Beispiele. Die offizielle Prompt-Formatting-Dokumentation erwähnt **weder** Chain-of-Thought **noch** Zero-/Few-shot-Techniken ausdrücklich (unbelegt, ob ein spezielles CoT-Format empfohlen wird).
-- Verfügbare Größen: 270M (seit 2025-08-14), 1B, 4B, 12B, 27B. Als Referenzvariante dient hier **gemma-3-27b-it** (größtes instruction-tuned Modell); das Prompt-/Turn-Format ist über alle Größen hinweg identisch.
+- Type: **none** (no dedicated "thinking" or reasoning mode). Gemma 3 is an open-weight model (freely available weights, pre-trained and instruction-tuned) and has no built-in chain-of-thought or thinking switch like newer "thinking" models.
+- Step-by-step reasoning has to be triggered classically through prompting: explicit instructions such as "Think step by step" or "Justify your answer before the result", or few-shot examples. The official prompt-formatting documentation mentions **neither** chain-of-thought **nor** zero-/few-shot techniques explicitly (unverified whether a specific CoT format is recommended).
+- Available sizes: 270M (since 2025-08-14), 1B, 4B, 12B, 27B. The reference variant here is **gemma-3-27b-it** (largest instruction-tuned model); the prompt and turn format is identical across all sizes.
 
-## Prompting-Stil
-- **Mäßig präskriptiv, aber formatgebunden.** Das instruction-tuned Modell ist auf ein festes Turn-Format feinjustiert; die Control-Tokens sind „reserved in and specific to our tokenizer" und müssen exakt verwendet werden.
-- Offizielles Chat-/Prompt-Format (Turn-Tokens):
-  - `<start_of_turn>` leitet einen Turn ein, `<end_of_turn>` beendet ihn.
-  - Rollen-Marker direkt nach `<start_of_turn>`: `user` bzw. `model`.
-  - Aufbau:
+## Prompting style
+- **Moderately prescriptive, but format-bound.** The instruction-tuned model is fine-tuned to a fixed turn format; the control tokens are "reserved in and specific to our tokenizer" and must be used exactly.
+- Official chat/prompt format (turn tokens):
+  - `<start_of_turn>` opens a turn, `<end_of_turn>` ends it.
+  - Role markers directly after `<start_of_turn>`: `user` or `model`.
+  - Structure:
     ```
     <start_of_turn>user
-    [Inhalt]<end_of_turn>
+    [Content]<end_of_turn>
     <start_of_turn>model
     ```
-  - Der letzte Turn endet mit `<start_of_turn>model` **ohne** schließendes Tag, damit das Modell generiert.
-- **System-Prompt-Handhabung:** Es gibt **keine** dedizierte `system`-Rolle / keinen System-Turn — „the `system` role or a system turn is not supported." System-/Persona-Anweisungen werden stattdessen **an den Anfang der ersten User-Nachricht** gesetzt (offizielles Beispiel: „Only reply like a pirate. What is the answer to life the universe and everything?"). Manche HuggingFace-Chat-Templates akzeptieren technisch ein `system`-Feld, das aber intern in die erste User-Nachricht eingefügt wird; die Google-Doku bleibt maßgeblich.
-- **Instruktionsbefolgung:** gut genug, dass System-Level-Anweisungen direkt im User-Prompt zuverlässig interpretiert werden — eine separate System-Rolle ist deshalb nicht nötig.
-- **Bekannte Eigenheit (BOS-Token):** Die Tokenizer-Pipeline fügt typischerweise ein `<bos>`-Token am Sequenzanfang hinzu; die offizielle Formatting-Seite zeigt `<bos>` in ihren Beispielen jedoch **nicht** explizit. Bei Roh-Inferenz (ohne `apply_chat_template`) darauf achten, das BOS-Token nicht doppelt einzufügen (unbelegt im Detail).
+  - The last turn ends with `<start_of_turn>model` **without** a closing tag, so that the model generates.
+- **System prompt handling:** There is **no** dedicated `system` role or system turn — "the `system` role or a system turn is not supported." System or persona instructions are instead placed **at the start of the first user message** (official example: "Only reply like a pirate. What is the answer to life the universe and everything?"). Some HuggingFace chat templates technically accept a `system` field, but it is inserted into the first user message internally; the Google documentation remains authoritative.
+- **Instruction following:** good enough that system-level instructions placed directly in the user prompt are reliably interpreted — a separate system role is therefore not necessary.
+- **Known quirk (BOS token):** The tokenizer pipeline typically adds a `<bos>` token at the start of the sequence; however, the official formatting page does **not** explicitly show `<bos>` in its examples. With raw inference (without `apply_chat_template`), take care not to insert the BOS token twice (unverified in detail).
 
-## Stärken & Schwächen (prompt-relevant)
-- **Stärken:**
-  - Multimodal: Verarbeitet Text **und** Bild als Eingabe, erzeugt Text als Ausgabe (Bilder werden auf 896×896 normalisiert und zu je 256 Tokens kodiert) — gilt für 4B/12B/27B.
-  - Mehrsprachig: Unterstützung für über 140 Sprachen → Prompts müssen nicht zwingend auf Englisch sein.
-  - Langer Kontext: 128K Tokens (4B/12B/27B), 32K Tokens bei 1B und 270M; der Output teilt sich dieses Limit mit dem Input.
-  - Starke Leistung bei multilingualen, STEM- und multimodalen Benchmarks.
-- **Schwächen:**
-  - Kann subtile Nuancen, Sarkasmus oder bildhafte Sprache schlecht erfassen → für solche Fälle im Prompt explizit machen.
-  - Kann faktisch falsche oder veraltete Aussagen erzeugen (Halluzinationen) → kritische Fakten extern verifizieren / im Prompt Quellenbindung verlangen.
-  - Kein eingebautes Reasoning → bei komplexen Aufgaben CoT/Few-shot manuell vorgeben.
-  - Trainingsdaten-Cutoff laut Model Card **August 2024** → zeitkritische Fakten im Prompt mitliefern.
+## Strengths & weaknesses (prompt-relevant)
+- **Strengths:**
+  - Multimodal: processes text **and** images as input and produces text as output (images are normalised to 896×896 and encoded at 256 tokens each) — applies to 4B/12B/27B.
+  - Multilingual: support for over 140 languages → prompts need not necessarily be in English.
+  - Long context: 128K tokens (4B/12B/27B), 32K tokens for 1B and 270M; output shares this limit with input.
+  - Strong performance on multilingual, STEM and multimodal benchmarks.
+- **Weaknesses:**
+  - Can poorly capture subtle nuance, sarcasm or figurative language → make this explicit in the prompt for such cases.
+  - Can produce factually incorrect or outdated statements (hallucinations) → verify critical facts externally, or require source grounding in the prompt.
+  - No built-in reasoning → specify CoT or few-shot manually for complex tasks.
+  - Training data cutoff per model card **August 2024** → include time-critical facts in the prompt.
 
-## Output- & Format-Konventionen
-- Reines Text-Output; das Modell schließt seinen Turn mit `<end_of_turn>` ab.
-- Strukturierte Ausgabe (JSON, Tabellen, Markdown) zuverlässig über explizite Format-Anweisungen im User-Prompt erreichbar (allgemeine Instruktionsbefolgung; spezielles JSON-Schema-/Structured-Output-Feature in den primären Quellen nicht dokumentiert — unbelegt).
-- Sampling-/Generierungsparameter: Zahlenwerte für Sampling nennt die offizielle Doku nicht (unbelegt) — die Gemma-3-Model-Card enthält keine Empfehlung für temperature, top_k oder top_p.
+## Output & format conventions
+- Plain text output; the model closes its turn with `<end_of_turn>`.
+- Structured output (JSON, tables, Markdown) is reliably achievable via explicit format instructions in the user prompt (general instruction following; a specific JSON-schema or structured-output feature is not documented in the primary sources — unverified).
+- Sampling and generation parameters: the official documentation gives no numeric sampling values (unverified); the Gemma 3 model card contains no recommendation for temperature, top_k or top_p.
 
-## Migrations-Hinweise
-- **Lebenszyklus:** Google führt Gemma 3 auf der Gemma-Übersicht unter „Previous Gemma models", die Gemma-3-Prompt-Doku läuft in der Navigation als „Legacy"; Gemma 4 ist die aktuelle Generation. Eine Deprecation oder ein Support-Ende für Gemma 3 kündigt die Release-Seite nicht an — als Ziel bleibt Gemma 3 nutzbar, ist aber nicht mehr die aktuelle Generation.
-- **Typische Änderungen, wenn man VON Gemma 3 wegmigriert:**
-  - Zu Modellen mit dediziertem `system`-Feld (z. B. OpenAI/Anthropic): Die in die erste User-Nachricht eingebetteten System-Anweisungen wieder in ein echtes System-Prompt-Feld auslagern.
-  - Gemma-spezifische Control-Tokens (`<start_of_turn>`, `<end_of_turn>`) entfernen — sie sind laut Google „reserved in and specific to our tokenizer"; andere Modelle nutzen eigene Templates.
-  - Sampling-Werte nicht übernehmen: die Gemma-Werte sind Gemma-spezifisch; ob und welche Sampling-Parameter das Ziel akzeptiert, bestimmt der Ziel-Guide.
-- **Typische Änderungen, wenn man ZU Gemma 3 migriert:**
-  - Separate `system`-Messages auflösen und an den **Anfang der ersten User-Nachricht** verschieben (keine System-Rolle verfügbar).
-  - Auf das exakte Turn-Token-Format umstellen bzw. `apply_chat_template()` der Transformers-Bibliothek nutzen, statt Tokens manuell zu setzen (vermeidet u. a. doppeltes `<bos>`).
-  - Kein Thinking-Modus erwarten — explizites CoT-/Few-shot-Prompting für Reasoning-Aufgaben ergänzen.
-  - Sampling: offizielle Zahlenwerte nicht publiziert (unbelegt) — keine Werte erzwingen.
-  - Bild-Eingaben sind möglich (4B/12B/27B), aber 1B ist textonly; für 270M weist die Model Card keine Bild-Eingabe aus (unbelegt).
+## Migration notes
+- **Lifecycle:** Google lists Gemma 3 under "Previous Gemma models" on the Gemma overview; the Gemma 3 prompt documentation is labelled "Legacy" in the navigation; Gemma 4 is the current generation. The release page announces no deprecation or end of support for Gemma 3 — as a target, Gemma 3 remains usable, but is no longer the current generation.
+- **Typical changes when migrating AWAY from Gemma 3:**
+  - To models with a dedicated `system` field (e.g. OpenAI/Anthropic): move the system instructions embedded in the first user message back into a real system prompt field.
+  - Remove Gemma-specific control tokens (`<start_of_turn>`, `<end_of_turn>`) — per Google they are "reserved in and specific to our tokenizer"; other models use their own templates.
+  - Do not carry over sampling values: the Gemma values are Gemma-specific; whether and which sampling parameters the target accepts is determined by the target guide.
+- **Typical changes when migrating TO Gemma 3:**
+  - Resolve separate `system` messages and move them to the **start of the first user message** (no system role available).
+  - Switch to the exact turn-token format, or use the `apply_chat_template()` function of the Transformers library instead of setting tokens manually (this avoids, among other things, a doubled `<bos>`).
+  - Do not expect a thinking mode — add explicit CoT or few-shot prompting for reasoning tasks.
+  - Sampling: official numeric values not published (unverified) — do not enforce any values.
+  - Image input is possible (4B/12B/27B), but 1B is text-only; for 270M the model card shows no image input (unverified).
 
-## Quellen
-- https://ai.google.dev/gemma/docs/core/prompt-structure — offizielle Turn-Token-Struktur (`<start_of_turn>`/`<end_of_turn>`, `user`/`model`), fehlende `system`-Rolle, Einbettung der System-Anweisung in die erste User-Nachricht, Tokenizer-spezifische Control-Tokens.
-- https://huggingface.co/google/gemma-3-27b-it — Model Card: Größen 1B/4B/12B/27B, 128K Kontext, multimodal (896×896 / 256 Tokens), 140+ Sprachen, kein dokumentierter Thinking-Modus, Schwächen (Sarkasmus/bildhafte Sprache, Faktenfehler), bfloat16/`device_map="auto"`.
-- https://ai.google.dev/gemma/docs/core/model_card_3 — offizielle Model Card: Kontext 128K (4B/12B/27B) bzw. 32K (1B/270M), Output innerhalb desselben Limits, Größen inkl. 270M, 896×896-Bilder à 256 Tokens, 140+ Sprachen, Trainingsdaten-Cutoff August 2024, keine Sampling-Zahlenwerte.
-- https://ai.google.dev/gemma/docs/releases — Release-Daten (Gemma 3 1B/4B/12B/27B am 2025-03-10, 270M am 2025-08-14, Gemma 4 ab 2026-03-31); keine Deprecation- oder Support-Ende-Ankündigung für Gemma 3.
-- https://ai.google.dev/gemma/docs/core — Gemma-Übersicht (Gemma 4): Gemma 3 unter „Previous Gemma models", Navigation „Legacy Prompt and system instructions [Gemma 1, 2, and 3]".
+## Sources
+- https://ai.google.dev/gemma/docs/core/prompt-structure — official turn-token structure (`<start_of_turn>`/`<end_of_turn>`, `user`/`model`), missing `system` role, embedding of the system instruction in the first user message, tokenizer-specific control tokens.
+- https://huggingface.co/google/gemma-3-27b-it — model card: sizes 1B/4B/12B/27B, 128K context, multimodal (896×896 / 256 tokens), 140+ languages, no documented thinking mode, weaknesses (sarcasm/figurative language, factual errors), bfloat16/`device_map="auto"`.
+- https://ai.google.dev/gemma/docs/core/model_card_3 — official model card: context 128K (4B/12B/27B) or 32K (1B/270M), output within the same limit, sizes incl. 270M, 896×896 images at 256 tokens each, 140+ languages, training data cutoff August 2024, no numeric sampling values.
+- https://ai.google.dev/gemma/docs/releases — release dates (Gemma 3 1B/4B/12B/27B on 2025-03-10, 270M on 2025-08-14, Gemma 4 from 2026-03-31); no deprecation or end-of-support announcement for Gemma 3.
+- https://ai.google.dev/gemma/docs/core — Gemma overview (Gemma 4): Gemma 3 under "Previous Gemma models", navigation "Legacy Prompt and system instructions [Gemma 1, 2, and 3]".

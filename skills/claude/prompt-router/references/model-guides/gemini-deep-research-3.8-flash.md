@@ -9,31 +9,31 @@ status: current
 
 # Gemini Deep Research (3.8 Flash)
 
-> ⚠ Einordnung: Deep Research ist ein **Agent** der Interactions API, kein Modellname. Eine dokumentierte Bindung „Deep Research läuft auf `gemini-3.8-flash`“ konnte **nicht** belegt werden (unbelegt). Dieser Guide beschreibt den Agenten und die Prompt-Anpassungen für ein schnelleres/günstigeres Setup mit Gemini 3.8 Flash als Hilfsmodell (Planung, Zusammenfassung, Nachbearbeitung). Vor Produktiveinsatz in der Doku prüfen.
+> ⚠ Note: Deep Research is an **agent** of the Interactions API, not a model name. A documented binding "Deep Research runs on `gemini-3.8-flash`" could **not** be verified (unverified). This guide describes the agent and the prompt adjustments for a faster, cheaper setup with Gemini 3.8 Flash as auxiliary model (planning, summarisation, post-processing). Check the documentation before production use.
 
 ## Reasoning / Thinking
-- Agent: asynchron per `client.interactions.create(agent=..., input=..., background=True)`, Polling über `client.interactions.get(id)`; Ergebnis in `outputs[-1].text`. Für den schnellen Lauf ist `deep-research-preview-04-2026` die naheliegende Wahl (laut Recherche auf Geschwindigkeit/Effizienz getrimmt); `deep-research-max-preview-04-2026` für maximale Gründlichkeit.
-- Gemini 3.8 Flash als Hilfsmodell: `thinking_level` `low | medium (Default) | high`; `minimal` wirft Fehler; `thinking_budget` nicht zusammen mit `thinking_level`. `low` für Extraktion/Zusammenfassung des Berichts, `medium`/`high` für Quellenabgleich und Tool-Schleifen.
-- Thought Signatures bei Function Calling zurückreichen (sonst 400), oder `previous_interaction_id` nutzen.
+- Agent: asynchronous via `client.interactions.create(agent=..., input=..., background=True)`, polling via `client.interactions.get(id)`; result in `outputs[-1].text`. For the fast run, `deep-research-preview-04-2026` is the obvious choice (per research, tuned for speed and efficiency); `deep-research-max-preview-04-2026` for maximum thoroughness.
+- Gemini 3.8 Flash as auxiliary model: `thinking_level` `low | medium (default) | high`; `minimal` throws an error; `thinking_budget` not together with `thinking_level`. `low` for extraction and summarisation of the report, `medium`/`high` for source reconciliation and tool loops.
+- Pass thought signatures back in function calling (otherwise 400), or use `previous_interaction_id`.
 
-## Prompting-Stil
-- Wie beim Argon-Setup: Leitfrage, Umfang, Gliederung, Quellenregeln; Collaborative Planning optional.
-- Für Flash: **kürzere, atomare Aufträge**; große Rechercheaufgaben in Teilfragen zerlegen und parallel starten statt einem Mammutauftrag (Empfehlung abgeleitet, unbelegt).
-- Kein handgeschriebenes Chain-of-Thought; Anweisungen direkt und knapp.
-- `temperature` bei 1.0 belassen, `top_p`/`top_k` entfernen, kein Prefill, `candidate_count` entfernen.
-- Tonalität nüchtern; ausführlichere Berichte explizit anfordern.
+## Prompting style
+- As with the Argon setup: guiding question, scope, outline, source rules; collaborative planning optional.
+- For Flash: **shorter, atomic briefs**; split large research tasks into sub-questions and start them in parallel instead of one mega-brief (recommendation derived, unverified).
+- No handwritten chain-of-thought; instructions direct and concise.
+- Keep `temperature` at 1.0, remove `top_p`/`top_k`, no prefill, remove `candidate_count`.
+- Sober tone; request longer reports explicitly.
 
-## Stärken & Schwächen (prompt-relevant)
-- Stärken: niedrige Kosten und Latenz ($0.75 In / $3.75 Out pro 1M Tokens bis 31.12.2026, danach $1.50 / $7.50), 1.048.576 Kontext, 65.536 Output, gute agentische Tool-Nutzung.
-- Schwächen: geringere Denktiefe als Argon bei sehr harten Syntheseaufgaben (Einschätzung, unbelegt); Agent-Bindung nicht belegt; Preview-Agent-IDs.
+## Strengths & weaknesses (prompt-relevant)
+- Strengths: low cost and latency ($0.75 in / $3.75 out per 1M tokens until 31 Dec 2026, then $1.50 / $7.50), 1,048,576 context, 65,536 output, good agentic tool use.
+- Weaknesses: lower reasoning depth than Argon on very hard synthesis tasks (assessment, unverified); agent binding not verified; preview agent IDs.
 
-## Output- & Format-Konventionen
-- Markdown-Bericht mit Quellen; Structured Outputs für die Nachbearbeitung (Zusammenfassung, Tabellen) mit `response_schema`.
+## Output & format conventions
+- Markdown report with sources; Structured Outputs for post-processing (summary, tables) with `response_schema`.
 
-## Migrations-Hinweise
-- **VON Deep Research (3.8 Flash) weg**: Hintergrund-Polling und Agent-ID entfernen; Rechercheschritte, Such-Tool und Quellenregeln explizit in den Zielprompt schreiben; `thinking_level` auf Effort/Budget des Ziels mappen.
-- **ZU Deep Research (3.8 Flash) migrieren**: Prompt auf Ziel, Umfang, Gliederung und Quellenregeln kürzen; CoT/„suche zuerst“-Scaffolding streichen; `background=True` und Polling einbauen; Sampling-Parameter/Prefill entfernen; bei komplexen Themen auf `deep-research-max-…` oder Argon-Nachprüfung eskalieren.
+## Migration notes
+- **FROM Deep Research (3.8 Flash)**: remove background polling and agent ID; write research steps, search tool and source rules explicitly into the target prompt; map `thinking_level` to the target's effort or budget.
+- **TO Deep Research (3.8 Flash)**: shorten the prompt to goal, scope, outline and source rules; remove CoT and "search first" scaffolding; build in `background=True` and polling; remove sampling parameters and prefill; for complex topics, escalate to `deep-research-max-…` or an Argon review.
 
-## Quellen
-- https://ai.google.dev/gemini-api/docs/deep-research — Agent-IDs, Interactions API, Hintergrundmodus (per Websuche zusammengefasst).
-- https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash — siehe Guide `gemini-3.8-flash`.
+## Sources
+- https://ai.google.dev/gemini-api/docs/deep-research — agent IDs, Interactions API, background mode (summarised from web search).
+- https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash — see guide `gemini-3.8-flash`.

@@ -10,68 +10,68 @@ status: current
 # Gemini 4 Argon
 
 ## Reasoning / Thinking
-- Typ: **Natives Reasoning, immer aktiv**. Tiefe ausschließlich über das String-Enum `thinking_level` steuerbar (`low | medium | high`), **Default `medium`**. `minimal` wird nicht unterstützt und wirft einen Fehler.
-- `thinking_budget` (Token-Budget) wird auf Gemini 4 Argon nicht mehr unterstützt und darf nicht übergeben werden. Die Stufen sind relative Allowances für die Überlegungstiefe, keine strikten Token-Garantien.
-- Empfohlene Stufenwahl laut Doku:
-  - `low`: Geringste Latenz und Tokenverbrauch; geeignet für einfachere Aufgaben, Textanalyse und leichte Recherche. Bei harten Coding- oder Reasoning-Aufgaben kann die Qualität abfallen.
-  - `medium` (Default): Ausgewogen; Standardempfehlung für fast alle produktiven Workloads inkl. komplexem Software Engineering und agentischen Pipelines.
-  - `high`: Maximale Denktiefe für schwierige Mathematik, Naturwissenschaften, komplexe Architektur-Refactorings und autonome Multi-Step-Agenten.
-- **`max_output_tokens` als harte Obergrenze**: `max_output_tokens` begrenzt die **Summe** aus generierten Thinking-Tokens und tatsächlichem Output. Wird der Wert zu niedrig angesetzt (z. B. < 32k), kann das Modell das gesamte Kontingent im Reasoning aufbrauchen und die Antwort vorzeitig abbrechen. Google empfiehlt mindestens 32.768 Tokens (Standard synchronous: 65.536).
-- **Long Decode**: Für Antworten jenseits von 64k Tokens unterstützt Gemini 4 Argon Long Decode bis zu 1.048.576 Tokens (minus Input). Dies erfordert `background: true` und `max_output_tokens > 65536`. Die Fortsetzungs-Hops (in Schritten von bis zu 64k) werden serverseitig orchestriert; im Interaction-Objekt müssen die Textinhalte aller `model_output`-Steps aneinandergehängt werden.
-- **Thought Signatures & State-Management**: Bei mehrstufigen Konversationen und Tool-Calls wird der verschlüsselte Reasoning-Kontext über Thought Signatures transportiert. Empfohlener Standard ist die serverseitige Zustandsverwaltung via `previous_interaction_id` der Interactions API (`store=true`). Bei zustandslosen Requests müssen alle generierten Thought-Blöcke unverändert in der Konversationshistorie mitgeführt werden.
-- Abrechnung: Berechnet wird die Gesamtsumme aus Ausgabe- und Denk-Tokens ($10 bzw. $20 pro 1M Tokens).
+- Type: **native reasoning, always active**. Depth controllable exclusively via the string enum `thinking_level` (`low | medium | high`), **default `medium`**. `minimal` is not supported and throws an error.
+- `thinking_budget` (token budget) is no longer supported on Gemini 4 Argon and must not be passed. The levels are relative allowances for reasoning depth, not strict token guarantees.
+- Recommended level choice per the docs:
+  - `low`: Lowest latency and token usage; suited to simpler tasks, text analysis and light research. For hard coding or reasoning tasks, quality can drop.
+  - `medium` (default): Balanced; standard recommendation for almost all production workloads, including complex software engineering and agentic pipelines.
+  - `high`: Maximum reasoning depth for difficult mathematics, natural sciences, complex architecture refactorings and autonomous multi-step agents.
+- **`max_output_tokens` as a hard ceiling**: `max_output_tokens` limits the **sum** of generated thinking tokens and actual output. If the value is set too low (e.g. < 32k), the model can use up the entire allowance in reasoning and cut the answer short. Google recommends at least 32,768 tokens (standard synchronous: 65,536).
+- **Long decode**: For answers beyond 64k tokens, Gemini 4 Argon supports long decode up to 1,048,576 tokens (minus input). This requires `background: true` and `max_output_tokens > 65536`. Continuation hops (in steps of up to 64k) are orchestrated server-side; in the Interaction object the text content of all `model_output` steps must be concatenated.
+- **Thought signatures and state management**: In multi-turn conversations and tool calls, the encrypted reasoning context is carried via thought signatures. The recommended default is server-side state management via `previous_interaction_id` of the Interactions API (`store=true`). For stateless requests, all generated thought blocks must be carried unchanged in the conversation history.
+- Billing: the total of output and thinking tokens is charged ($10 or $20 per 1M tokens, depending on the price period).
 
-## Prompting-Stil
-- **Direkt, präzise und schlank**: „Be concise. Gemini responds best to direct, clear instructions." Aufwändiges Prompt-Engineering für ältere Nicht-Reasoning-Modelle (wie manuelles „Think step by step" oder verschachtelte CoT-Schablonen) führt laut Doku dazu, dass das Modell überanalysiert („over-analyze") und sollte restlos entfernt werden.
-- **Standard-Tonalität ist nüchtern**: Das Modell antwortet standardmäßig kompakt und sachlich. Wenn ausführliche, didaktische oder konversationelle Antworten erwünscht sind, muss dieser Stil explizit im Prompt angefordert werden.
-- **Long-Context-Struktur**: Bei großen Datenmengen (Dokumente, Codebases, Tabellen) die Referenzdaten **an den Anfang** und die konkrete Aufgabe/Instruktion ans **Ende nach dem Datenblock** stellen, eingeleitet durch eindeutige Anker („Basierend auf den vorstehenden Informationen...").
-- **Keine Sampling-Parameter**: `temperature`, `top_p` und `top_k` vollständig aus den Generation-Configs entfernen. Werden sie übergeben, ignoriert die API sie; manuelle Eingriffe unter 1.0 können bei anspruchsvollen Reasoning- und Matheaufgaben Looping auslösen.
-- **Kein Assistant-Prefill**: Vorgefüllte Modellantworten (`prefilled model turns`) entfernen. Struktur und Formatierung stattdessen über System-Instructions oder `response_schema` (Structured Outputs) durchsetzen.
-- **Agentischer Scope**: Bei komplexen oder offenen Aufgabenstellungen klare Abbruchkriterien, maximale Iterationsgrenzen und Handlungsspielräume definieren, um unkontrolliertes Weiteriterieren im Reasoning zu vermeiden.
+## Prompting style
+- **Direct, precise and lean**: "Be concise. Gemini responds best to direct, clear instructions." Elaborate prompt engineering for older non-reasoning models (such as manual "Think step by step" or nested CoT templates) causes, per the docs, the model to "over-analyze" and should be removed entirely.
+- **Default tone is sober**: The model answers compactly and factually by default. If detailed, didactic or conversational answers are wanted, this style must be requested explicitly in the prompt.
+- **Long-context structure**: For large amounts of data (documents, codebases, tables), put the reference data **at the start** and the concrete task or instruction at the **end, after the data block**, introduced by clear anchors ("Based on the preceding information...").
+- **No sampling parameters**: Remove `temperature`, `top_p` and `top_k` completely from the generation configs. If passed, the API ignores them; manual settings below 1.0 can trigger looping on demanding reasoning and maths tasks.
+- **No assistant prefill**: Remove prefilled model responses (`prefilled model turns`). Instead enforce structure and formatting via system instructions or `response_schema` (Structured Outputs).
+- **Agentic scope**: For complex or open-ended tasks, define clear stop criteria, maximum iteration limits and room for action, to avoid uncontrolled further iteration in reasoning.
 
-## Stärken & Schwächen (prompt-relevant)
-- **Stärken**: Googles Flaggschiff-Reasoning-Modell für High-End-Softwareentwicklung, autonome Multi-Step-Agenten, tiefgehende mathematische und wissenschaftliche Problemlösung sowie anspruchsvolle Enterprise-Wissensarbeit (Finanzanalysen, juristisches Drafting). Generelle Verfügbarkeit (GA) seit 13. Oktober 2026. Bietet Long Decode bis zu 1 Mio. Output-Tokens, Agentic Video Understanding (dynamische Frame-Analyse) und native Integration in Antigravity Managed Agents.
-- **Schwächen & Eigenheiten**:
-  - **Kein explizites Context Caching**: Das traditionelle explizite Caching (`cachedContents` / `caches.create`) wird nicht mehr unterstützt. Stattdessen greift automatisches, implizites Caching (ab 4.096 Tokens) mit 95 % Rabatt auf Treffer.
-  - **Latenz bei tiefem Reasoning**: Komplexe Denkprozesse auf Stufe `high` oder Long-Decode-Aufgaben können mehrere Minuten dauern. HTTP-Client-Timeouts müssen auf mindestens 15 Minuten angehoben werden, oder es muss auf `background: true` ausgewichen werden.
-  - **Hoher Tokenverbrauch**: Durch langes Nachdenken können signifikant mehr Tokens anfallen als bei Flash-Modellen; für einfache Extraktions- und Klassifikationsaufgaben ist `gemini-3.8-flash` oder `thinking_level: "low"` wirtschaftlicher.
-  - **Fehlende Modalitäten**: Keine native Bildgenerierung, keine Audiogenerierung, keine Live API (WebSockets).
-  - **Knowledge Cutoff**: März 2026 (mit einzelnen Domänen bis Januar 2025). Zeitkritische Daten müssen über Google Search Grounding oder den Kontext bereitgestellt werden.
+## Strengths & weaknesses (prompt-relevant)
+- **Strengths**: Google's flagship reasoning model for high-end software development, autonomous multi-step agents, in-depth mathematical and scientific problem solving, and demanding enterprise knowledge work (financial analysis, legal drafting). General availability (GA) since 13 Oct 2026. Offers long decode up to 1M output tokens, agentic video understanding (dynamic frame analysis) and native integration into Antigravity managed agents.
+- **Weaknesses and quirks**:
+  - **No explicit context caching**: The traditional explicit caching (`cachedContents` / `caches.create`) is no longer supported. Instead, automatic implicit caching applies (from 4,096 tokens) with a 95% discount on hits.
+  - **Latency with deep reasoning**: Complex reasoning at level `high` or long-decode tasks can take several minutes. HTTP client timeouts must be raised to at least 15 minutes, or `background: true` must be used.
+  - **High token usage**: Long reasoning can produce significantly more tokens than Flash models; for simple extraction and classification tasks, `gemini-3.8-flash` or `thinking_level: "low"` is more economical.
+  - **Missing modalities**: No native image generation, no audio generation, no Live API (WebSockets).
+  - **Knowledge cutoff**: March 2026 (with individual domains back to January 2025). Time-critical data must be supplied via Google Search grounding or the context.
 
-## Output- & Format-Konventionen
-- Unified Context Window: **1.048.576 Tokens** (geteilt zwischen Input, Thinking und Output).
-- Maximale Ausgabetoken: 65.536 Tokens synchron; bis zu 1.048.576 Tokens (abzüglich Input-Tokens) im asynchronen Long-Decode-Modus (`background: true`).
-- Input-Modalitäten: Text, Bild, Video (mit Agentic Video Understanding), Audio, PDF. Output: Nur Text.
-- Unterstützte Features: Structured Outputs (auch in Kombination mit Built-in Tools wie Google Search, Maps Grounding, URL Context und Code Execution), Function Calling, Implizites Caching (ab 4k Tokens, 95 % Rabatt), Batch API (50 % Rabatt), Computer Use, File Search, Flex- und Priority-Inference.
-- Preise (pro 1M Tokens):
-  - Bis 30.11.2026 (Einführungspreis): Input $2.00 (Cached $0.10), Output $10.00.
-  - Ab 01.12.2026 (Regulär): Input $4.00 (Cached $0.20), Output $20.00.
-  - Kein Free Tier verfügbar.
+## Output & format conventions
+- Unified context window: **1,048,576 tokens** (shared between input, thinking and output).
+- Maximum output tokens: 65,536 synchronous; up to 1,048,576 tokens (minus input tokens) in asynchronous long-decode mode (`background: true`).
+- Input modalities: text, image, video (with agentic video understanding), audio, PDF. Output: text only.
+- Supported features: Structured Outputs (also in combination with built-in tools such as Google Search, Maps grounding, URL Context and code execution), function calling, implicit caching (from 4k tokens, 95% discount), Batch API (50% discount), Computer Use, File Search, Flex and Priority inference.
+- Prices (per 1M tokens):
+  - Until 30 Nov 2026 (introductory price): input $2.00 (cached $0.10), output $10.00.
+  - From 1 Dec 2026 (regular): input $4.00 (cached $0.20), output $20.00.
+  - No free tier available.
 
-## Migrations-Hinweise
-- **VON gemini-4-argon weg**:
-  - `thinking_level` in den Effort- oder Budget-Parameter des Zielmodells überführen (`reasoning_effort` bei OpenAI/o3/GPT-5, `budget_tokens` bzw. adaptiven `effort` bei Claude Sonnet/Opus); falls das Zielmodell kein natives Reasoning besitzt, wieder explizites Chain-of-Thought-Scaffolding („Schritt für Schritt") im Prompt ergänzen.
-  - Sampling-Parameter (`temperature`, `top_p`) wieder in die Request-Config einfügen.
-  - Server-seitigen Session-State (`previous_interaction_id`) auflösen und Konversationshistorie client-seitig verwalten.
-  - Long-Decode-Annahmen über 64k Tokens Output auf die Ausgabelimits des Zielmodells zurückstutzen (häufig 4k, 8k, 16k oder 64k).
-  - Automatisches Caching auf die providerspezifische Caching-API umstellen (z. B. Anthropic Cache-Control-Header).
-- **ZU gemini-4-argon migrieren**:
-  - Modell-ID auf `gemini-4-argon` setzen.
-  - `thinking_level` konfigurieren (`low | medium | high`; Default ist `medium`; `minimal` von älteren Flash-Modellen zwingend auf `low` anheben).
-  - `max_output_tokens` überprüfen und auf mindestens 32.768 erhöhen (oder Default 65.536 belassen), damit Reasoning den eigentlichen Output nicht abschneidet; für extrem lange Ausgaben `background: true` mit Werten > 65.536 nutzen.
-  - Manuelle CoT-Anweisungen („Denke Schritt für Schritt", „Reflektiere ausführlich") und verbose Scaffolding aus dem Prompt streichen und stattdessen `thinking_level: "high"` wählen.
-  - Explizites Caching (`caches.create`) aus dem Code entfernen — Implizites Caching greift automatisch ab 4.096 Tokens.
-  - `temperature`, `top_p`, `top_k`, `candidate_count` und Prefill-Turns restlos aus Requests entfernen.
-  - Client-Timeouts auf mindestens 15 Minuten anheben oder asynchrone Background-Execution nutzen.
-  - Multi-Turn-Interaktionen und Function Calling auf `previous_interaction_id` der Interactions API umstellen.
-  - Ausführlichkeit und Stil explizit definieren, falls von gesprächigeren Modellen migriert wird.
+## Migration notes
+- **FROM gemini-4-argon**:
+  - Map `thinking_level` to the effort or budget parameter of the target model (`reasoning_effort` for OpenAI o3/GPT-5, `budget_tokens` or adaptive `effort` for Claude Sonnet/Opus); if the target model has no native reasoning, add explicit chain-of-thought scaffolding ("Step by step") back into the prompt.
+  - Put sampling parameters (`temperature`, `top_p`) back into the request config.
+  - Resolve server-side session state (`previous_interaction_id`) and manage the conversation history client-side.
+  - Scale back long-decode assumptions above 64k output tokens to the output limits of the target model (often 4k, 8k, 16k or 64k).
+  - Switch automatic caching to the provider-specific caching API (e.g. Anthropic cache-control headers).
+- **TO gemini-4-argon**:
+  - Set model ID to `gemini-4-argon`.
+  - Configure `thinking_level` (`low | medium | high`; default is `medium`; raise `minimal` from older Flash models to `low` mandatorily).
+  - Check `max_output_tokens` and raise it to at least 32,768 (or keep the default 65,536), so reasoning does not truncate the actual output; for extremely long outputs use `background: true` with values > 65,536.
+  - Remove manual CoT instructions ("Think step by step", "Reflect in detail") and verbose scaffolding from the prompt, and choose `thinking_level: "high"` instead.
+  - Remove explicit caching (`caches.create`) from the code — implicit caching applies automatically from 4,096 tokens.
+  - Remove `temperature`, `top_p`, `top_k`, `candidate_count` and prefill turns completely from requests.
+  - Raise client timeouts to at least 15 minutes or use asynchronous background execution.
+  - Switch multi-turn interactions and function calling to `previous_interaction_id` of the Interactions API.
+  - Define verbosity and style explicitly when migrating from more conversational models.
 
-## Quellen
-- https://ai.google.dev/gemini-api/docs/models/gemini-4-argon — Offizielle Modellkarte: Modell-ID gemini-4-argon, Unified 1M Token Context Window, 64k Standard / 1M Long Decode, Modalitäten, Feature-Matrix, GA-Status Oktober 2026.
-- https://ai.google.dev/gemini-api/docs/latest-model — „What's new in Gemini 4 Argon": Positionierung als Flaggschiff-Reasoning-Modell, Migrations-Checkliste (Entfernen von temperature/top_p/top_k, Anheben von max_output_tokens auf mind. 32k, Ersatz expliziten Cachings durch implizites 95%-Rabatt-Caching, previous_interaction_id), Long-Decode-Architektur via background=True, Default thinking_level medium.
-- https://ai.google.dev/gemini-api/docs/pricing — Offizielle Preisstaffel: Einführungspreise bis 30.11.2026 ($2.00 Input, $0.10 Cached Input, $10.00 Output inkl. Thinking-Tokens), Normalpreise ab 01.12.2026 ($4.00 In / $0.20 Cached / $20.00 Out), kein Free Tier.
-- https://ai.google.dev/gemini-api/docs/changelog — Release-Notes vom 13. Oktober 2026: General Availability (GA) von Gemini 4 Argon (gemini-4-argon).
-- https://deepmind.google/models/model-cards/gemini-4-argon/ — DeepMind Model Card: Evaluierung für komplexe Softwareentwicklung, agentische Multi-Step-Workflows, Mathematik, Naturwissenschaften, Knowledge Cutoff März 2026 (Januar 2025 für Spezialdomänen) und dokumentierte Latenz-/Tokencharakteristiken.
-- https://ai.google.dev/gemini-api/docs/thinking — Offizielle Dokumentation zum Reasoning-System: Thinking Levels (low, medium, high), Thought Signatures, Abrechnung von Thinking-Tokens und Verhalten bei max_output_tokens.
-- https://ai.google.dev/gemini-api/docs/long-decode — Offizieller Leitfaden zu Long Decode: Generierung von bis zu 1M Tokens über server-seitige Fortsetzungs-Hops mit background=true.
+## Sources
+- https://ai.google.dev/gemini-api/docs/models/gemini-4-argon — official model card: model ID gemini-4-argon, unified 1M token context window, 64k standard / 1M long decode, modalities, feature matrix, GA status October 2026.
+- https://ai.google.dev/gemini-api/docs/latest-model — "What's new in Gemini 4 Argon": positioning as flagship reasoning model, migration checklist (removing temperature/top_p/top_k, raising max_output_tokens to at least 32k, replacing explicit caching with implicit 95%-discount caching, previous_interaction_id), long-decode architecture via background=True, default thinking_level medium.
+- https://ai.google.dev/gemini-api/docs/pricing — official price tiers: introductory prices until 30 Nov 2026 ($2.00 input, $0.10 cached input, $10.00 output incl. thinking tokens), regular prices from 1 Dec 2026 ($4.00 in / $0.20 cached / $20.00 out), no free tier.
+- https://ai.google.dev/gemini-api/docs/changelog — release notes of 13 Oct 2026: general availability (GA) of Gemini 4 Argon (gemini-4-argon).
+- https://deepmind.google/models/model-cards/gemini-4-argon/ — DeepMind model card: evaluation for complex software development, agentic multi-step workflows, mathematics, natural sciences, knowledge cutoff March 2026 (January 2025 for specialist domains) and documented latency/token characteristics.
+- https://ai.google.dev/gemini-api/docs/thinking — official documentation on the reasoning system: thinking levels (low, medium, high), thought signatures, billing of thinking tokens and behaviour with max_output_tokens.
+- https://ai.google.dev/gemini-api/docs/long-decode — official guide to long decode: generation of up to 1M tokens via server-side continuation hops with background=true.
 

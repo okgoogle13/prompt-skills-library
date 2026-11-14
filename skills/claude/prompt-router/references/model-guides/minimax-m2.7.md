@@ -7,50 +7,50 @@ last_verified: 2026-10-13
 status: current
 ---
 
-# MiniMax-M2.7 (inkl. M2.7-highspeed)
+# MiniMax-M2.7 (incl. M2.7-highspeed)
 
 ## Reasoning / Thinking
-- Typ: **Thinking immer an, nicht abschaltbar**. Auf beiden Endpoints gilt für M2.x: `thinking` weggelassen oder `adaptive` → Thinking an; `{"type": "disabled"}` wird „accepted but ignored; thinking remains on". Keine Tiefensteuerung: `output_config.effort` / `reasoning_effort` wirken nur bei M3.1-Flash-Preview, „Other models ignore this field".
-- Rückgabe: Anthropic-Pfad als `thinking`-Content-Block; OpenAI-Pfad standardmäßig als `<think>…</think>` im `content`-Feld, mit `reasoning_split=true` getrennt in `reasoning_content`. `reasoning_split` schaltet Thinking weder an noch aus.
-- Multi-Turn: die vollständige Assistant-Message muss zurück in die History („must be append to the conversation history to maintain the continuity of the reasoning chain") — Anthropic-Pfad die komplette `response.content`-Liste, OpenAI-Pfad `content` inkl. `<think>`-Tags unverändert.
-- Self-Hosting: Reasoning wird über SGLangs `--reasoning-parser minimax-append-think` verarbeitet, Tool Calls über `--tool-call-parser minimax-m2`; wie der Trace danach im Response liegt, hängt laut Vendor von der SGLang-Version ab.
+- Type: **thinking always on, cannot be switched off**. On both endpoints for M2.x: `thinking` omitted or `adaptive` → thinking on; `{"type": "disabled"}` is "accepted but ignored; thinking remains on". No depth control: `output_config.effort` / `reasoning_effort` only act on M3.1-Flash-Preview, "Other models ignore this field".
+- Return: on the Anthropic path as a `thinking` content block; on the OpenAI path by default as `<think>…</think>` in the `content` field, separated into `reasoning_content` with `reasoning_split=true`. `reasoning_split` neither turns thinking on nor off.
+- Multi-turn: the complete assistant message must go back into the history ("must be append to the conversation history to maintain the continuity of the reasoning chain") — Anthropic path the complete `response.content` list, OpenAI path `content` including `<think>` tags unchanged.
+- Self-hosting: reasoning is handled via SGLang's `--reasoning-parser minimax-append-think`, tool calls via `--tool-call-parser minimax-m2`; where the trace then appears in the response depends, per the vendor, on the SGLang version.
 
-## Prompting-Stil
-- **Keine modellspezifische Prompting-Seite mehr.** Die frühere „Usage Tips"-Seite unter `token-plan/` leitet auf die M-Plan-Übersicht um; MiniMax' frühere Ratschläge (Aufgabe ans Ende, Sektionen labeln, diverse Few-Shot-Beispiele) sind für M2.7 daher (unbelegt).
-- Belegt durch die Hugging-Face-Modellkarte: Sampling `temperature=1.0`, `top_p=0.95`, `top_k=40` und der Default-System-Prompt „You are a helpful assistant. Your name is MiniMax-M2.7 and is built by MiniMax." Achtung: Die gehostete API hat `top_p`-Default 0.9 und ignoriert `top_k` auf dem Anthropic-Pfad.
-- Sichtbares CoT-Scaffolding ist überflüssig, da das Modell ohnehin denkt; ob es die Qualität senkt, ist (unbelegt).
+## Prompting style
+- **No model-specific prompting page any more.** The former "Usage Tips" page under `token-plan/` redirects to the M-Plan overview; MiniMax's earlier advice (task at the end, labelled sections, various few-shot examples) is therefore (unverified) for M2.7.
+- Confirmed by the Hugging Face model card: sampling `temperature=1.0`, `top_p=0.95`, `top_k=40` and the default system prompt "You are a helpful assistant. Your name is MiniMax-M2.7 and is built by MiniMax." Note: the hosted API has a `top_p` default of 0.9 and ignores `top_k` on the Anthropic path.
+- Visible CoT scaffolding is redundant, since the model thinks anyway; whether it lowers quality is (unverified).
 
-## Stärken & Schwächen (prompt-relevant)
-- Laut Vendor ein Modell „for agents, software engineering, and complex productivity tasks"; die Modellkarte nennt Agent Teams, komplexe Skills und dynamische Tool-Suche sowie u. a. SWE-Pro 56,22 % und Terminal Bench 2 57,0 % (Vendor-Angaben).
-- **Nur Text und Tool Calls**: „The M2.7, M2.5, M2.1, and M2 series support text and tool-call content blocks only" — kein Bild-/Video-Input.
-- Kontext **204.800 Tokens**. M2.7 ca. 60 tps; M2.7-highspeed „Same performance, faster and more agile" mit ca. 100 tps — gleiche Prompts, gleicher Guide.
-- Open Weights (`MiniMaxAI/MiniMax-M2.7`, MiniMax-M2.7 License; kommerzielle Nutzung mit Attributions- und Vorab-Genehmigungspflichten). Parameterzahl und Knowledge Cutoff sind auf den offiziellen Seiten nicht angegeben (unbelegt). Structured Outputs/JSON-Schema-Modus sind nicht dokumentiert (unbelegt).
-- Thinking ist nicht abschaltbar: für latenzkritische Chat- oder Completion-Fälle ohne Reasoning ist M2.7 strukturell im Nachteil gegenüber M3 mit `disabled`.
+## Strengths & weaknesses (prompt-relevant)
+- Per the vendor a model "for agents, software engineering, and complex productivity tasks"; the model card names Agent Teams, complex skills and dynamic tool search, as well as, among others, SWE-Pro 56.22% and Terminal Bench 2 57.0% (vendor figures).
+- **Text and tool calls only**: "The M2.7, M2.5, M2.1, and M2 series support text and tool-call content blocks only" — no image/video input.
+- Context **204,800 tokens**. M2.7 approx. 60 tps; M2.7-highspeed "Same performance, faster and more agile" at approx. 100 tps — same prompts, same guide.
+- Open weights (`MiniMaxAI/MiniMax-M2.7`, MiniMax-M2.7 License; commercial use with attribution and prior-approval obligations). Parameter count and knowledge cutoff are not stated on the official pages (unverified). Structured outputs/JSON schema mode are not documented (unverified).
+- Thinking cannot be switched off: for latency-critical chat or completion cases without reasoning, M2.7 is structurally at a disadvantage versus M3 with `disabled`.
 
-## Output- & Format-Konventionen
-- Model IDs (API, exakte Schreibweise): `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`.
-- `max_tokens` (Anthropic) bzw. `max_completion_tokens` (OpenAI; `max_tokens` dort deprecated): empfohlen 65536, Maximum 204800. Thinking-Tokens zählen mit — zu klein gewählt → `stop_reason: "max_tokens"` ohne Text bzw. `finish_reason: "length"` mit leerem `content`.
-- `temperature` [0, 2], Default 1; `top_p` Default **0.9** (M2.x). Anthropic-Pfad: `stop_sequences` und `top_k` werden ignoriert, `tool_choice` nur `auto`/`none`.
-- Caching: passives Prefix-Caching (ab 512 Input-Tokens, Reihenfolge tool list → system prompts → user messages) **und** explizites `cache_control` auf dem Anthropic-Pfad — 5 Minuten TTL mit Verlängerung bei Nutzung, max. 4 Breakpoints, 20-Block-Lookback, Cache-Write wird extra berechnet.
-- Preise pro 1M Tokens (Pay-as-you-go): M2.7 $0,30 Input / $1,20 Output / $0,06 Cache-Read / $0,375 Cache-Write; M2.7-highspeed $0,60 / $2,40 / $0,06 / $0,375.
+## Output & format conventions
+- Model IDs (API, exact spelling): `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`.
+- `max_tokens` (Anthropic) or `max_completion_tokens` (OpenAI; `max_tokens` deprecated there): recommended 65536, maximum 204800. Thinking tokens count — set too small → `stop_reason: "max_tokens"` with no text, or `finish_reason: "length"` with empty `content`.
+- `temperature` [0, 2], default 1; `top_p` default **0.9** (M2.x). Anthropic path: `stop_sequences` and `top_k` are ignored, `tool_choice` only `auto`/`none`.
+- Caching: passive prefix caching (from 512 input tokens, order tool list → system prompts → user messages) **and** explicit `cache_control` on the Anthropic path — 5-minute TTL, extended on use, max. 4 breakpoints, 20-block lookback; cache writes are billed extra.
+- Prices per 1M tokens (pay-as-you-go): M2.7 $0.30 input / $1.20 output / $0.06 cache read / $0.375 cache write; M2.7-highspeed $0.60 / $2.40 / $0.06 / $0.375.
 
-## Migrations-Hinweise
-- **VON M2.7 zu MiniMax-M3** (vom Vendor für neue Projekte mit Multimodal- oder 1M-Bedarf empfohlen): `thinking` **explizit** auf `adaptive` setzen — auf dem Anthropic-Pfad ist es bei M3 sonst aus, bei M2.7 war es immer an. Ein bisher folgenlos mitgeschicktes `disabled` schaltet bei M3 Thinking tatsächlich ab. `cache_control`-Breakpoints wirken bei M3 laut Support-Matrix nicht mehr — Kosten auf passives Caching stützen. Limits anheben (Kontext bis 1M, `max_tokens` bis 524288), `top_p`-Default wechselt von 0.9 auf 0.95. Bild-/Video-Input wird möglich.
-- **VON M2.7 zu M3.1-Flash-Preview**: effort explizit setzen (Default `max`); `reasoning_split=false` geht dort nicht — Thinking kommt in `reasoning_content` statt `<think>` in `content`.
-- **ZU M2.7**: Bild-/Video-Inhalte entfernen oder vorab in Text überführen; Kontext auf ≤ 204.800 Tokens und `max_tokens` auf ≤ 204800 trimmen. `thinking: disabled` und effort-Parameter wirken nicht — Latenzbudget für immer-an-Thinking einplanen. Bei wiederkehrenden Präfixen explizite `cache_control`-Breakpoints setzen.
-- **VON M2.7 zu anderen Anbietern**: `<think>`-Parsing und `reasoning_split`/`reasoning_details` entfernen, History-Handling an das Ziel anpassen; `stop_sequences`/`top_k`, die hier folgenlos waren, werden dort wieder wirksam.
+## Migration notes
+- **FROM M2.7 to MiniMax-M3** (recommended by the vendor for new projects with multimodal or 1M needs): set `thinking` **explicitly** to `adaptive` — on the Anthropic path it is otherwise off on M3, whereas on M2.7 it was always on. A `disabled` that was previously sent without effect does actually switch thinking off on M3. `cache_control` breakpoints no longer act on M3 per the support matrix — base cost on passive caching. Raise limits (context up to 1M, `max_tokens` up to 524288); the `top_p` default changes from 0.9 to 0.95. Image/video input becomes possible.
+- **FROM M2.7 to M3.1-Flash-Preview**: set effort explicitly (default `max`); `reasoning_split=false` does not work there — thinking arrives in `reasoning_content` instead of `<think>` in `content`.
+- **TO M2.7**: remove image/video content or convert it to text beforehand; trim context to ≤ 204,800 tokens and `max_tokens` to ≤ 204,800. `thinking: disabled` and effort parameters have no effect — budget latency for always-on thinking. For recurring prefixes set explicit `cache_control` breakpoints.
+- **FROM M2.7 to other providers**: remove `<think>` parsing and `reasoning_split`/`reasoning_details`, adapt history handling to the target; `stop_sequences`/`top_k`, which had no effect here, become effective again there.
 
-## Quellen
-- https://platform.minimax.io/docs/guides/text-generation — Supported Models: M2.7 und M2.7-highspeed (204.800 Kontext, ca. 60 bzw. 100 tps, „Same performance, faster and more agile"), „MiniMax-M3, MiniMax-M2.7, and MiniMax-M2.7-highspeed also remain available"; ältere Modelle im Legacy-Akkordeon.
-- https://platform.minimax.io/docs/release-notes/models — Mar. 18, 2026: „Released MiniMax-M2.7 series (MiniMax-M2.7 / M2.7-highspeed)".
-- https://platform.minimax.io/docs/faq/models — M2.7 und M2.7-highspeed unter „Available Models" (nicht retired).
-- https://platform.minimax.io/docs/api-reference/text-anthropic-api — Thinking-Control-Tabelle (M2.x: „Accepted but ignored; thinking remains on"), nur Text/Tool-Call-Blöcke für M2.x, Thinking-Tokens in `max_tokens`, ignorierte `stop_sequences`/`top_k`, Multi-Turn-Regel.
-- https://platform.minimax.io/docs/api-reference/text-chat-anthropic — `max_tokens` 65536/204800 für Nicht-M3-Modelle, `top_p` 0.9 für M2.x, `output_config.effort` „Other models ignore this field", `tool_choice` nur `auto`/`none`.
-- https://platform.minimax.io/docs/api-reference/text-chat-openai — `thinking` für M2.x nicht abschaltbar, `reasoning_effort` ignoriert, `reasoning_split` als Output-Schalter (`<think>` in `content` vs. `reasoning_content`), `max_completion_tokens` 65536/204800.
-- https://platform.minimax.io/docs/api-reference/text-openai-api — `<think>`-Inhalte in `content` vollständig erhalten; `finish_reason: "length"` mit leerem `content` bei zu kleinem Limit.
-- https://platform.minimax.io/docs/api-reference/text-prompt-caching — passives Caching inkl. M2.7-Serie; Cache Comparison: explizites Caching für M2.7/M2.5/M2.1/M2, 5 Minuten TTL.
-- https://platform.minimax.io/docs/api-reference/anthropic-api-compatible-cache — `cache_control`-Mechanik (max. 4 Breakpoints, 20-Block-Lookback), Supported Models inkl. M2.7/M2.7-highspeed.
-- https://platform.minimax.io/docs/guides/pricing-paygo — M2.7 $0,3/$1,2/$0,06/$0,375; M2.7-highspeed $0,6/$2,4/$0,06/$0,375.
-- https://platform.minimax.io/docs/guides/local-deploy-m2-7 — „For a new project that needs native multimodal input or a 1M-token context, use MiniMax-M3", SGLang-Parser `minimax-append-think` / `minimax-m2`, Lizenzhinweis.
-- https://huggingface.co/MiniMaxAI/MiniMax-M2.7 — offizielle Modellkarte: Agent Teams/Skills, SWE-Pro 56,22 %, Terminal Bench 2 57,0 %, Sampling `temperature=1.0`/`top_p=0.95`/`top_k=40`, Default-System-Prompt.
-- https://platform.minimax.io/docs/guides/text-m3-function-call — „must be append to the conversation history …", `<think>`-Inhalt in `content` nicht verändern (Guide auf M3 ausgerichtet; Übertragung auf M2.7 über die SDK-Seiten belegt).
+## Sources
+- https://platform.minimax.io/docs/guides/text-generation — Supported Models: M2.7 and M2.7-highspeed (204,800 context, approx. 60 / 100 tps, "Same performance, faster and more agile"), "MiniMax-M3, MiniMax-M2.7, and MiniMax-M2.7-highspeed also remain available"; older models in the legacy accordion.
+- https://platform.minimax.io/docs/release-notes/models — Mar. 18, 2026: "Released MiniMax-M2.7 series (MiniMax-M2.7 / M2.7-highspeed)".
+- https://platform.minimax.io/docs/faq/models — M2.7 and M2.7-highspeed under "Available Models" (not retired).
+- https://platform.minimax.io/docs/api-reference/text-anthropic-api — Thinking-control table (M2.x: "Accepted but ignored; thinking remains on"), text/tool-call blocks only for M2.x, thinking tokens in `max_tokens`, ignored `stop_sequences`/`top_k`, multi-turn rule.
+- https://platform.minimax.io/docs/api-reference/text-chat-anthropic — `max_tokens` 65536/204800 for non-M3 models, `top_p` 0.9 for M2.x, `output_config.effort` "Other models ignore this field", `tool_choice` only `auto`/`none`.
+- https://platform.minimax.io/docs/api-reference/text-chat-openai — `thinking` for M2.x not switchable off, `reasoning_effort` ignored, `reasoning_split` as output switch (`<think>` in `content` vs. `reasoning_content`), `max_completion_tokens` 65536/204800.
+- https://platform.minimax.io/docs/api-reference/text-openai-api — `<think>` content fully retained in `content`; `finish_reason: "length"` with empty `content` when the limit is too small.
+- https://platform.minimax.io/docs/api-reference/text-prompt-caching — passive caching incl. the M2.7 series; cache comparison: explicit caching for M2.7/M2.5/M2.1/M2, 5-minute TTL.
+- https://platform.minimax.io/docs/api-reference/anthropic-api-compatible-cache — `cache_control` mechanics (max. 4 breakpoints, 20-block lookback), supported models incl. M2.7/M2.7-highspeed.
+- https://platform.minimax.io/docs/guides/pricing-paygo — M2.7 $0.3/$1.2/$0.06/$0.375; M2.7-highspeed $0.6/$2.4/$0.06/$0.375.
+- https://platform.minimax.io/docs/guides/local-deploy-m2-7 — "For a new project that needs native multimodal input or a 1M-token context, use MiniMax-M3", SGLang parsers `minimax-append-think` / `minimax-m2`, license note.
+- https://huggingface.co/MiniMaxAI/MiniMax-M2.7 — official model card: Agent Teams/Skills, SWE-Pro 56.22%, Terminal Bench 2 57.0%, sampling `temperature=1.0`/`top_p=0.95`/`top_k=40`, default system prompt.
+- https://platform.minimax.io/docs/guides/text-m3-function-call — "must be append to the conversation history …", do not alter `<think>` content in `content` (guide aimed at M3; transfer to M2.7 documented via the SDK pages).
