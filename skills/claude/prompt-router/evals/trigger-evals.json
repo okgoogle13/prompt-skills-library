@@ -8,8 +8,8 @@
     "should_trigger": true
   },
   {
-    "query": "Migrate the prompt in ~/work/prompts/triage.md from Claude Opus 5.5 to Gemini 3.8 Flash",
-    "should_trigger": false
+    "query": "Adapt the prompt in ~/work/prompts/triage.md from Claude Opus 5.5 to Gemini 3.8 Flash",
+    "should_trigger": true
   },
   {
     "query": "Review this prompt before I paste it into a Gem — it's going on Gemini 3.8 Flash: 'Act as my career coach and rewrite my CV bullets...'",
@@ -32,7 +32,7 @@
     "should_trigger": true
   },
   {
-    "query": "I've got a prompt that works on Opus 5.5 but our team is moving to GPT-5 — what needs to change? here it is: ...",
+    "query": "I've got a prompt that works on Opus 5.5 but our team is adapting to GPT-5 — what needs to change? here it is: ...",
     "should_trigger": true
   },
   {
@@ -85,6 +85,22 @@
   },
   {
     "query": "write a short story about a lighthouse keeper who finds a message in a bottle",
+    "should_trigger": false
+  },
+  {
+    "query": "migrate this prompt to Sonnet 5.5, it was written for GPT-5: 'You are a concise assistant...'",
+    "should_trigger": true
+  },
+  {
+    "query": "port my system prompt from Opus 5.5 to Gemini 3.8 Flash",
+    "should_trigger": true
+  },
+  {
+    "query": "convert this prompt for Gemini 3.8 Flash: 'Summarise the board minutes into decisions and owners'",
+    "should_trigger": true
+  },
+  {
+    "query": "convert this CSV file to JSON with a python script",
     "should_trigger": false
   }
 ]

@@ -1,0 +1,4 @@
+{
+  "reserved_aliases": ["spark", "gemini-spark"],
+  "warn_aliases": ["copilot", "perplexity"]
+}

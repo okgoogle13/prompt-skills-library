@@ -162,3 +162,45 @@ Not run: C4 (Antigravity/`agy`), C5/C6 (Perplexity/ChatGPT web; Codex), and the 
 - Phases 1–2: the pre-change text was never recorded (the Phase 1–2 revert plans above cannot be executed). The baseline is now the snapshot in `skills/claude/prompt-router/`, taken after the Phase 4 edits.
 - Phase 3 pre-edit text: the diff in `research/03-router-portability.md` (extraction section 4) can be reversed by hand.
 - Phase 4: restore `SKILL.md` from that Phase 3 diff plus the Phase 4 description above; the commit on branch `prompt-router-phase-1-3` is the recovery point going forward.
+
+---
+
+## Phase 5 — Consolidation of Packaged `adapt` / Context-Bloat Workstream & F1/F2 Refinements (2026-11-14)
+
+### Decision 0 (Superseding Phase 4 Scope Decision)
+
+By explicit user approval, **`adapt` (`adapt`, `migrate`, `port`, `convert`, `move`, `from A to B`) is brought back into `prompt-router`**, superseding the Phase 4 decision to remove migration from `prompt-router`. Unlike Phase 3–4 (which depended on a sibling `../migrate-prompt/` directory), the consolidated package is **self-contained** inside `skills/claude/prompt-router/`:
+- `skills/claude/prompt-router/` in `prompt-skills-library` is the **canonical source of truth**; `~/.claude/skills/prompt-router/` is a derived install copy synced one-way via `rsync -a --delete`.
+- Standalone `migrate-prompt` remains retired (with `~/.claude/skills/_archived/migrate-prompt-20261114-131631` preserved read-only).
+
+### Decision
+
+Merged Workstream A (Phases 1–4 hardening) and Workstream B (packaged self-contained skill + `adapt` + context/token bloat + platform profiles + F1/F2):
+1. **Self-contained package layout (Workstream B):** Packaged all 85 guides under `references/model-guides/`, generated `references/model-registry.md` via `scripts/build_registry.py`, included `references/hosts.json` (`spark`, `gemini-spark` reserved; `copilot`, `perplexity` warned) and `references/platform-guides/` (`codex-cli-chatgpt-go.md`, `perplexity-pro.md`), kept `(unbelegt)` unverified-claim convention, and added `references/patterns.md` §2.6 (context and token optimisation).
+2. **Restored Workstream A Phase 3–4 security & placeholder hardening:**
+   - Prose-only unexpanded `$ARGUMENTS` and `${CLAUDE_EFFORT}` guards in `SKILL.md` (zero literal tokens in `SKILL.md` so Claude Code never splices user input or effort values into rule text).
+   - Strict bans on `Bash`/`run_command`, `glob`, `grep`, and reading `~/.claude/plugins/`.
+   - Deterministic host-only / no-model rule (`Claude Code`, `Claude`, `Gemini`, `Gemini CLI`, `Antigravity`, `Gem`, `Codex`, `ChatGPT`, `Gemini Spark` → `review` with 0 guides on non-`adapt`, non-bloat requests; clarify with ≤5 registry IDs on `adapt` host/family targets or bare `spark`; `optimise` via §2.6 on explicit context/token bloat).
+   - Single-retry vendor-prefix stripping (`claude-`, `openai-`, `google-`, `meta-`) during exact model resolution.
+3. **Applied F2 tightening (`SKILL.md` §5 Adapt checklist):**
+   - Required explicit one-line pre-output check immediately before the fenced adapted prompt (`Self-check: intent kept; constraints kept; success criteria kept; variables/examples kept (or removed: <list>).`).
+   - Added explicit anti-garbled-phrasing rule around fenced code blocks.
+4. **Unified validation & generator checks:**
+   - Updated `scripts/build_registry.py` to warn on self-aliases (`github-copilot`) and legacy guides without a documented `successor` (`gpt-4.1`), and fail on self-successors.
+   - Restored global security expectations across all 35 `evals/evals.json` cases, added F2 expectations to cases 31 and 35, and restored Suite C7 and the two-guide `adapt` invariant in `evals/prompt-router-test-cases.md`.
+5. **F1 description selection (`D`) & canonical `Model ID` filename rule:**
+   - Added explicit rule in `SKILL.md` §3 item 4 requiring column-1 `Model ID` (not aliases like `sonnet-5.5`) when constructing `references/model-guides/<model-id>.md` (eliminated the alias read attempt seen in `H/write/3`).
+   - Promoted F1 Candidate `D` (write-first opening + local per-model guides anchor + prompt-text vs `claude-api` SDK boundary) after `D` scored `3/3` on `migrate`, `convert`, `adapt`, and `write` and `0/3` on `control` (`3/3` `claude-api`) in proxy runs (`n=3`/cell), vs `base` (`migrate` `0/3`, `write` `0/3` freshly measured in `runs/base/write/1..3.jsonl`), `A` (`write` `0/3`), and `H` (`write` `1/3`).
+6. **Post-review YAML, host-rule, and portability fixes:**
+   - Single-quoted `SKILL.md` frontmatter `description` (escaping `prompt''s`) and replaced `"for <model>"` with `"for [model]"` so `yaml.safe_load` passes and strict skill validators accept the frontmatter (`len=772`, `<` and `>` absent). Reran F1 `D` `write` and `migrate` (`n=3`, `skip=0`): both remained `3/3` (`avg_guides=1.0`).
+   - Removed the non-adapt `clarify` exception from `SKILL.md` §2 (`Host-only or no-model rule`) so host-only non-`adapt`, non-bloat requests unambiguously route to `review` with zero guides and `clarify` stays `adapt`-only.
+   - Replaced the duplicated host-only paragraph in `references/patterns.md` §0.4 with a one-line pointer to `SKILL.md` §2.
+   - Removed the hardcoded `~/.claude/skills/prompt-router` fallback from `SKILL_DIR` in `SKILL.md` (`Portable file use`) so non-Claude hosts fail closed instead of probing a host-specific path.
+
+### Revert Plan
+
+- Repo: `git checkout prompt-router-phase-1-3` returns cleanly to the Phase 4 Workstream A snapshot (`3d96112`).
+- Installed skill rollback #1 (back to pre-consolidation Workstream B install):
+  `rsync -a --delete ~/.claude/skills/_archived/prompt-router-20261114-pre-consolidation/ ~/.claude/skills/prompt-router/`
+- Installed skill rollback #2 (back to Workstream A + standalone `migrate-prompt`, non-destructive):
+  `rsync -a --delete ~/.claude/skills/_archived/prompt-router-20261114-131631/ ~/.claude/skills/prompt-router/ && rsync -a --delete ~/.claude/skills/_archived/migrate-prompt-20261114-131631/ ~/.claude/skills/migrate-prompt/`

@@ -6,3 +6,6 @@
 
 # Scratch reference area
 sources/intake/
+
+# Local untracked backups
+.backups/

@@ -1,17 +1,15 @@
-# Credits and provenance
+# Credits and provenance — prompt-router
 
-`prompt-router` is a local, unpublished skill. Its own text is original or paraphrased; no
-source file is copied into this folder. Sources were reviewed on 2026-11-10.
+`prompt-router` (which handles adapt/migrate/port/convert; `migrate-prompt` is retired) is a local, unpublished skill. Its own text is original or paraphrased; no
+source file is copied into this folder. Packaging and dependency audit completed on 2026-11-13; model-guide facts retain their individual `last_verified` dates.
 
-## Used in place (read at run time, not copied)
+## Model-guide provenance
 
 | Source | What is used | Licence |
 |---|---|---|
 | `~/.claude/skills/migrate-prompt/` — local copy of prompt-brain 0.8.0 by Tarek Steiß (`tarekst/prompt-brain`, manifest-stated) | Model registry and alias policy (`SKILL.md` BEGIN/END block), `model-guides/*.md` (authoritative for this skill), migration Steps 3–5, Guide-Stand and legacy-successor footer rules | MIT |
 
-The router never reads, copies or falls back to the plugin cache
-(`~/.claude/plugins/cache/tarek-plugins/prompt-brain/`). The local guides are the only guide
-source; a missing guide stops the run.
+All 85 supplied model guides are packaged in `references/model-guides/`. Four OpenAI guides (`gpt-6.1-sol`, `gpt-6-luna`, `gpt-5.6-terra`, `gpt-5.6-luna`) include additive Codex CLI notes to distinguish API behavior from the CLI surface. The separate `migrate-prompt` workflow and its examples are not included; model adaptation is integrated into this skill. Guide facts were not independently re-verified in this packaging step.
 
 MIT notice for prompt-brain (also covers the paraphrased weakness categories in
 `references/patterns.md` §2.3, derived from its `optimize-prompt`):
@@ -58,6 +56,6 @@ carried. If text is ever copied verbatim, add the Apache-2.0 licence and a chang
 
 ## Maintenance
 
-- Guides perish: each carries `last_verified`; the migrate footer warns past 180 days.
-- Refreshing guides is a separate, user-approved change to `migrate-prompt/`; this skill
-  changes nothing there.
+- Model facts are perishable. Each guide carries `last_verified`; the skill warns when a guide is more than 180 days old.
+- Platform profiles record provider- and plan-specific availability separately from model capabilities. User-reported access is labelled as such.
+- Update guide content and frontmatter together. Regenerate `references/model-registry.md` from guide frontmatter after adding or changing a guide.

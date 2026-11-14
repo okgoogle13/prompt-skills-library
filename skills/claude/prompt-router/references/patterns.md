@@ -1,6 +1,6 @@
 # Prompt patterns (shared reference)
 
-Rules the prompt-router applies on the write, optimise and review routes.
+Rules the prompt-router applies on the write, optimise, adapt and review routes. Model-specific guides take precedence when directly relevant.
 
 ## 0. Precedence
 
@@ -8,9 +8,7 @@ Rules the prompt-router applies on the write, optimise and review routes.
 2. Sections 1–4 and 6 apply to every target.
 3. Section 5 applies when the target is a Claude model (or no model was named and the
    prompt is plainly for Claude Code).
-4. Hosts and runtimes (`Claude Code`, `Claude`, `Gemini`, `Gemini CLI`, `Antigravity`, `Gem`,
-   `Codex`, `ChatGPT`): when named without a concrete model ID, requests route to review with
-   no guide. Never ask for a model solely because a host is named.
+4. For host-only or no-model requests, follow the host-only rule in `SKILL.md` §2.
 5. An explicit requirement in the user's prompt (one paragraph, JSON, a table, an exact count)
    wins over any default shape suggested here.
 
@@ -110,6 +108,35 @@ the concrete defect fixed (§2.2–§2.3) or a guide fact ("target defaults to m
 "improved clarity" or "better structure" alone is never a valid reason. Suggestions
 outside the rewrite follow "Do X, because Y"; drop any without a reason.
 
+### 2.6 Context and token optimisation
+
+Apply this when the user asks to reduce token use, context bloat, prompt length or instruction overhead, and when obvious context duplication materially harms a requested optimisation. This is part of **optimise**, not a separate route.
+
+**Separate the layers:**
+- **Prompt bloat:** repeated rules, filler, excessive constraints, redundant headings, unnecessary personas, examples that restate rules, and instructions that do not change the result.
+- **Context bloat:** irrelevant chat history, duplicate files, stale notes, oversized examples, unrelated retrieved passages, repeated source material, and background that does not affect the task.
+- **Persistent-instruction bloat:** standing preferences or rules repeated in every task prompt instead of being stored once in the appropriate system/project instructions, where the host supports that separation.
+
+**Method:**
+1. Identify the actual task, required output, hard constraints, literal tokens and evidence sources.
+2. Classify each context item as **essential** (needed for correctness or contract survival), **useful** (improves quality or disambiguates), or **removable** (irrelevant, duplicated, stale, contradicted or non-operative). Do not discard material merely because it is long.
+3. Remove or consolidate removable material. Summarise useful material only when the summary preserves the facts, caveats, source attribution and distinctions needed downstream. Keep essential source text intact when exact wording, legal meaning, code, data, schema or traceability matters.
+4. Put high-priority instructions and task-defining context where the target guide recommends. Separate stable instructions from variable task input when the host supports it; do not assume caching or hierarchy behavior without guide support.
+5. If a context limit or budget is supplied, prioritise within it: task/output contract and hard constraints first, then authoritative current evidence, then supporting examples/background. If no limit is supplied, do not invent one or force an arbitrary percentage allocation.
+6. Check for lost requirements, changed facts, broken references/variables, removed exceptions, weakened safety boundaries and ambiguity introduced by compression.
+
+**Rules:**
+- Optimise for reliable task completion, not minimum character count. A shorter prompt that loses a necessary distinction is worse.
+- Preserve names, numbers, dates, paths, URLs, identifiers, code, quoted strings, variables, parsed tags and output contracts exactly (§1), unless the user explicitly asks to change them.
+- Do not summarise away source provenance, uncertainty, conflicting evidence, dates or exceptions.
+- Prefer deleting duplication over replacing precise requirements with vague umbrella language.
+- Keep examples only when they demonstrate behavior not already specified; reduce their number before deleting a uniquely informative example.
+- Do not move instructions into system/project memory unless the user controls that destination or explicitly asks for the restructuring. Otherwise provide a suggested separation.
+- Never claim a measured token count or percentage reduction without actually measuring it with a suitable tokenizer. Character/word counts are not token counts. If no tokenizer is available, report only qualitative or clearly labelled approximate savings.
+- Do not assume a model's context window, tokenizer, caching behavior or context priority rules; use the loaded guide or label the detail unknown.
+
+**Output for a context/token-focused optimisation:** return the revised prompt or context structure, then a concise change log grouped under **Removed**, **Consolidated**, **Retained**, and **Trade-offs** only where applicable. State whether token savings are measured, estimated or qualitative. Explicitly flag any source/context that should remain available rather than be compressed.
+
 ## 3. Review (findings only — no rewrite)
 
 **Materiality gate:** before keeping a finding, identify the affected instruction or
@@ -171,15 +198,14 @@ Do not suggest a specific fix the user did not name; state the symptom and expec
 
 ## 5. Claude-target-only practices
 
-Apply when the target resolves to a Claude model, or when the prompt is for Claude Code.
+Apply only when the target is a Claude model or Claude Code. Do not apply these conventions to other models or hosts by analogy.
 
-- Reference files with `@path` in Claude Code prompts.
-- Multi-file or uncertain approach: ask for a plan first and approval before edits (plan mode).
-- Heavy reading or investigation: delegate to subagents so the main context stays clean.
-- Separate parts with XML tags (`<instructions>`, `<context>`, `<document>`, `<example>`);
-  long documents first, the question or task last.
-- Stable content first, variable content last, so prompt caching can reuse the prefix.
-- Reasoning depth is an effort setting, not wording; put it in `Run settings:` if requested.
+- Use `@path` references only in Claude Code prompts.
+- For multi-file or uncertain changes, a plan-first/approval boundary may help; do not impose it on simple, reversible tasks.
+- Delegate heavy reading or investigation only when the target runtime supports subagents and delegation materially helps.
+- XML tags (`<instructions>`, `<context>`, `<document>`, `<example>`) can separate functional blocks when the target benefits from them, with long documents first and the question or task last; do not add tags as decoration.
+- Stable content before variable content can help prompt caching where supported.
+- If reasoning depth is an exposed effort setting, put it in `Run settings:` rather than asking the model to reveal private reasoning or using wording hacks.
 
 ## 6. Write (sketch, notes or brief → complete prompt)
 
