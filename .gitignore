@@ -1,11 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
 .venv/
-.envrc
+venv/
 
-# OS metadata
+# Build outputs
+dist/
+!dist/.gitkeep
+
+# Environment and secrets
+.env
+.env.*
+*.local
+
+# OS files
 .DS_Store
-
-# Scratch reference area
-sources/intake/
-
-# Local untracked backups
-.backups/
+Thumbs.db
