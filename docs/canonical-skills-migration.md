@@ -53,17 +53,19 @@ scripts/
 | Output | Purpose |
 |---|---|
 | `dist/skills/<skill-name>/` | Portable skill bundle |
-| `dist/bundles/<skill-name>.zip` | Upload-ready archive where applicable |
-| `dist/chrome-gemini/<skill-name>.txt` | Frontmatter-free prompt for Gemini in Chrome |
+| `dist/bundles/<skill-name>.zip` | Reproducible upload-ready archive where applicable |
+| `dist/chrome-gemini/<skill-name>.txt` | Frontmatter-free prompt for Gemini in Chrome (canonical body composed with `skills/adapters/chrome-gemini/<skill-name>.md` when present, emitted only when `chrome-gemini` is listed in `platforms`) |
 | `dist/index.json` | Machine-readable skill index |
 
 ## Validation
 
-The build script should validate:
+The build script validates:
 
-- `SKILL.md` exists for every canonical skill
-- `name` matches its parent folder
-- `description` is present and under 1,024 characters
-- Required metadata fields are valid
-- Adapter references resolve to existing files
+- `SKILL.md` exists for every canonical skill directory
+- YAML frontmatter parses cleanly and includes all required metadata (`name`, `description`, `version`, `status`, `owner`, `source_of_truth`, `platforms`, `evidence`)
+- `name` is valid kebab-case (`<= 64` chars) and matches its parent folder
+- `description` is present (including folded/multiline YAML values) and `<= 1,024` characters
+- `version` is semantic (`vX.Y` / `X.Y.Z`), `status` is `draft | approved | deprecated`, `source_of_truth` points to `skills/<skill-name>/SKILL.md`, `platforms` is a non-empty subset of supported platforms, and `evidence` paths exist
+- Adapter references (`adapters` metadata or `skills/adapters/<platform>/<skill-name>.md`) resolve to existing files for declared platforms, and Chrome Gemini adapters contain no YAML frontmatter
+- `--dist-root` never overlaps repository source directories or deletes unexpected files (preserving `dist/.gitkeep`)
 - Generated `dist/` artifacts are reproducible
