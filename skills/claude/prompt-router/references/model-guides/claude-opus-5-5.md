@@ -3,7 +3,7 @@ model: claude-opus-5-5
 vendor: Anthropic
 family: Claude
 aliases: [opus, opus-5.5, claude-opus-5.5, opus5.5]
-last_verified: 2026-10-13
+last_verified: 2026-11-16
 status: current
 ---
 
@@ -26,9 +26,11 @@ status: current
 - **Unattended agent loops**: the model reports along the way and sometimes ends turns with plain text (`end_turn`). Treat a text-only turn as a report rather than a completion, track subtasks in a checklist, and prompt for open points with a short user message (at most two to three automatic continuations). Optionally add a system prompt addition that names the unwanted stop types concretely — from the first request; not in human-in-the-loop apps; keep confirmation for risky actions.
 - **Progress updates**: describe cadence and form in the system prompt (e.g. an intent sentence before the first tool call, a short recap at the end); for verbatim handoffs declare a message tool from the first request; during long silent stretches append a turn-scoped reminder (`clear_at: "next_user_message"`, beta `mid-conversation-system-clear-at-2026-08-21`).
 - **Multi-app workflows**: Opus 5.5 starts quickly — one sentence requiring broad exploration of all relevant sources before every action (including unnamed ones) raises the success rate; keep untrusted content from the searched sources out of the instructions.
-- **Chat**: remove "think carefully" lines (effort is the lever); optionally the instruction to treat answered questions as done (not for long analyses or agentic tasks).
+- **Chat**: remove "think carefully" / "think hard" lines; effort is the lever. For a substantive request, give one complete brief—goal, deliverable, constraints, inputs, and clarification policy—rather than issuing sequential instructions. Ask directly for the final artefact when that is the intended outcome, and optionally add the instruction to treat answered questions as done (not for long analyses or agentic tasks).
 - **Multi-agent harnesses**: a time budget with elapsed time (`elapsed 340s / 1200s`) or a "time counts" sentence speeds up teams; the budget is advisory only.
-- **Pasted text**: mark it in `<pasted_content id="…">` tags with a random ID, plus a system prompt note to follow instructions inside it only if the user asks. **Frontend**: name concrete patterns to avoid instead of "no generic AI look".
+- **Pasted text**: mark it in `<pasted_content id="…">` tags with a random ID, plus a system prompt note to follow instructions inside it only if the user asks.
+- **Frontend**: name concrete patterns, colours, components, and layouts to avoid (for example, "no cream background", "no pill-shaped buttons") instead of "no generic AI look". Pair exclusions with positive requirements: target audience, visual direction, layout, accessibility, and acceptance criteria.
+- **Attachments and connected context**: attach diagrams, charts, screenshots, tables, and files directly rather than manually transcribing them (Opus 5.5 reads visual material directly with higher accuracy), and when using connectors/files/tools specify which sources are authoritative and how to handle missing or conflicting information.
 
 ## Strengths & weaknesses (prompt-relevant)
 - Strengths: agentic coding and code review in real repositories (at `medium`, according to Anthropic's tests, on par with or better than Opus 5 at `high`, with fewer steps and tokens; more bugs found with fewer false alarms); hours-long autonomous runs with parallel subagents; knowledge work (fewer wrong numbers or sources, financial models, details in large inputs); clear reports; more precise reading of charts, diagrams and screenshots without tools; more reliable computer use. Generates output tokens over 30% faster than Opus 5 and often needs fewer tokens per task. Resists indirect prompt injection better than any earlier Opus model.
@@ -62,3 +64,4 @@ status: current
 - https://platform.claude.com/docs/en/build-with-claude/thinking — model table (`disabled`/`enabled` → 400), `display` default `omitted`, progress update blocks and `display: "updates"`, sampling parameter rule incl. `top_p` default 0.99, forced tool use.
 - https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback — category table with billing before any output, section "Keep reasoning in thinking blocks" (triggers, replacement, no fallback model), server-side fallback Claude API only with `server-side-fallback-2026-07-01`.
 - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages — no beta header, Opus 5.5 supported (Claude API, Bedrock, Google Cloud), placement rules, `clear_at` beta header.
+- https://claude.dev/blog/getting-the-most-out-of-opus-5-5/ — single-brief prompting, direct final-artefact requests, direct visual/file attachments, authoritative connector context, medium default effort, and concrete frontend design exclusions.

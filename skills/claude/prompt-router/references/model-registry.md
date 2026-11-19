@@ -12,7 +12,7 @@ Generated from the frontmatter of `model-guides/*.md`. The guide file is authori
 | claude-opus-4-6 | Anthropic | Claude | `opus-4.6`, `claude-opus-4.6`, `opus4.6` | 2026-10-13 | legacy | claude-opus-5-5 |
 | claude-opus-4-7 | Anthropic | Claude | `opus-4.7`, `claude-opus-4.7`, `opus4.7` | 2026-10-13 | legacy | claude-opus-5-5 |
 | claude-opus-4-8 | Anthropic | Claude | `opus-4.8`, `claude-opus-4.8`, `opus4.8`, `opus-4-8` | 2026-10-13 | legacy | claude-opus-5-5 |
-| claude-opus-5-5 | Anthropic | Claude | `opus`, `opus-5.5`, `claude-opus-5.5`, `opus5.5` | 2026-10-13 | current |  |
+| claude-opus-5-5 | Anthropic | Claude | `opus`, `opus-5.5`, `claude-opus-5.5`, `opus5.5` | 2026-11-16 | current |  |
 | claude-opus-5 | Anthropic | Claude | `opus-5`, `claude-opus5`, `opus5` | 2026-10-13 | legacy | claude-opus-5-5 |
 | claude-sonnet-4-6 | Anthropic | Claude | `sonnet-4.6`, `claude-sonnet-4.6`, `sonnet4.6`, `sonnet-4-6` | 2026-10-13 | legacy | claude-sonnet-5-5 |
 | claude-sonnet-5-5 | Anthropic | Claude | `sonnet`, `sonnet-5.5`, `claude-sonnet-5.5`, `sonnet5.5` | 2026-10-13 | current |  |
