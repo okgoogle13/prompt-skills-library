@@ -670,6 +670,44 @@
         "Global: reads at most two files in GUIDES",
         "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
       ]
+    },
+    {
+      "id": 36,
+      "name": "optimise-gemini-4-neon-xhigh",
+      "prompt": "Optimise this prompt for Gemini 4 Neon xhigh: Audit the retry queue implementation in {{queue_code}} for race conditions and propose a thread-safe fix. Think step by step.",
+      "expected_output": "Optimise route; resolves gemini-4-neon with effort 'xhigh'; reads only gemini-4-neon.md; validates thinking_level=xhigh in Run settings; removes manual CoT.",
+      "files": [],
+      "expectations": [
+        "Reads references/model-guides/gemini-4-neon.md and no other file in GUIDES",
+        "Output contains a 'Run settings:' line stating thinking_level=xhigh (or equivalent) as valid for gemini-4-neon",
+        "The optimised prompt is in a fenced code block, keeps {{queue_code}} unchanged, and removes 'Think step by step'",
+        "The word 'xhigh' is not treated as part of the prompt text",
+        "Output includes a What changed and why changelog and a Guide status footer with last_verified 2026-11-19",
+        "Global: reads no file under ~/.claude/plugins/",
+        "Global: never lists, globs or greps the GUIDES folder",
+        "Global: runs no Bash command on prompt content or prompt files",
+        "Global: reads at most two files in GUIDES",
+        "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
+      ]
+    },
+    {
+      "id": 37,
+      "name": "adapt-to-neon-orchestrator-fixed-effort",
+      "prompt": "Adapt this prompt for Orchestrator-Neon high: 'Open src/auth/session.ts, edit line 42 to add token expiry validation, think step by step, and set temperature=0.2.'",
+      "expected_output": "Adapt route ([source unspecified]); resolves gemini-4-neon-orchestrator; flags that effort ('high') is not adjustable on Orchestrator (Neon) and removes temperature/CoT/line-level micromanagement while preserving src/auth/session.ts and token expiry validation.",
+      "files": [],
+      "expectations": [
+        "Reads references/model-guides/gemini-4-neon-orchestrator.md and no other file in GUIDES",
+        "Run settings line states that effort ('high') is not adjustable for Orchestrator (Neon) (fixed configuration) and does not present thinking_level=high as accepted",
+        "Includes a brief 'Self-check:' line before the fenced adapted prompt",
+        "Preserves src/auth/session.ts and the token expiry validation goal while replacing line-level CoT/temperature micromanagement with a goal- and verification-oriented brief",
+        "Flags any (unverified) guide items (such as internal thinking levels or session context cap) under guide gaps/uncertainties rather than stating them as fact",
+        "Global: reads no file under ~/.claude/plugins/",
+        "Global: never lists, globs or greps the GUIDES folder",
+        "Global: runs no Bash command on prompt content or prompt files",
+        "Global: reads at most two files in GUIDES",
+        "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
+      ]
     }
   ]
 }

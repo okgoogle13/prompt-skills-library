@@ -38,6 +38,8 @@ Generated from the frontmatter of `model-guides/*.md`. The guide file is authori
 | gemini-4-argon | Google | Gemini | `gemini-4`, `argon`, `gemini-argon`, `gemini4`, `gemini4-argon`, `4-argon`, `argan` | 2026-11-05 | current |  |
 | gemini-4-carbon | Google | Gemini | `carbon`, `gemini-carbon`, `gemini4-carbon`, `4-carbon`, `carbon-4` | 2026-11-13 | current |  |
 | gemini-4-hydrogen | Google | Gemini | `hydrogen`, `gemini-hydrogen`, `gemini4-hydrogen`, `4-hydrogen`, `gemini-4-h2`, `gemini-hydrogen-4` | 2026-11-13 | current |  |
+| gemini-4-neon-orchestrator | Google | Gemini | `neon-orchestrator`, `gemini-neon-orchestrator`, `gemini4-neon-orchestrator`, `orchestrator-neon`, `neon-orch` | 2026-11-19 | current |  |
+| gemini-4-neon | Google | Gemini | `neon`, `gemini-neon`, `gemini4-neon`, `4-neon`, `neon-4` | 2026-11-19 | current |  |
 | gemini-deep-research-3.8-flash | Google | Gemini | `deep-research-3.8-flash`, `gemini-dr-flash`, `flash-deep-research`, `gemini-3.8-flash-deep-research`, `deep-research-flash` | 2026-11-07 | current |  |
 | gemini-deep-research-argon | Google | Gemini | `deep-research-argon`, `gemini-dr-argon`, `argon-deep-research`, `gemini-argon-deep-research` | 2026-11-07 | current |  |
 | gemma-3 | Google | Gemma | `gemma3`, `gemma-3-27b`, `gemma-3-27b-it`, `gemma-3-12b-it`, `gemma-3-4b-it`, `gemma-3-1b-it`, `gemma3-27b`, `gemma_3` | 2026-10-13 | legacy | gemma-4 |
