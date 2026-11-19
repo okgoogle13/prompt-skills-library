@@ -25,3 +25,8 @@ jobs:
     - name: Validate Cards
       run: |
         python scripts/validate_cards.py
+
+    - name: Validate Prompt-Router Registry
+      run: |
+        python -I skills/claude/prompt-router/scripts/build_registry.py --check
+        python -I skills/claude/prompt-router/scripts/build_registry.py --self-test
