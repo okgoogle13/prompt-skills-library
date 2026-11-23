@@ -5,6 +5,8 @@ family: Claude
 aliases: [opus-5-5-orchestrator, opus-orchestrator, claude-opus-orchestrator, orchestrator-opus, orchestrator-claude-opus-5-5, opus-orch]
 last_verified: 2026-11-23
 status: current
+tier: active
+profile: Antigravity-only Opus planner with Hydrogen/Sonnet executor; spec-first multi-step work; overhead on minor edits.
 ---
 
 # Claude Opus 5.5 Orchestrator

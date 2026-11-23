@@ -5,6 +5,8 @@ family: Qwen
 aliases: ["Qwen/Qwen3.8-27B", "Qwen/Qwen3.8-27B-FP8", qwen38-27b]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Open-weight dense 27B vision-language for coding and office; self-hosted context 262K without YaRN.
 ---
 
 # Qwen3.8-27B (Open Weights)

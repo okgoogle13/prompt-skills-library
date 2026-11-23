@@ -5,6 +5,8 @@ family: Gemini
 aliases: [argon-orchestrator, gemini-argon-orchestrator, gemini4-argon-orchestrator, orchestrator-argon, argon-orch, gemini-pro-orchestrator-g1-pro]
 last_verified: 2026-11-23
 status: current
+tier: active
+profile: Harness-only Argon planner with Hydrogen workers; spec-first cross-file refactors and migrations; heavy for trivial tasks.
 ---
 
 # Gemini 4 Argon Orchestrator

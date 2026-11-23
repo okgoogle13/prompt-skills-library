@@ -5,6 +5,8 @@ family: GPT
 aliases: [sol, gpt6.1-sol, 6.1-sol, gpt-6-1-sol]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Complex coding, computer use, professional work; no `none` effort; Codex excludes Free and Go.
 ---
 
 # GPT-6.1 Sol

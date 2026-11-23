@@ -5,6 +5,8 @@ family: GPT
 aliases: [luna, gpt6-luna, 6-luna]
 last_verified: 2026-11-13
 status: current
+tier: active
+profile: Focused, repeatable high-volume tasks; keep prompts tightly bounded; not for difficult architecture work.
 ---
 
 # GPT-6 Luna

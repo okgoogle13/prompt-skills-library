@@ -5,6 +5,8 @@ family: Claude
 aliases: [fable, fable-5.1, fable-5-1, claude-fable-5.1, fable5.1]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Multi-hour agentic coding, knowledge-work artefacts, long-context research; dense prose, whole-file rewrites; nudge tool-call batching.
 ---
 
 # Claude Fable 5.1

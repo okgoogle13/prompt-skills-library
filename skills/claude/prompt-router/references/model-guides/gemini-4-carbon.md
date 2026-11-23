@@ -5,6 +5,8 @@ family: Gemini
 aliases: [carbon, gemini-carbon, gemini4-carbon, 4-carbon, carbon-4]
 last_verified: 2026-11-23
 status: current
+tier: active
+profile: Heavy compute and formal reasoning; unavailable on Google AI Pro Antigravity (requires Ultra or Enterprise ADC).
 ---
 
 # Gemini 4 Carbon

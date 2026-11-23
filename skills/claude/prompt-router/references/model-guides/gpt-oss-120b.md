@@ -5,6 +5,8 @@ family: gpt-oss
 aliases: [gpt-oss, gpt-oss-20b]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Apache-2.0 open weights, Harmony format required; text only; effort set in system message.
 ---
 
 # gpt-oss-120b (also applies to gpt-oss-20b)

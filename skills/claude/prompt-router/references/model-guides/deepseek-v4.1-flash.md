@@ -5,6 +5,8 @@ family: DeepSeek
 aliases: [deepseek-flash, v4.1-flash, deepseek-v4-1-flash]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Agentic coding and maths; weak factual recall; JSON mode only, no schema.
 ---
 
 # DeepSeek-V4.1-Flash

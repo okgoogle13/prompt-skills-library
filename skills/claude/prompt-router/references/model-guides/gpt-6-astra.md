@@ -5,6 +5,8 @@ family: GPT
 aliases: [astra, gpt6-astra]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Complex end-to-end work, computer use; asks too often, over-tests, over-formats; grant autonomy explicitly.
 ---
 
 # GPT-6 Astra

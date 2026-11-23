@@ -5,6 +5,8 @@ family: GPT
 aliases: [gpt6-sol, 6-sol]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Coding and agentic workflows; supports `none` effort; newer `gpt-6.1-sol` exists, review migration first.
 ---
 
 # GPT-6 Sol

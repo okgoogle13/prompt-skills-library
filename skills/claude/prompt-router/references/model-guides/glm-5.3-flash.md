@@ -5,6 +5,8 @@ family: GLM
 aliases: [glm-flash, glm-5.3-flashx, glm53-flash, zai-glm-5.3-flash, zai-org/GLM-5.3-Flash]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Multimodal agent for visual render-compare loops; thinking always on; narrow effort enum.
 ---
 
 # GLM-5.3-Flash

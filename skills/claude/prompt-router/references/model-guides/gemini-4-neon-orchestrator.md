@@ -5,6 +5,8 @@ family: Gemini
 aliases: [neon-orchestrator, gemini-neon-orchestrator, gemini4-neon-orchestrator, orchestrator-neon, neon-orch, gemini-pro-orchestrator-neon]
 last_verified: 2026-11-23
 status: current
+tier: active
+profile: Antigravity Neon planner with Hydrogen executor; fixed effort; for features, fixes, refactoring.
 ---
 
 # Gemini 4 Neon Orchestrator

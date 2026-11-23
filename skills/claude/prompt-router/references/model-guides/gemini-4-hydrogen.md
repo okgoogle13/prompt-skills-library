@@ -5,6 +5,8 @@ family: Gemini
 aliases: [hydrogen, gemini-hydrogen, gemini4-hydrogen, 4-hydrogen, gemini-4-h2, gemini-hydrogen-4]
 last_verified: 2026-11-13
 status: current
+tier: active
+profile: Execution workhorse for code patches, tool calls, test loops; default high; xhigh raises tokens and latency.
 ---
 
 # Gemini 4 Hydrogen

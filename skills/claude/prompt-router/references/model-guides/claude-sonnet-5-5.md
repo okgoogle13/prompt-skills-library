@@ -5,6 +5,8 @@ family: Claude
 aliases: [sonnet, sonnet-5.5, claude-sonnet-5.5, sonnet5.5]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Agentic coding that self-checks; asks before finishing at low/medium; unrequested extras at high effort.
 ---
 
 # Claude Sonnet 5.5

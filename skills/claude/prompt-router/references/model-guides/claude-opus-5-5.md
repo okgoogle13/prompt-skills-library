@@ -5,6 +5,8 @@ family: Claude
 aliases: [opus, opus-5.5, claude-opus-5.5, opus5.5]
 last_verified: 2026-11-16
 status: current
+tier: active
+profile: Agentic coding, code review, long autonomous runs, knowledge work; may stop long tasks early.
 ---
 
 # Claude Opus 5.5

@@ -11,7 +11,7 @@
 
 1. Ask to adapt a prompt from one exact model to another.
 2. Confirm the source and target IDs resolve exactly.
-3. Confirm only the two corresponding guides and `references/patterns.md` are read.
+3. Confirm only the registry, the two corresponding guides and `references/adapt.md` are read (`references/patterns.md` is not loaded on adapt).
 4. Pass if task intent and literal tokens survive, and only material target-specific changes are made.
 
 ## M3 — Missing guide

@@ -1,4 +1,6 @@
 {
   "reserved_aliases": ["spark", "gemini-spark"],
-  "warn_aliases": ["copilot", "perplexity"]
+  "warn_aliases": ["copilot", "perplexity"],
+  "active_count": 20,
+  "profile_words": [8, 16]
 }

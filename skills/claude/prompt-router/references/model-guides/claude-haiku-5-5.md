@@ -5,6 +5,8 @@ family: Claude
 aliases: [haiku, haiku-5.5, claude-haiku-5.5, haiku5.5]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: High-volume classification, routing, extraction, sub-agents; at low effort skips checks and stops early.
 ---
 
 # Claude Haiku 5.5

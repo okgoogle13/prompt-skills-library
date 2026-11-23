@@ -5,6 +5,8 @@ family: Gemini
 aliases: [neon, gemini-neon, gemini4-neon, 4-neon, neon-4]
 last_verified: 2026-11-19
 status: current
+tier: active
+profile: Repo-level debugging and multi-file refactoring; paid tier only; xhigh overthinks simple prompts.
 ---
 
 # Gemini 4 Neon

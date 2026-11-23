@@ -5,6 +5,8 @@ family: Qwen
 aliases: [qwen38-flash, qwen3-8-flash]
 last_verified: 2026-10-13
 status: current
+tier: active
+profile: Multimodal input, 1M window, OpenAI/Anthropic-compatible; thinking on by default; JSON mode needs keyword.
 ---
 
 # Qwen3.8-Flash

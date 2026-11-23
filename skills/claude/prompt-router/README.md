@@ -4,9 +4,11 @@ A portable, modular skill for writing, optimising, adapting and reviewing LLM pr
 
 ## Package layout
 
-- `SKILL.md` — route selection, intake, trust boundary, reference loading and output contracts.
-- `references/patterns.md` — shared prompt-writing, optimisation, coding-task and review rules.
-- `references/model-registry.md` — exact model IDs, aliases, vendor/family, verification dates and legacy successors.
+- `SKILL.md` — always loaded: the 5 safeguards, intake, route table, model lookup, output tiers and the pre-return gate.
+- `references/patterns.md` — loaded on `write` and `optimise` only: literal-token rules, Karpathy rules, Context Audit, coding-task brief and Claude-target rules.
+- `references/review.md` / `references/adapt.md` — lazy route shards, loaded only on `review` / `adapt`.
+- `references/model-registry.md` — active shortlist (`tier: active` guides, with a guide-backed `Profile` column), read when resolving or recommending a model.
+- `references/model-registry-archive.md` — all other models, read once only on a shortlist miss.
 - `references/model-guides/` — 89 model-specific guides (85 from the supplied archive plus 4 frontier model and orchestrator guides).
 - `references/platform-guides/` — provider/client/plan notes kept separate from model behavior.
 - `evals/` — evaluation cases, trigger tests, manual tests and fixture prompts.
@@ -36,7 +38,7 @@ These are account-specific observations, not universal plan guarantees. Re-check
 
 ## Maintenance
 
-`last_verified` means **last written**, not independently fact-checked against vendor documentation. Model-guide facts are only as current as that date. Update a guide and its frontmatter together, then regenerate `references/model-registry.md` with `python3 -I scripts/build_registry.py --write` (check: `--check`; tests: `--self-test`; stdlib only). It fails on duplicate aliases and on aliases that match `references/hosts.json` reserved names, and reports missing and stale (>180 days) guides. Platform access notes should be updated separately from model capability notes.
+`last_verified` means **last written**, not independently fact-checked against vendor documentation. Model-guide facts are only as current as that date. Update a guide and its frontmatter together, then regenerate both registry files with `.venv/bin/python -I scripts/build_registry.py --write` (check: `--check`; tests: `--self-test`; run separately, the flags are mutually exclusive; stdlib only). It fails on duplicate aliases, aliases that match `references/hosts.json` reserved names, an active guide that is not `status: current` or lacks an 8–16-word (or `unverified`) `profile:`, a `profile:` on an archive guide, and an active count different from `hosts.json` `active_count`; it reports missing and stale (>180 days) guides. To promote or demote a model, add or remove `tier: active` and `profile:` in its guide frontmatter and adjust `active_count`. Platform access notes should be updated separately from model capability notes.
 
 ## Conventions
 

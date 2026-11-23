@@ -5,6 +5,8 @@ family: Gemini
 aliases: [gemini-4, argon, gemini-argon, gemini4, gemini4-argon, 4-argon, argan]
 last_verified: 2026-11-05
 status: current
+tier: active
+profile: Deep reasoning for software engineering, multi-step agents, maths; slow at high; heavy for simple extraction.
 ---
 
 # Gemini 4 Argon
