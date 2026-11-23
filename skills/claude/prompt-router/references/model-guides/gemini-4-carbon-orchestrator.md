@@ -35,7 +35,7 @@ status: current
   - Substantial quota and latency savings over running standalone `gemini-4-carbon` across all implementation steps.
   - Automatic mid-flight plan repair when subagent edits or test runs encounter unexpected friction.
 - **Weaknesses and quirks**:
-  - **Plan availability**: Available exclusively on **Google AI Ultra** and **Gemini Enterprise** (with `AGY_ADC_AUTH`); not available on Google AI Pro, Google AI Plus, or Free tiers.
+  - **Plan availability**: Available exclusively on **Google AI Ultra** and **Gemini Enterprise** (with Application Default Credentials `AGY_ADC_AUTH`). On **Google AI Pro**, Gemini 4 Carbon is marked `Unavailable (i)` in the model selector, and `Orchestrator (Carbon)` is excluded from both the Orchestrator planner submenu and CLI `agy models` (Google AI Pro provides `Orchestrator (Neon)`, `Orchestrator (Argon)`, and `Orchestrator (Claude Opus 5.5)`).
   - **Overhead on routine tasks**: For simple single-file edits, documentation tweaks, package bumps, or boilerplate scaffolding, Orchestrator introduces unnecessary planning latency; select `gemini-4-hydrogen` or `gemini-3.8-flash` directly.
   - **No manual effort adjustment**: Effort cannot be changed via `/effort` while Orchestrator is active. For direct control over `thinking_level` (`low | medium | high`), select standalone `gemini-4-carbon`.
   - **Context window**: Standalone Carbon offers a 1M unified context window; session persistence and history compaction follow Antigravity orchestrator defaults `(unverified)`.

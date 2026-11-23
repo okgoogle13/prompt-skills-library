@@ -30,6 +30,7 @@ Keep the directory structure intact when installing. Do not copy only `SKILL.md`
 
 - `references/platform-guides/codex-cli-chatgpt-go.md` records this user's reported selectable Codex CLI models under ChatGPT Go.
 - `references/platform-guides/perplexity-pro.md` records this user's reported GPT-6.1 Sol access through Perplexity Pro.
+- `references/platform-guides/google-ai-pro-antigravity.md` records this user's observed selectable Antigravity models and Orchestrator options under Google AI Pro, noting that Gemini 4 Carbon and Carbon Orchestrator are unavailable on Pro and require Google AI Ultra or Gemini Enterprise.
 
 These are account-specific observations, not universal plan guarantees. Re-check the provider's live model picker when availability matters.
 

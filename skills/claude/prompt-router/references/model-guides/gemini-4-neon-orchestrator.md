@@ -2,8 +2,8 @@
 model: gemini-4-neon-orchestrator
 vendor: Google
 family: Gemini
-aliases: [neon-orchestrator, gemini-neon-orchestrator, gemini4-neon-orchestrator, orchestrator-neon, neon-orch]
-last_verified: 2026-11-19
+aliases: [neon-orchestrator, gemini-neon-orchestrator, gemini4-neon-orchestrator, orchestrator-neon, neon-orch, gemini-pro-orchestrator-neon]
+last_verified: 2026-11-23
 status: current
 ---
 

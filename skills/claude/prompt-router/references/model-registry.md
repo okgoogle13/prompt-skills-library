@@ -35,12 +35,12 @@ Generated from the frontmatter of `model-guides/*.md`. The guide file is authori
 | gemini-3.7-flash | Google | Gemini | `gemini-3.7`, `gemini-3-7-flash`, `3.7-flash`, `gemini-flash-3.7` | 2026-10-13 | legacy | gemini-3.8-flash |
 | gemini-3.8-flash-ai-studio | Google | Gemini | `gemini-3.8-flash-studio`, `ai-studio-flash`, `ai-studio-gemini-3.8-flash`, `gemini-3.8-ai-studio`, `flash-ai-studio`, `aistudio-flash` | 2026-11-07 | current |  |
 | gemini-3.8-flash | Google | Gemini | `gemini-3.8`, `gemini-3-8-flash`, `3.8-flash`, `gemini-flash-3.8`, `gemini3.8flash` | 2026-10-13 | current |  |
-| gemini-4-argon-orchestrator | Google | Gemini | `argon-orchestrator`, `gemini-argon-orchestrator`, `gemini4-argon-orchestrator`, `orchestrator-argon`, `argon-orch` | 2026-11-13 | current |  |
+| gemini-4-argon-orchestrator | Google | Gemini | `argon-orchestrator`, `gemini-argon-orchestrator`, `gemini4-argon-orchestrator`, `orchestrator-argon`, `argon-orch`, `gemini-pro-orchestrator-g1-pro` | 2026-11-23 | current |  |
 | gemini-4-argon | Google | Gemini | `gemini-4`, `argon`, `gemini-argon`, `gemini4`, `gemini4-argon`, `4-argon`, `argan` | 2026-11-05 | current |  |
 | gemini-4-carbon-orchestrator | Google | Gemini | `carbon-orchestrator`, `gemini-carbon-orchestrator`, `gemini4-carbon-orchestrator`, `orchestrator-carbon`, `carbon-orch` | 2026-11-23 | current |  |
-| gemini-4-carbon | Google | Gemini | `carbon`, `gemini-carbon`, `gemini4-carbon`, `4-carbon`, `carbon-4` | 2026-11-13 | current |  |
+| gemini-4-carbon | Google | Gemini | `carbon`, `gemini-carbon`, `gemini4-carbon`, `4-carbon`, `carbon-4` | 2026-11-23 | current |  |
 | gemini-4-hydrogen | Google | Gemini | `hydrogen`, `gemini-hydrogen`, `gemini4-hydrogen`, `4-hydrogen`, `gemini-4-h2`, `gemini-hydrogen-4` | 2026-11-13 | current |  |
-| gemini-4-neon-orchestrator | Google | Gemini | `neon-orchestrator`, `gemini-neon-orchestrator`, `gemini4-neon-orchestrator`, `orchestrator-neon`, `neon-orch` | 2026-11-19 | current |  |
+| gemini-4-neon-orchestrator | Google | Gemini | `neon-orchestrator`, `gemini-neon-orchestrator`, `gemini4-neon-orchestrator`, `orchestrator-neon`, `neon-orch`, `gemini-pro-orchestrator-neon` | 2026-11-23 | current |  |
 | gemini-4-neon | Google | Gemini | `neon`, `gemini-neon`, `gemini4-neon`, `4-neon`, `neon-4` | 2026-11-19 | current |  |
 | gemini-deep-research-3.8-flash | Google | Gemini | `deep-research-3.8-flash`, `gemini-dr-flash`, `flash-deep-research`, `gemini-3.8-flash-deep-research`, `deep-research-flash` | 2026-11-07 | current |  |
 | gemini-deep-research-argon | Google | Gemini | `deep-research-argon`, `gemini-dr-argon`, `argon-deep-research`, `gemini-argon-deep-research` | 2026-11-07 | current |  |

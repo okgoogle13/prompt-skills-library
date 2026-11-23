@@ -3,7 +3,7 @@ model: gemini-4-carbon
 vendor: Google
 family: Gemini
 aliases: [carbon, gemini-carbon, gemini4-carbon, 4-carbon, carbon-4]
-last_verified: 2026-11-13
+last_verified: 2026-11-23
 status: current
 ---
 
@@ -23,6 +23,7 @@ Gemini 4 Carbon is available through the following official interfaces and devel
 3. **Google Antigravity (agent IDE & swarm orchestrator)**:
    - Integrated as the primary architect and review model for multi-agent workflows (`/swarm`, Antigravity orchestrator).
    - Used for overarching system architecture, plan approvals (`plan.md`) and safety-critical code audits, while execution subagents (typically `gemini-4-hydrogen`) handle operational edits.
+   - **Plan tier availability**: In the Antigravity model picker and CLI, Carbon is available exclusively on **Google AI Ultra** and **Gemini Enterprise** (with Application Default Credentials `AGY_ADC_AUTH`). On **Google AI Pro**, Carbon is marked `Unavailable (i)` and is excluded from `agy models`.
 4. **Google Cloud / Vertex AI**:
    - Enterprise Model Garden and Vertex AI Studio for enterprise customers with private VPC connectivity, IAM governance, SLA guarantees and regional data residency.
 5. **Google Workspace & Gemini for Business / Google AI Ultra**:

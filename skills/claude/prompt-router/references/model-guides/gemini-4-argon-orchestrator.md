@@ -2,8 +2,8 @@
 model: gemini-4-argon-orchestrator
 vendor: Google
 family: Gemini
-aliases: [argon-orchestrator, gemini-argon-orchestrator, gemini4-argon-orchestrator, orchestrator-argon, argon-orch]
-last_verified: 2026-11-13
+aliases: [argon-orchestrator, gemini-argon-orchestrator, gemini4-argon-orchestrator, orchestrator-argon, argon-orch, gemini-pro-orchestrator-g1-pro]
+last_verified: 2026-11-23
 status: current
 ---
 

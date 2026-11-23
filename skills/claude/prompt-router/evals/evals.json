@@ -748,6 +748,25 @@
         "Global: reads at most two files in GUIDES",
         "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
       ]
+    },
+    {
+      "id": 40,
+      "name": "google-ai-pro-antigravity-platform",
+      "prompt": "Optimise this prompt for Orchestrator Carbon in Google Antigravity with my Google AI Pro account: 'Architect a thread-safe connection pool and implement it with tests.'",
+      "expected_output": "Resolves gemini-4-carbon-orchestrator; reads its model guide and the google-ai-pro-antigravity platform profile; flags that Carbon Orchestrator is unavailable on Google AI Pro (requires Google AI Ultra or Enterprise ADC) and recommends Orchestrator (Neon) or Claude Opus 5.5 Orchestrator.",
+      "files": [],
+      "expectations": [
+        "Reads references/model-guides/gemini-4-carbon-orchestrator.md",
+        "Reads references/platform-guides/google-ai-pro-antigravity.md",
+        "Flags that Gemini 4 Carbon and Orchestrator (Carbon) are marked Unavailable on Google AI Pro",
+        "Explains that accessing Carbon Orchestrator requires upgrading to Google AI Ultra or signing in with Gemini Enterprise ADC",
+        "Recommends available Google AI Pro alternatives (Orchestrator Neon, Claude Opus 5.5 Orchestrator, or Gemini 4 Neon Extra effort)",
+        "Global: reads no file under ~/.claude/plugins/",
+        "Global: never lists, globs or greps the GUIDES folder",
+        "Global: runs no Bash command on prompt content or prompt files",
+        "Global: reads at most two files in GUIDES",
+        "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
+      ]
     }
   ]
 }
