@@ -27,3 +27,15 @@
   - `evals/evals.json` parses (45 cases; 6 updated, 5 added); `scripts/validate_cards.py` passes; `diff -rq` against `~/.claude/skills/prompt-router/` clean.
 - **Open (out of scope):** live-model eval runs (spec §10: Short-tier fidelity, ≥90% shortlist hit rate). Static `write` load is ~5.7k tok (22,850 chars / 4), ~57% cut; accepted as Phase 1 result, spec §8 updated.
 
+
+### PR-001 Translate prompt-router model guides to English
+- **Status:** done
+- **Phase:** 1
+- **Surface:** claude
+- **Completed:** 2026-11-23 (translation landed 2026-11-14 in `a4b1cc7` merge of `prompt-router-consolidated` and `8d3f627`)
+- **Outcome:** All guides in `skills/claude/prompt-router/references/model-guides/` are English (85 at translation time; 4 added since were written in English, 89 total). `(unbelegt)` → `(unverified)` and `Guide-Stand` → `Guide status` across skill text and evals.
+- **Evidence:**
+  - Frontmatter unchanged against the pre-translation commit (checked at translation time); `tier:`/`profile:` added later by P1-PR-LEAN.
+  - 2026-11-23: no umlauts, `„`, `unbelegt` or common German words (`und|nicht|wird|sollte`) in any of the 89 guides.
+  - `build_registry.py --check` → `guides=89 registry_rows=89 active=20 archive=69`, "registry up to date", exit 0; `--self-test` → ALL PASS; `scripts/validate_cards.py` exit 0; `diff -rq` against `~/.claude/skills/prompt-router/` clean.
+- **Open:** `claude-opus-4-6.md` L14 ("No `thinking.type` is rejected with 400") keeps an ambiguous German original; verify against Anthropic docs. Spelling convention mixed (AU/UK vs US) across batches.
