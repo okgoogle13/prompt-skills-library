@@ -708,6 +708,46 @@
         "Global: reads at most two files in GUIDES",
         "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
       ]
+    },
+    {
+      "id": 38,
+      "name": "adapt-to-carbon-orchestrator-ultra",
+      "prompt": "Adapt this prompt for Orchestrator Carbon: 'Verify the zero-day memory leak in the kernel driver, generate a patch, think step by step, and set temperature=0.0.'",
+      "expected_output": "Adapt route ([source unspecified]); resolves gemini-4-carbon-orchestrator; notes fixed configuration (effort not adjustable), Google AI Ultra / Enterprise plan requirement, removes temperature and manual CoT, and formats into spec-first goal and acceptance criteria.",
+      "files": [],
+      "expectations": [
+        "Reads references/model-guides/gemini-4-carbon-orchestrator.md and no other file in GUIDES",
+        "Run settings line states that effort is not adjustable for Orchestrator (Carbon) (fixed configuration)",
+        "Includes a brief 'Self-check:' line before the fenced adapted prompt",
+        "Preserves the kernel driver memory leak verification scope while converting step-by-step micromanagement into a spec-first invariant brief with explicit test verification",
+        "Removes temperature=0.0 and manual CoT ('think step by step')",
+        "Notes subscription availability (Google AI Ultra or Gemini Enterprise)",
+        "Global: reads no file under ~/.claude/plugins/",
+        "Global: never lists, globs or greps the GUIDES folder",
+        "Global: runs no Bash command on prompt content or prompt files",
+        "Global: reads at most two files in GUIDES",
+        "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
+      ]
+    },
+    {
+      "id": 39,
+      "name": "optimise-claude-opus-5-5-orchestrator",
+      "prompt": "Optimise this prompt for Orchestrator Claude Opus 5.5: 'Refactor our payment billing state machine to handle idempotency keys, explain every line in <thinking> tags, and micromanage the worker edits directly.'",
+      "expected_output": "Optimise route; resolves claude-opus-5-5-orchestrator; reads only claude-opus-5-5-orchestrator.md; removes <thinking> extraction request; replaces worker micromanagement with spec-first goal-oriented delegation.",
+      "files": [],
+      "expectations": [
+        "Reads references/model-guides/claude-opus-5-5-orchestrator.md and no other file in GUIDES",
+        "Output contains a Run settings line appropriate for Claude Opus 5.5 Orchestrator",
+        "Removes <thinking> tags instruction to prevent Anthropic reasoning_extraction refusal filters",
+        "Preserves the payment billing state machine refactoring and idempotency keys scope",
+        "Replaces line-level worker micromanagement with goal-oriented spec-first instructions for the planner/executor handoff loop",
+        "Output includes a What changed and why changelog and a Guide status footer with last_verified 2026-11-23",
+        "Global: reads no file under ~/.claude/plugins/",
+        "Global: never lists, globs or greps the GUIDES folder",
+        "Global: runs no Bash command on prompt content or prompt files",
+        "Global: reads at most two files in GUIDES",
+        "Portable: uses only packaged references and available file-reading capabilities; assumes no vendor-specific absolute path."
+      ]
     }
   ]
 }

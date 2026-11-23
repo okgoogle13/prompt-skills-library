@@ -7,7 +7,7 @@ A portable, modular skill for writing, optimising, adapting and reviewing LLM pr
 - `SKILL.md` — route selection, intake, trust boundary, reference loading and output contracts.
 - `references/patterns.md` — shared prompt-writing, optimisation, coding-task and review rules.
 - `references/model-registry.md` — exact model IDs, aliases, vendor/family, verification dates and legacy successors.
-- `references/model-guides/` — 87 model-specific guides (85 from the supplied archive plus 2 Gemini 4 Neon guides).
+- `references/model-guides/` — 89 model-specific guides (85 from the supplied archive plus 4 frontier model and orchestrator guides).
 - `references/platform-guides/` — provider/client/plan notes kept separate from model behavior.
 - `evals/` — evaluation cases, trigger tests, manual tests and fixture prompts.
 - `CREDITS.md` — provenance and licence notices.
@@ -44,6 +44,6 @@ These are account-specific observations, not universal plan guarantees. Re-check
 
 ## Migration note
 
-The command stays `prompt-router`. This package replaces the earlier `prompt-router` and retires `migrate-prompt`; adaptation is route **adapt**. Starting from the 85 original guides (`muse-spark-1.3` lost the `spark` alias), the registry now holds 87 guides after adding `gemini-4-neon` and `gemini-4-neon-orchestrator`.
+The command stays `prompt-router`. This package replaces the earlier `prompt-router` and retires `migrate-prompt`; adaptation is route **adapt**. Starting from the 85 original guides (`muse-spark-1.3` lost the `spark` alias), the registry now holds 89 guides after adding `gemini-4-neon`, `gemini-4-neon-orchestrator`, `gemini-4-carbon-orchestrator`, and `claude-opus-5-5-orchestrator`.
 
 Canonical source of truth: `skills/claude/prompt-router/` in `prompt-skills-library`. Install or update `~/.claude/skills/prompt-router/` as a one-way derived copy via `rsync -a --delete`. Check registry integrity with `.venv/bin/python -I scripts/build_registry.py --check`.
