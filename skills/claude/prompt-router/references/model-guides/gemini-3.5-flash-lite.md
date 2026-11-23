@@ -17,7 +17,7 @@ status: current
 - Thought signatures: in stateful operation (`store: true` + `previous_interaction_id`) the server manages them; stateless, all `thought` blocks must be returned unchanged. Thinking tokens are billed as output, and `max_output_tokens` counts them.
 
 ## Prompting style
-- **Terse and direct**: "Be concise. Gemini 3.x responds best to direct, clear instructions." According to the docs, verbose prompt-engineering techniques from older models can cause the model to "over-analyze".
+- **Terse and direct**: "Be concise. Gemini 3.x responds best to direct, clear instructions." According to the docs, verbose prompt-engineering techniques from older models can cause the model to "over-analyse".
 - **Request conversational tone**: Gemini 3.x is by default not very verbose; explicitly ask for a conversational tone.
 - **Long context**: data first, question or instruction at the end, introduced by "Based on the preceding information...".
 - **No sampling control**: `temperature`, `top_p` and `top_k` are "deprecated and ignored"; future model generations return HTTP 400. For more determinism, Google suggests a system instruction with explicit rules.
@@ -27,7 +27,7 @@ status: current
 ## Strengths & weaknesses (prompt-relevant)
 - Strengths per Google: highest throughput in the 3.5 family for data parsing and document extraction; more reliable tool execution with code execution, search and MCP; more precise document parsing and structured data extraction; front-end JavaScript and table processing via lightweight code execution; more stable multi-turn instruction following and persona consistency than Gemini 3.1 Flash-Lite; computer use as a built-in tool.
 - Compared with Gemini 2.5 Flash, Google names a "Strong migration path" with higher scores on HLE (18.0% vs. 11.0%) and CharXIV (74.5% vs. 63.7%).
-- Model card: based on Gemini 3.1 Flash-Lite; optimized for latency-critical, high-volume tasks such as translation and classification, and for agentic workflows.
+- Model card: based on Gemini 3.1 Flash-Lite; optimised for latency-critical, high-volume tasks such as translation and classification, and for agentic workflows.
 - Weaknesses per the model card: usual hallucinations, jailbreak resistance still a work in progress, occasional slowness or timeouts. Knowledge cutoff **March 2026**, in some domains only January 2025.
 - Image segmentation (pixel masks) is, according to Google, not supported in Gemini 3.x.
 

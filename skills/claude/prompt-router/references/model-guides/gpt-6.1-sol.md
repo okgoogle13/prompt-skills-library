@@ -46,7 +46,7 @@ Unless explicitly marked otherwise, `reasoning.effort`, `reasoning.mode`, `reaso
 - Effort can be changed mid-conversation via a `configuration_update` item without rewriting the prompt prefix (and thus the cache) — supported for the GPT-6 family only in standard, single-agent mode; do not combine with automatic compaction/truncation.
 
 ## Prompting Style
-- OpenAI provides no separate Sol prompting guide; the GPT-6 prompts are explicitly "a starting point across the GPT-6 model family", but address "behavior observed with GPT-6 Astra". Any transfer of the Astra quirks below to 6.1 Sol is therefore (unverified) and must be confirmed with evals.
+- OpenAI provides no separate Sol prompting guide; the GPT-6 prompts are explicitly "a starting point across the GPT-6 model family", but address "behaviour observed with GPT-6 Astra". Any transfer of the Astra quirks below to 6.1 Sol is therefore (unverified) and must be confirmed with evals.
 - Building blocks from the GPT-6 guide: grant autonomy explicitly ("bias towards action and carry the user's intended task to completion"); request approval only after "a concrete, reviewable result"; spell out precedence over skills/files ("The user's instructions take precedence over guidelines provided in a skill."); explicitly request prose when no Markdown is wanted; forbid slop words and contrastive framing; actively steer delegation to subagents; limit test scope for small, reversible changes.
 - Tool calling only via the Responses API — tool instructions in the prompt presuppose a Responses request.
 

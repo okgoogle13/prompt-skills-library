@@ -13,12 +13,12 @@ successor: deepseek-v4.1-flash
 ## Reasoning / Thinking
 - **Type: none** (non-reasoning chat model). DeepSeek-V3 is the instruction-tuned chat model of the V3 series and was historically accessed via the model ID `deepseek-chat`. It is **not** a dedicated reasoning model like DeepSeek-R1 and does not return a separate `reasoning_content` trace.
 - V3 was trained via **knowledge distillation from DeepSeek-R1** and thereby inherited improved reasoning capabilities, but it is not itself a reasoning model like R1 (unverified) — the chain-of-thought is therefore implicitly trained in, but not exposed as a separate thinking mode.
-- **Prompting step-by-step reasoning:** Because V3 has no built-in thinking mode, step-by-step reasoning must be forced explicitly via the prompt — e.g. "Think step by step", structured/hierarchical Markdown prompts, or specifying an outline (problem → solution steps → result) (unverified). Unlike R1, V3 may and should use the **system prompt** to control behavior.
+- **Prompting step-by-step reasoning:** Because V3 has no built-in thinking mode, step-by-step reasoning must be forced explicitly via the prompt — e.g. "Think step by step", structured/hierarchical Markdown prompts, or specifying an outline (problem → solution steps → result) (unverified). Unlike R1, V3 may and should use the **system prompt** to control behaviour.
 - **Distinction from R1 (`deepseek-reasoner`):** R1 produces a separately delivered chain-of-thought (`reasoning_content`) and, per its model card, should be run without a system prompt; V3 behaves like a classic chat model and follows system prompts. (Note: the API IDs `deepseek-chat` and `deepseek-reasoner` have been retired since 2026-07-24 15:59 UTC (last routed to `deepseek-v4-flash`). Alias semantics per the change log: `deepseek-chat` = V3 (from 2024-12-26), V3-0324 (from 2025-03-24), non-thinking mode of V3.1/V3.1-Terminus/V3.2-Exp/V3.2 (from 2025-08-21), V4-Flash (from 2026-04-24) — the temperature mapping below is only verified for V3-0324. The V3 weights remain available via the open-weights releases.)
 
 ## Prompting style
 - **Prescriptiveness:** medium-high. V3 behaves more like a classic chat model, responds well to system prompts and to precise, structured instructions (unverified). Clear, hierarchically structured Markdown prompts are recommended (unverified).
-- **System prompt fidelity / instruction following:** Good — unlike R1, the system prompt is actively used to fix behavior. The official V3-0324 system prompt template is: `该助手为DeepSeek Chat，由深度求索公司创造。今天是{current date}。`. Inserting the current date into the system prompt is officially intended.
+- **System prompt fidelity / instruction following:** Good — unlike R1, the system prompt is actively used to fix behaviour. The official V3-0324 system prompt template is: `该助手为DeepSeek Chat，由深度求索公司创造。今天是{current date}。`. Inserting the current date into the system prompt is officially intended.
 - **Temperature recommendations (official, by use case):**
   - Coding / Math: **0.0**
   - Data Cleaning / Data Analysis: **1.0**
@@ -45,9 +45,9 @@ successor: deepseek-v4.1-flash
   - To **R1 / `deepseek-reasoner`**: reduce system-prompt-based control or move instructions into the user role; expect a separate `reasoning_content`; remove explicit "Think step by step" instructions, since R1 reasons anyway.
   - To **other vendors (OpenAI/Anthropic/Gemini)**: the implicit temperature mapping falls away — recalibrate temperature values (a V3 "API 1.0" corresponded to model 0.3).
 - **Migrating TO DeepSeek-V3:**
-  - Use the system prompt actively to fix behavior and, if needed, add the DeepSeek date pattern to the system prompt.
+  - Use the system prompt actively to fix behaviour and, if needed, add the DeepSeek date pattern to the system prompt.
   - **Adjust temperature to the official use-case table** and — only for the historical `deepseek-chat` endpoint — account for the API mapping: `temperature=0.0` for deterministic code, up to `1.5` for creative text; when running open weights locally, work with lower raw values.
-  - Use hierarchical, structured Markdown prompts and clear step-by-step outlines to elicit step-by-step behavior, since V3 has no automatic thinking mode (unverified).
+  - Use hierarchical, structured Markdown prompts and clear step-by-step outlines to elicit step-by-step behaviour, since V3 has no automatic thinking mode (unverified).
 
 ## Sources
 - https://api-docs.deepseek.com/quick_start/parameter_settings — official temperature recommendations by use case (coding 0.0, conversation/translation 1.3, creative 1.5; default 1.0).

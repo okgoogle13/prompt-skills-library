@@ -19,7 +19,7 @@ profile: Antigravity Neon planner with Hydrogen executor; fixed effort; for feat
 - **Four-phase automatic handoff**:
   1. *Planner plans*: Each user message starts with a read-only planning phase in which Neon explores the codebase, resolves ambiguities, and writes an implementation plan including re-planning trigger conditions. (Questions, reviews, or explanations requiring no edits are answered directly by Neon; small follow-ups with settled steps receive a short plan immediately.)
   2. *Hydrogen executes*: Once planned, `gemini-4-hydrogen` applies file edits, writes code, runs builds/tests, and verifies against the plan.
-  3. *Friction escalation*: If Hydrogen hits a verification failure twice, an unexpected interface behavior, or an unsettled design choice, control returns to Neon to inspect conversation state, repair the plan, and resume execution.
+  3. *Friction escalation*: If Hydrogen hits a verification failure twice, an unexpected interface behaviour, or an unsettled design choice, control returns to Neon to inspect conversation state, repair the plan, and resume execution.
   4. *Progress review*: On longer tasks—or when the user sends a message mid-run—Hydrogen reports progress to Neon to verify against the plan and wrap up, continue, or revise.
 - **No manual CoT scaffolding**: Instructions like "Think step by step" are unnecessary; Neon handles architectural reasoning natively during the read-only planning phase.
 - **Quota and latency efficiency**: Reserves `gemini-4-neon` tokens for planning, architectural judgment, and error recovery while delegating routine edits, package updates, and test iterations to `gemini-4-hydrogen`, stretching plan quota further than running Neon standalone.

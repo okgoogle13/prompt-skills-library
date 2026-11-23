@@ -37,7 +37,7 @@ profile: Focused, repeatable high-volume tasks; keep prompts tightly bounded; no
 - Reasoning tokens are invisible but occupy context and are billed as output tokens; `max_output_tokens` caps reasoning and answer together (starting reserve per the docs at least 25,000 tokens).
 
 ## Prompting Style
-- There is no separate Luna prompting guidance. The GPT-6 prompts in the model guide are explicitly "a starting point across the GPT-6 model family", but address "behavior observed with GPT-6 Astra" — so adopt the autonomy building block, skill precedence sentence, prose instruction, slop-word ban and test-scope rules only after your own evals; that Luna shows the same quirks is not verified (unverified).
+- There is no separate Luna prompting guidance. The GPT-6 prompts in the model guide are explicitly "a starting point across the GPT-6 model family", but address "behaviour observed with GPT-6 Astra" — so adopt the autonomy building block, skill precedence sentence, prose instruction, slop-word ban and test-scope rules only after your own evals; that Luna shows the same quirks is not verified (unverified).
 - Name task shapes that suit Luna: OpenAI recommends `gpt-6-luna` "for efficient, repeatable work" and advises not to route every request to the strongest model. Keep prompts tightly scoped to one clearly bounded task and specify the output format explicitly (Structured Outputs is supported).
 - Level of detail: the deployment checklist names `text.verbosity` (`low`/`medium`/`high`) "the main lever for balancing brevity against completeness" and content/structure/length in the prompt; its example uses Astra, and is not verified individually for Luna (unverified).
 

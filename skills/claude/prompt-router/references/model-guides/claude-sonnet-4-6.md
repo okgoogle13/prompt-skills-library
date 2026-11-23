@@ -19,7 +19,7 @@ successor: claude-sonnet-5-5
 - Per-message effort and mid-conversation system messages do not exist on Sonnet 4.6; a change of effort via the top-level value restarts the prompt cache.
 
 ## Prompting style
-- Claude 4.6 models are more proactive and can overtrigger on instructions that older models needed — soften thoroughness and tool-pressure phrasing ("If in doubt, use [tool]", "CRITICAL: You MUST use this tool …"); if behavior remains too aggressive, lower effort.
+- Claude 4.6 models are more proactive and can overtrigger on instructions that older models needed — soften thoroughness and tool-pressure phrasing ("If in doubt, use [tool]", "CRITICAL: You MUST use this tool …"); if behaviour remains too aggressive, lower effort.
 - At release: the best balance of speed and intelligence, good for high-volume production workloads. (unverified)
 - Always read tool-call `input` with a JSON parser (escaping can differ), never with a raw-string match.
 

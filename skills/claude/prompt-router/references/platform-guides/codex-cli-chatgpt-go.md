@@ -19,7 +19,7 @@ The user explicitly confirms that all three models below are selectable in the `
 | GPT-5.6 Luna | `gpt-5.6-luna` | Selectable; user-confirmed |
 | GPT-6.1 Sol | `gpt-6.1-sol` | Not in the user's reported Go CLI picker |
 
-This is account-specific observed availability as of 2026-11-13. Do not describe GPT-5.6 Terra or GPT-5.6 Luna as disabled or inaccessible. Do not generalize the user's observed access to every Go subscriber.
+This is account-specific observed availability as of 2026-11-13. Do not describe GPT-5.6 Terra or GPT-5.6 Luna as disabled or inaccessible. Do not generalise the user's observed access to every Go subscriber.
 
 ## Public documentation versus account-specific availability
 

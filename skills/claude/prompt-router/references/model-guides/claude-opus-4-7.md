@@ -14,14 +14,14 @@ successor: claude-opus-5-5
 - Type: **adaptive, off by default**. A request without a `thinking` field runs without thinking; it is switched on with `thinking: {type: "adaptive"}`. `{type: "disabled"}` is allowed. `thinking: {type: "enabled", budget_tokens: N}` is removed and returns 400.
 - Depth control via `output_config.effort`: `low | medium | high | xhigh | max`, default `high`. Vendor recommendation: start at `xhigh` for coding/agentic work, `high` as the minimum for most intelligence-critical workloads, `medium` for cost-sensitive routes, `max` only where there is measurable headroom (can lead to overthinking on structured-output tasks).
 - Opus 4.7 adheres to effort more strictly than Opus 4.6, especially at `low`/`medium`: it limits the work to what was asked. If reasoning is shallow, raise effort rather than countering through the prompt; if effort must stay low, add targeted guidance: "This task involves multistep reasoning. Think carefully before responding."
-- `thinking.display` defaults to `"omitted"` (empty thinking fields, only `signature`) — a silent change from Opus 4.6, where summarized thinking was the default. For readable summaries, set `display: "summarized"`.
+- `thinking.display` defaults to `"omitted"` (empty thinking fields, only `signature`) — a silent change from Opus 4.6, where summarised thinking was the default. For readable summaries, set `display: "summarized"`.
 - Interleaved thinking is automatic with adaptive thinking (no beta header); reasoning between tool calls always appears in thinking blocks.
 - Sampling parameters: non-default `temperature`/`top_p`/`top_k` return 400 on every request, even without thinking (`top_p: 1` likewise, and `temperature` plus `top_p` together even at default values).
 - At `xhigh`/`max`, set a large `max_tokens` (starting value 64k); it limits thinking plus response text.
 
 ## Prompting style
 - **Effort before prompt tricks**: control depth primarily via effort; use prompt instructions only as a supplement when effort must stay low for latency reasons.
-- **Remove progress scaffolding**: Opus 4.7 produces more regular, better progress updates on its own in long agentic traces. Remove forced status choreography ("After every 3 tool calls, summarize progress").
+- **Remove progress scaffolding**: Opus 4.7 produces more regular, better progress updates on its own in long agentic traces. Remove forced status choreography ("After every 3 tool calls, summarise progress").
 - **No assistant prefill** (400 since Opus 4.6) — use Structured Outputs or a system prompt instruction instead.
 - **Forced tool use** (`tool_choice` `any`/`tool`) is accepted, but the response then begins with the tool call and no thinking block. If the model should think first: `tool_choice: {type: "auto"}` and state in the prompt when to use the tool.
 - **No mid-conversation system messages**: `role: "system"` in the `messages` array returns 400 on Opus 4.7. Instructions belong in the top-level `system` prompt or in a user turn.
@@ -48,9 +48,9 @@ successor: claude-opus-5-5
 
 ## Sources
 - https://platform.claude.com/docs/en/models/opus-4-7/overview — legacy status, model ID `claude-opus-4-7`, 1M context, 128K output (300K batch beta), thinking "Adaptive", effort default `high`, knowledge cutoff Jan 2026, retirement not before 16 Apr 2027, migration recommendation to Opus 5.5.
-- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-47 — what changes after Opus 4.7 (effort recalibration, 1M without beta header, mid-conversation system messages on 4.7 → 400, `stop_details`, no Fast Mode, no computer-use toolset), plus breaking changes and behavior changes from Opus 4.7 (thinking display, tokenizer 1× to 1.35×, progress updates, cyber safeguards, high-res images).
+- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-47 — what changes after Opus 4.7 (effort recalibration, 1M without beta header, mid-conversation system messages on 4.7 → 400, `stop_details`, no Fast Mode, no computer-use toolset), plus breaking changes and behaviour changes from Opus 4.7 (thinking display, tokenizer 1× to 1.35×, progress updates, cyber safeguards, high-res images).
 - https://platform.claude.com/docs/en/about-claude/model-deprecations — status Active, retirement "Not sooner than April 16, 2027"; parameter table: `temperature`/`top_p`/`top_k` on Claude 4.7+ → 400.
 - https://platform.claude.com/docs/en/about-claude/models/overview — Opus 4.7 in the list "Legacy models (still available)"; tokenizer since Opus 4.7 (555k vs. 750k words per 1M tokens).
 - https://platform.claude.com/docs/en/build-with-claude/effort — effort levels incl. `xhigh`/`max` for Opus 4.7, default `high`, recommendation table, stricter effort adherence than 4.6, `max_tokens` ≥ 64k at `xhigh`/`max`.
 - https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting — Opus 4.7: adaptive only, default off, `enabled` → 400.
-- https://platform.claude.com/docs/en/build-with-claude/thinking — `display` default `omitted`, interleaved thinking automatic, sampling parameter rules, prefill/forced-tool-use behavior.
+- https://platform.claude.com/docs/en/build-with-claude/thinking — `display` default `omitted`, interleaved thinking automatic, sampling parameter rules, prefill/forced-tool-use behaviour.

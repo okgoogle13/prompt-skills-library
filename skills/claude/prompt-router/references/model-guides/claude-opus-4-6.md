@@ -48,7 +48,7 @@ successor: claude-opus-5-5
 
 ## Sources
 - https://platform.claude.com/docs/en/models/opus-4-6/overview — legacy status, model ID `claude-opus-4-6`, 1M context, 128K output (300K batch beta), thinking "Adaptive (extended deprecated)", effort default `high`, knowledge cutoff May 2025, retirement not before 5 Feb 2027, Bedrock InvokeModel ID, migration recommendation to Opus 5.5.
-- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-46 — breaking changes from Opus 4.7 (`budget_tokens`, sampling parameters, thinking display, tokenizer, prefill since 4.6), behavior changes (progress updates, cyber safeguards, high-res images), tool-parameter escaping from 4.6.
+- https://platform.claude.com/docs/en/models/opus-5-5/migration-guide#migrating-from-claude-opus-46 — breaking changes from Opus 4.7 (`budget_tokens`, sampling parameters, thinking display, tokenizer, prefill since 4.6), behaviour changes (progress updates, cyber safeguards, high-res images), tool-parameter escaping from 4.6.
 - https://platform.claude.com/docs/en/about-claude/model-deprecations — status Active, retirement "Not sooner than February 5, 2027"; sampling-parameter 400 only from Claude 4.7.
 - https://platform.claude.com/docs/en/about-claude/models/overview — Opus 4.6 in the list "Legacy models (still available)"; extended thinking on Opus 4.6 deprecated; words per token before the Opus 4.7 tokenizer.
 - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices — Opus 4.6-specific: system prompt responsiveness/overtriggering, overthinking and upfront exploration, `budget_tokens` deprecated, sub-agent tendency, overengineering, risky actions, vision, frontend design.

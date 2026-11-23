@@ -19,8 +19,8 @@ profile: Antigravity-only Opus planner with Hydrogen/Sonnet executor; spec-first
 - **Four-phase coordination protocol**:
   1. *Opus 5.5 plans*: Each user message begins with a read-only investigation and planning phase in which Opus 5.5 maps repository dependencies, resolves design ambiguities, and produces an explicit implementation plan (`plan.md`). (Questions, reviews, or consultations requiring no code edits are answered directly by Opus 5.5 without delegating.)
   2. *Worker executes*: Once the plan is confirmed, the execution worker (`gemini-4-hydrogen` or `claude-sonnet-5-5`) applies file diffs, executes shell commands, and verifies output against the plan.
-  3. *Escalation on friction*: If the execution worker hits two consecutive test failures, encounters unexpected interface behavior, or finds unspecified architectural choices, control returns to Opus 5.5 to inspect state, repair the plan, and direct subsequent execution.
-  4. *Audit and progress review*: On complex multi-step workflows, the worker reports completed milestones to Opus 5.5, which reviews the git diff against the plan and safety invariants before finalizing the response.
+  3. *Escalation on friction*: If the execution worker hits two consecutive test failures, encounters unexpected interface behaviour, or finds unspecified architectural choices, control returns to Opus 5.5 to inspect state, repair the plan, and direct subsequent execution.
+  4. *Audit and progress review*: On complex multi-step workflows, the worker reports completed milestones to Opus 5.5, which reviews the git diff against the plan and safety invariants before finalising the response.
 - **No manual CoT scaffolding**: Manual instructions like "Think step by step" or `<thinking>` scratchpad requests are redundant and may trigger Anthropic's `reasoning_extraction` refusal filter; Opus 5.5 deliberates natively during planning.
 - **Quota and throughput efficiency**: Orchestrator pairs Opus 5.5's state-of-the-art reasoning and visual comprehension with Hydrogen's high-speed execution, drastically reducing token spend and latency compared to running Opus 5.5 monomorphically on every routine edit or build step.
 
@@ -34,7 +34,7 @@ profile: Antigravity-only Opus planner with Hydrogen/Sonnet executor; spec-first
 ## Strengths & weaknesses (prompt-relevant)
 - **Strengths**:
   - Premier agentic reasoning and code review: combines Opus 5.5's deep architectural judgment, low hallucination rate, and prompt-injection resilience with Hydrogen's rapid execution.
-  - Native cross-vendor synergy: leverages Anthropic's strongest reasoning engine while utilizing Google's fast infrastructure for routine execution.
+  - Native cross-vendor synergy: leverages Anthropic's strongest reasoning engine while utilising Google's fast infrastructure for routine execution.
   - Automatic error recovery through Opus 5.5's plan repair whenever worker verification fails.
 - **Weaknesses and quirks**:
   - **Harness dependency**: Available exclusively within Google Antigravity environments (App, CLI, IDE extensions) supporting multi-model orchestrator roles; not available as a single API call on the Claude API or Google Cloud Vertex AI.

@@ -28,7 +28,7 @@ profile: Apache-2.0 open weights, Harmony format required; text only; effort set
 ## Strengths & Weaknesses (prompt-relevant)
 - Open weights under **Apache 2.0**. 120b: 117B total / 5.1B active, "Most powerful open-weight model, fits into an H100 GPU" (≥ 60 GB VRAM or multi-GPU per the Transformers guide). 20b: 21B total / 3.6B active, "Medium-sized open-weight model for low latency", approx. 16 GB VRAM with MXFP4. Both share format, channels, effort control and limits — the prompt contract is identical.
 - **Text only** in and out; no image or audio input. Knowledge cutoff **1 Jun 2024** — supply time-critical facts in the context.
-- Weakness: `# Response Formats` "will, however, only influence the model's behavior but doesn't guarantee the full adherence to the schema" — enforce schema adherence in self-hosting via constrained sampling or validation.
+- Weakness: `# Response Formats` "will, however, only influence the model's behaviour but doesn't guarantee the full adherence to the schema" — enforce schema adherence in self-hosting via constrained sampling or validation.
 - Built-in tools `browser` (search/open/find) and `python` (stateful Jupyter, 120 s timeout) exist only if your own stack implements them.
 - Benchmark and quality comparisons against the API models are not claimed here (unverified).
 

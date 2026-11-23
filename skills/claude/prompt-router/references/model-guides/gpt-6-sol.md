@@ -18,7 +18,7 @@ profile: Coding and agentic workflows; supports `none` effort; newer `gpt-6.1-so
 - Mid-conversation effort changes via `configuration_update` are documented for "the GPT-6 model family in standard, single-agent mode"; the docs do not name GPT-6 Sol explicitly as included (unverified).
 
 ## Prompting Style
-- No dedicated prompting guide for GPT-6 Sol. The GPT-6 prompts count as "a starting point across the GPT-6 model family", but address "behavior observed with GPT-6 Astra" — any transfer to GPT-6 Sol is (unverified) and must be checked with evals.
+- No dedicated prompting guide for GPT-6 Sol. The GPT-6 prompts count as "a starting point across the GPT-6 model family", but address "behaviour observed with GPT-6 Astra" — any transfer to GPT-6 Sol is (unverified) and must be checked with evals.
 - Building blocks from this guide, if the evals support them: grant autonomy explicitly ("bias towards action"), request approval only after a "concrete, reviewable result", spell out precedence of user instructions over skills, explicitly request prose, limit test scope for small changes.
 - Tie tool instructions to the API path: built-in tools and function calling run through the Responses API; in Chat Completions only function calling and only with `reasoning_effort: "none"`.
 

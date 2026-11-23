@@ -19,9 +19,9 @@ successor: claude-sonnet-5-5
 - `max_tokens` caps thinking **plus** response text: with a tight budget, a truncated response consisting almost entirely of thinking is at risk, with `stop_reason: "max_tokens"`.
 
 ## Prompting style
-- **Literal instruction following**, especially at low effort: no silent generalization, no inference of unstated requirements. If a rule should apply broadly, spell out its scope ("apply to every section, not just the first").
+- **Literal instruction following**, especially at low effort: no silent generalisation, no inference of unstated requirements. If a rule should apply broadly, spell out its scope ("apply to every section, not just the first").
 - **Verbosity is task-calibrated** rather than fixed — short answers for simple lookups, long ones for open-ended analysis. For fixed product lengths, prompt explicitly; positive examples of the desired brevity work better than negative instructions.
-- **Remove progress scaffolding**: forced interim reports ("summarize after every 3 tool calls") are superfluous; if the form does not fit, describe the updates explicitly and give examples.
+- **Remove progress scaffolding**: forced interim reports ("summarise after every 3 tool calls") are superfluous; if the form does not fit, describe the updates explicitly and give examples.
 - **Tool use**: more agentic out of the box than Sonnet 4.6 (readily reaches for tools and self-verification loops). **With thinking switched off** it reaches for tools less often — then add an explicit nudge to the system prompt. `high`/`xhigh` markedly increase tool use.
 - **The adaptive-thinking trigger is controllable**: where thinking blocks appear too often (happens with large/complex system prompts), counteract via the prompt and measure the effect.
 - **Tone**: prose style shifts compared with 4.6; re-evaluate style prompts against the new baseline. If you previously used `temperature` for stylistic variety, switch to system prompt instructions.

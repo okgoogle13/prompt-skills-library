@@ -18,8 +18,8 @@ If current availability matters, use the model selector in the user's Perplexity
 When the target is GPT-6.1 Sol inside Perplexity:
 
 - Use the GPT-6.1 Sol model guide for model-level prompting advice, while retaining its explicit distinction between OpenAI API facts and non-API use.
-- Treat Perplexity's search, research, source retrieval and citation behavior as platform-level capabilities, not intrinsic guarantees of the underlying model.
-- For research prompts, define the research question, scope and date range; prioritize primary sources; distinguish sourced facts from inference; require citations for factual claims; and ask the model to disclose material evidence gaps.
+- Treat Perplexity's search, research, source retrieval and citation behaviour as platform-level capabilities, not intrinsic guarantees of the underlying model.
+- For research prompts, define the research question, scope and date range; prioritise primary sources; distinguish sourced facts from inference; require citations for factual claims; and ask the model to disclose material evidence gaps.
 - Do not import Codex CLI repository, terminal, approval or agent instructions into a Perplexity research prompt.
 - Do not assume OpenAI Responses API parameters, tool names, context limits, pricing or account entitlements apply inside Perplexity.
 

@@ -26,7 +26,7 @@ profile: Execution workhorse for code patches, tool calls, test loops; default h
 - Billing: the total of output and thinking tokens ($1.50 input / $7.50 output per 1M tokens).
 
 ## Prompting style
-- **Direct, precise and lean**: "Be concise. Gemini responds best to direct, clear instructions." Elaborate prompt engineering for older non-reasoning models (such as manual "Think step by step" or nested CoT templates) leads, per the docs, to the model over-analysing ("over-analyze") and should be removed entirely.
+- **Direct, precise and lean**: "Be concise. Gemini responds best to direct, clear instructions." Elaborate prompt engineering for older non-reasoning models (such as manual "Think step by step" or nested CoT templates) leads, per the docs, to the model over-analysing ("over-analyse") and should be removed entirely.
 - **Default tone is sober**: The model answers compactly and factually by default. If detailed, didactic or conversational answers are wanted, this style must be requested explicitly in the prompt.
 - **Long-context structure**: For large amounts of data (documents, codebases, tables), put the reference data **at the start** and the concrete task or instruction at the **end, after the data block**, introduced by clear anchors ("Based on the preceding information...").
 - **No sampling parameters**: Remove `temperature`, `top_p` and `top_k` completely from generation configs. They are ignored; manual settings below 1.0 can trigger looping on demanding reasoning and coding tasks.

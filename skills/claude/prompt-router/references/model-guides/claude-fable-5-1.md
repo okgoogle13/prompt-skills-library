@@ -21,7 +21,7 @@ profile: Multi-hour agentic coding, knowledge-work artefacts, long-context resea
 - Non-default values for `temperature`/`top_p`/`top_k` → 400.
 
 ## Prompting style
-- Anthropic explicitly says that existing **Fable 5 prompts work well unchanged** — there is no requirement to rewrite; there are only a handful of behavioral deltas, against which individual lines can be added.
+- Anthropic explicitly says that existing **Fable 5 prompts work well unchanged** — there is no requirement to rewrite; there are only a handful of behavioural deltas, against which individual lines can be added.
 - **Rerun the effort sweep**: start at `high`, test all levels against your own evals. Level names do not correspond to the same amount of thinking across models; `medium` is roughly Fable 5-level at lower cost.
 - **Keep the conversation append-only**: send reminders as turn-scoped system messages (`clear_at: "next_user_message"`, beta `mid-conversation-system-clear-at-2026-08-21`) and leave old copies byte-for-byte intact; change `system`/`tools` via a mid-conversation system message or `tool_addition`/`tool_removal` instead of rebuilding them.
 - **Tool-batching nudge** in implicit agent loops, placed after the `tool_result` blocks: "First privately list what you need next; then request every item that doesn't depend on another's result in this one response."
@@ -47,7 +47,7 @@ profile: Multi-hour agentic coding, knowledge-work artefacts, long-context resea
 - Tokenizer same as Fable 5 (introduced with Opus 4.7): roughly 30% more tokens for the same text compared with models before Opus 4.7.
 - Model IDs: Claude API, Google Cloud, Microsoft Foundry and Claude Platform on AWS `claude-fable-5-1`; Amazon Bedrock `anthropic.claude-fable-5-1`. Status *Active (latest)*, release 1 Sep 2026, retirement not before 1 Sep 2027. Reliable knowledge cutoff Jun 2026.
 - `stop_reason: "refusal"` arrives as HTTP 200 with `stop_details` — check before reading `content`. Permitted fallback targets are Claude Opus 4.8 and Claude Opus 5; `fallbacks: "default"` (beta, header `server-side-fallback-2026-07-01`, Claude API only) routes by category, and fallback credit refunds the prompt-cache cost of the model switch. Refusals before any output have been billed since 24 Sep 2026 when `stop_details.category` is `bio`, `frontier_llm` or `reasoning_extraction` (not before); in other categories still not billed. Mid-stream refusals bill input plus output already streamed.
-- **30-day retention mandatory**, no ZDR without explicit authorization from Anthropic; covered model.
+- **30-day retention mandatory**, no ZDR without explicit authorisation from Anthropic; covered model.
 - Content provenance: text outputs carry Anthropic's statistical watermark on all platforms (no extra tokens, no hidden characters); image/video/audio files retrieved via the Files API carry signed C2PA content credentials.
 
 ## Migration notes

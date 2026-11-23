@@ -23,13 +23,13 @@ If a registry row points to a missing file, the skill must stop, state the missi
 
 1. Ask to optimise a prompt for GPT-5.6 Luna in Codex CLI with ChatGPT Go.
 2. Confirm the skill reads `gpt-5.6-luna.md` and `codex-cli-chatgpt-go.md`.
-3. Pass if GPT-6 Luna, GPT-5.6 Terra and GPT-5.6 Luna are recorded as selectable in this user's account, while account-specific access is not generalized to all Go subscribers.
+3. Pass if GPT-6 Luna, GPT-5.6 Terra and GPT-5.6 Luna are recorded as selectable in this user's account, while account-specific access is not generalised to all Go subscribers.
 
 ## M5 — Perplexity Pro model access
 
 1. Ask to optimise a research prompt for GPT-6.1 Sol in Perplexity Pro.
 2. Confirm the skill reads `gpt-6.1-sol.md` and `perplexity-pro.md`.
-3. Pass if Perplexity research/citation behavior is kept separate from OpenAI API and Codex CLI features, and Perplexity access is not treated as ChatGPT Go or direct API entitlement.
+3. Pass if Perplexity research/citation behaviour is kept separate from OpenAI API and Codex CLI features, and Perplexity access is not treated as ChatGPT Go or direct API entitlement.
 
 ## M6 — Portable paths and dependencies
 

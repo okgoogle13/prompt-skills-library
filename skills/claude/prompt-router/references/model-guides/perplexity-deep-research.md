@@ -12,7 +12,7 @@ status: current
 > ⚠ The Perplexity docs were checked only via web-search summaries, not fetched directly. Verify effort names and parameters before use (unverified). Per research, the Agent API with `high`/`xhigh` replaces the standalone `sonar-deep-research`.
 
 ## Reasoning / Thinking
-- Autonomous multi-step research: iterative searching, reading, refining queries, closing gaps, synthesizing many sources (sometimes dozens of tool steps, runtimes of several minutes).
+- Autonomous multi-step research: iterative searching, reading, refining queries, closing gaps, synthesising many sources (sometimes dozens of tool steps, runtimes of several minutes).
 - Agent API: `effort` `high` (expert synthesis, comparison reports) and `xhigh`/`ultra` (exhaustive deep research; name `ultra` unverified).
 - Legacy: `sonar-deep-research` with `reasoning_effort` (low/medium/high; unverified).
 
@@ -36,4 +36,4 @@ status: current
 - **TO Perplexity Deep Research**: condense the prompt into goal + scope + structure + source rules; remove search and CoT instructions; move time/domain constraints into filters; add a "no evidence" clause; set high `effort` and plan for runtime.
 
 ## Sources
-- https://docs.perplexity.ai — effort levels `high`/`xhigh`, deep-research behavior, `instructions` vs. `input` (summarized via web search).
+- https://docs.perplexity.ai — effort levels `high`/`xhigh`, deep-research behaviour, `instructions` vs. `input` (summarised via web search).

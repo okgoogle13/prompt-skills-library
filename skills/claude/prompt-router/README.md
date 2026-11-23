@@ -10,7 +10,7 @@ A portable, modular skill for writing, optimising, adapting and reviewing LLM pr
 - `references/model-registry.md` — active shortlist (`tier: active` guides, with a guide-backed `Profile` column), read when resolving or recommending a model.
 - `references/model-registry-archive.md` — all other models, read once only on a shortlist miss.
 - `references/model-guides/` — 89 model-specific guides (85 from the supplied archive plus 4 frontier model and orchestrator guides).
-- `references/platform-guides/` — provider/client/plan notes kept separate from model behavior.
+- `references/platform-guides/` — provider/client/plan notes kept separate from model behaviour.
 - `evals/` — evaluation cases, trigger tests, manual tests and fixture prompts.
 - `CREDITS.md` — provenance and licence notices.
 

@@ -24,7 +24,7 @@ profile: Deep reasoning for software engineering, multi-step agents, maths; slow
 - Billing: the total of output and thinking tokens is charged ($10 or $20 per 1M tokens, depending on the price period).
 
 ## Prompting style
-- **Direct, precise and lean**: "Be concise. Gemini responds best to direct, clear instructions." Elaborate prompt engineering for older non-reasoning models (such as manual "Think step by step" or nested CoT templates) causes, per the docs, the model to "over-analyze" and should be removed entirely.
+- **Direct, precise and lean**: "Be concise. Gemini responds best to direct, clear instructions." Elaborate prompt engineering for older non-reasoning models (such as manual "Think step by step" or nested CoT templates) causes, per the docs, the model to "over-analyse" and should be removed entirely.
 - **Default tone is sober**: The model answers compactly and factually by default. If detailed, didactic or conversational answers are wanted, this style must be requested explicitly in the prompt.
 - **Long-context structure**: For large amounts of data (documents, codebases, tables), put the reference data **at the start** and the concrete task or instruction at the **end, after the data block**, introduced by clear anchors ("Based on the preceding information...").
 - **No sampling parameters**: Remove `temperature`, `top_p` and `top_k` completely from the generation configs. If passed, the API ignores them; manual settings below 1.0 can trigger looping on demanding reasoning and maths tasks.

@@ -45,7 +45,7 @@ profile: Open-weight dense 27B vision-language for coding and office; self-hoste
 - https://www.alibabacloud.com/help/en/model-studio/deep-thinking — `qwen3.8-27b` as hybrid with thinking on by default; parameter placement `extra_body` (Python) vs. top-level (Node.js); `thinking_budget` for the Qwen3.8 series; `preserve_thinking` list without this model.
 - https://www.alibabacloud.com/help/en/model-studio/newly-released-models — entry of 17 Aug 2026: 27B native vision-language dense, focus on coding/office versus 3.6-27B.
 - https://huggingface.co/Qwen/Qwen3.8-27B — official model card: architecture, image/video input, thinking default and switching off via `chat_template_kwargs` or directly on Qwen Cloud, `reasoning_effort` xhigh/medium/low (top-level) with the effort warning, `preserve_thinking`, both sampling sets, output lengths, native context 262,144 / YaRN up to 1M incl. flags, YaRN caveat, FP8 repo, Apache-2.0.
-- https://huggingface.co/Qwen/Qwen3.8-27B-FP8 — official FP8 quantization of Qwen/Qwen3.8-27B (Apache-2.0).
+- https://huggingface.co/Qwen/Qwen3.8-27B-FP8 — official FP8 quantisation of Qwen/Qwen3.8-27B (Apache-2.0).
 - https://www.alibabacloud.com/help/en/model-studio/qwen-structured-output — "Qwen3.8 open-source series" only under `json_object` (keyword "JSON" required), not under `json_schema`.
 - https://www.alibabacloud.com/help/en/model-studio/partial-mode — prefix continuation via last assistant message with `partial: true`; Qwen3.8 open-source series not in the model list.
 - https://www.alibabacloud.com/help/en/model-studio/prompt-engineering-guide — generic, not model-specific prompt frame, few-shot, step lists, delimiters.

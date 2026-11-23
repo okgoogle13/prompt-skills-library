@@ -18,7 +18,7 @@ successor: gemini-3.8-flash
 - Thought signatures carry reasoning continuity across turns. In stateful operation (`store: true` + `previous_interaction_id`) the server manages them; stateless, all `thought` blocks must be returned unchanged. Billing: "response pricing is the sum of output tokens and thinking tokens".
 
 ## Prompting style
-- **Terse and direct**: "Be concise. Gemini 3.x responds best to direct, clear instructions." Verbose prompt-engineering techniques for older models can, according to the docs, make the model "over-analyze"; replace hand-written CoT chains with `thinking_level`.
+- **Terse and direct**: "Be concise. Gemini 3.x responds best to direct, clear instructions." Verbose prompt-engineering techniques for older models can, according to the docs, make the model "over-analyse"; replace hand-written CoT chains with `thinking_level`.
 - **Request conversational tone**: Gemini 3.x responds by default in a less verbose and direct way; explicitly request a conversational tone in the prompt.
 - **Long context**: data first, the concrete question or instruction at the end, introduced by an anchor such as "Based on the preceding information...".
 - **No sampling control**: `temperature`, `top_p` and `top_k` are "deprecated and ignored"; future model generations respond with HTTP 400. For more determinism, Google instead recommends a system instruction with explicit rules.

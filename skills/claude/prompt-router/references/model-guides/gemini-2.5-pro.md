@@ -33,7 +33,7 @@ successor: gemini-3.1-pro-preview
 ## Output & format conventions
 - **Text-only output** (no image/audio output). Output token limit **65,536 tokens**.
 - **Structured outputs / JSON** are supported — best demonstrate the format by example rather than only describing it; specify the desired formatting via few-shot examples or completion-style prompts.
-- Name constraints explicitly: length specifications ("summarize in one sentence"), format (table, list, JSON), scope and what **not** to do.
+- Name constraints explicitly: length specifications ("summarise in one sentence"), format (table, list, JSON), scope and what **not** to do.
 - Supported features include: function calling, code execution, structured outputs, caching, batch API, search grounding, URL context, file search.
 
 ## Migration notes

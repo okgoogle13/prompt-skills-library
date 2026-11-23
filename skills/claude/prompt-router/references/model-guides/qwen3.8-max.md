@@ -29,7 +29,7 @@ status: current
 - Architecture per the press release: 2.4 trillion parameters as **sparse MoE with a hybrid attention mechanism**, of which only 95B are active; 1M context; natively multimodal ("hundred-page documents, full television series, or 100-hour livestreams").
 - Strengths: agentic coding and long-horizon work (internal test run: a real software project developed autonomously over 16 days); vision/chart reasoning and document parsing (further sharpened in the 0902 snapshot); Function Calling, Structured Outputs, Web Search (rolling id only in Beijing and Singapore, snapshot 0902 in all listed regions), Prefix Completion and Context Caching are enabled for the model; reachable via OpenAI-, Anthropic- and DashScope-compatible endpoints.
 - Weaknesses/quirks: **no fine-tuning**; batch inference not available in some regions (e.g. Singapore, Germany, US, Japan); prefix continuation is documented only for the **non-thinking mode** — so prefill and thinking do not combine; the docs themselves warn that usable length "may vary depending on different combinations of API input parameters".
-- Not published and therefore unverified: knowledge cutoff, recommended sampling parameters (`temperature`/`top_p`/`top_k`), behavior with out-of-range `thinking_budget`.
+- Not published and therefore unverified: knowledge cutoff, recommended sampling parameters (`temperature`/`top_p`/`top_k`), behaviour with out-of-range `thinking_budget`.
 
 ## Output & format conventions
 - Context window 1,000,000 tokens; max input 991,808 (without thinking) or 983,616 (with); max output 131,072; max chain-of-thought 262,144. Input text/image/video, output text only.

@@ -37,5 +37,6 @@
 - **Evidence:**
   - Frontmatter unchanged against the pre-translation commit (checked at translation time); `tier:`/`profile:` added later by P1-PR-LEAN.
   - 2026-11-23: no umlauts, `„`, `unbelegt` or common German words (`und|nicht|wird|sollte`) in any of the 89 guides.
+  - 2026-11-23: unified spelling convention to AU/UK English across all 89 model guides and skill files (e.g. -ise, -our, -re, double-l); URLs, API parameters, and code literals preserved; 0 unintended US spellings in prose.
   - `build_registry.py --check` → `guides=89 registry_rows=89 active=20 archive=69`, "registry up to date", exit 0; `--self-test` → ALL PASS; `scripts/validate_cards.py` exit 0; `diff -rq` against `~/.claude/skills/prompt-router/` clean.
-- **Open:** `claude-opus-4-6.md` L14 ("No `thinking.type` is rejected with 400") keeps an ambiguous German original; verify against Anthropic docs. Spelling convention mixed (AU/UK vs US) across batches.
+- **Open:** none.

@@ -19,7 +19,7 @@ status: current
 
 ## Prompting style
 - **System prompt as the primary control surface**: the vendor card lists "System Prompt: Strong adherence and support for system prompts", and all official usage examples load the bundled `SYSTEM_PROMPT.txt` as the system message (placeholders `{today}` / `{yesterday}` are filled in beforehand).
-- Self-hosting pitfall: if there is no system message, the official chat template **adds its own** default system prompt (Le Chat persona, date and tool rules). Anyone wanting neutral behavior should supply their own system prompt. Whether the API does the same is not documented (unverified).
+- Self-hosting pitfall: if there is no system message, the official chat template **adds its own** default system prompt (Le Chat persona, date and tool rules). Anyone wanting neutral behaviour should supply their own system prompt. Whether the API does the same is not documented (unverified).
 - Role-first framing from the official prompting docs: "You are a <role>, your task is to <task>."; structure instructions hierarchically, structure via Markdown and/or XML-like tags, few-shot as example turns in the history.
 - Plan for literalness: "Mistral Small 4 can follow your instructions to the letter." Spell out scope, stop conditions and output form.
 - Documented anti-patterns of the prompting docs: vague quantities and fuzzy words, contradictory rules (use a decision tree instead), having the model count, requesting unnecessary output tokens, numeric rating scales instead of word scales.
@@ -33,7 +33,7 @@ status: current
 - Knowledge date: the official system prompt says "Your knowledge base was last updated on Friday, November 1, 2024." Mistral publishes no separate cutoff (unverified). Maximum output token limit: not documented (unverified).
 
 ## Output & format conventions
-- Context window 256k. API names per model card: `mistral-small-2603` (fixed) and `mistral-small-latest` (per lifecycle docs "Latest version, across generations"; "Using an alias may expose you to silent updates in model behavior and pricing"). For reproducible prompts pin `mistral-small-2603`.
+- Context window 256k. API names per model card: `mistral-small-2603` (fixed) and `mistral-small-latest` (per lifecycle docs "Latest version, across generations"; "Using an alias may expose you to silent updates in model behaviour and pricing"). For reproducible prompts pin `mistral-small-2603`.
 - Response form depends on the mode: with `"high"`, `message.content` is a list of `ThinkChunk` and `TextChunk`; with `"none"` a plain `str`. In streaming, `delta.content` is first a list (thinking), then a transition chunk with a closing `ThinkChunk` plus the first `TextChunk`, then a plain string.
 - Features per model card: Chat Completions, Function Calling, Agents & Conversations, Built-In Tools, Structured Outputs, **Predicted Outputs**, Document QnA, Prefix (assistant prefill), Batching.
 - Self-hosting template markers: `[SYSTEM_PROMPT]`, `[INST]`, `[AVAILABLE_TOOLS]`, `[MODEL_SETTINGS]{"reasoning_effort": …}[/MODEL_SETTINGS]`, `[THINK]`, `[TOOL_CALLS]…[ARGS]`, `[TOOL_RESULTS]`, `[IMG]`. Only the roles `user`, `assistant`, `system`, `tool`; the conversation must start with `user` or `system`.

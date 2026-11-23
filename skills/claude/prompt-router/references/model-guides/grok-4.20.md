@@ -28,7 +28,7 @@ This guide covers the vendor alias `grok-4.20`, which according to xAI points to
 ## Strengths & Weaknesses (prompt-relevant)
 - Strengths: **1M-token context**; inexpensive ($1.25 input / $2.50 output per 1M under 200k, identical for all three variants); **Batch API supported** with a 20% discount; a non-reasoning variant for latency-critical paths; multi-agent for deep research with server-side tools (`web_search`, `x_search`, `code_execution`, `collections_search`, remote MCP).
 - Weaknesses/quirks: no documented effort control; no published knowledge cutoff and no output limit; `logprobs`/`top_logprobs` are silently ignored for "`grok-4.20` and newer"; only us-east-1/us-west-2. The model overview recommends grok-4.7 for code and chat, not 4.20.
-- Multi-agent additionally: **beta** ("The API interface and behavior may change"); "Client-side tools (function calling) and custom tools are not currently supported"; `max_tokens` not supported; does **not** run over Chat Completions, only the xAI SDK / Responses API; only tool calls and the leader agent's final answer come back; all agent tokens and tool calls are billed; rate limit only 9 rps / 2.5M tpm.
+- Multi-agent additionally: **beta** ("The API interface and behaviour may change"); "Client-side tools (function calling) and custom tools are not currently supported"; `max_tokens` not supported; does **not** run over Chat Completions, only the xAI SDK / Responses API; only tool calls and the leader agent's final answer come back; all agent tokens and tool calls are billed; rate limit only 9 rps / 2.5M tpm.
 
 ## Output & Format Conventions
 - 1,000,000 tokens context (all three variants); input text + image, output text only. Max. output and cutoff: not published (unverified).

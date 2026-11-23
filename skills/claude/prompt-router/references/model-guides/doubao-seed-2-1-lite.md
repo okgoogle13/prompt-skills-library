@@ -17,7 +17,7 @@ status: current
 - Maximum chain-of-thought 256k tokens; it counts against the same output budget as the answer.
 
 ## Prompting style
-- The Ark "prompt optimization recommendations" for deep-thinking models apply: add **goal, scenario and audience** (language/tool, readership, occasion, objective) instead of just naming the task.
+- The Ark "prompt optimisation recommendations" for deep-thinking models apply: add **goal, scenario and audience** (language/tool, readership, occasion, objective) instead of just naming the task.
 - **Reduce or avoid decomposition and examples** — step-by-step instructions and few-shot examples, according to the docs, narrow the reasoning logic.
 - **Reduce system prompts**: put all prompt information directly into the user prompt (`role: user`).
 - Structured output (appendix 3 of the docs): do not stress "output JSON" in the prompt and do not repeat the schema structure; instead describe the substantive content of the task — the format belongs in `response_format`.
@@ -35,7 +35,7 @@ status: current
 - Model ID: `doubao-seed-2-1-lite-260915` (Ark: 推荐模型, 首推 = recommended, top pick). Context window 1024k, max input 1024k, max response 256k with **default 4k**, max chain-of-thought 256k. `doubao-seed-2.1-lite` appears only as a billing name on the pricing page; as a callable model ID it is not verified (unverified).
 - Output length via `max_completion_tokens` (Chat API) or `max_output_tokens` (Responses API) — covers chain-of-thought **plus** answer.
 - Structured output: `json_schema` with `strict: true` recommended; `json_object` requires the string `json` in the input; field order follows the schema; `$ref` only local (`#`), `oneOf`/`allOf` without semantic guarantee; unsupported keywords throw an error; do not combine `frequency_penalty`/`presence_penalty`.
-- Operations: streaming recommended, otherwise `timeout` above 30 minutes. APIs: Chat Completions, Responses, Batch (`/v3/batch/chat/completions`), tokenization. Caching: implicit via Responses and Chat API, explicit via Responses API (prefix and session cache).
+- Operations: streaming recommended, otherwise `timeout` above 30 minutes. APIs: Chat Completions, Responses, Batch (`/v3/batch/chat/completions`), tokenisation. Caching: implicit via Responses and Chat API, explicit via Responses API (prefix and session cache).
 - Volcengine prices per million tokens, flat across 0–1024k: online 0.80 ¥ input / 12.00 ¥ audio input / 0.16 ¥ cache hit / 2.40 ¥ audio cache hit / 2.70 ¥ output, cache storage 0.017 ¥ per million tokens/hour. Low-latency (fast): 1.60 / 24.00 / 0.32 / 4.80 / 5.40 ¥. Low-priority (flex) and batch: 0.40 / 6.00 / 0.16 / 2.40 / 1.35 ¥. Audio input costs 15× text input.
 
 ## Migration notes
@@ -45,7 +45,7 @@ status: current
 
 ## Sources
 - https://docs.volcengine.com/docs/ark/model-list?lang=zh — Ark model list (status 2026.10.09): `doubao-seed-2-1-lite-260915` under 推荐模型 with capability tags, 1024k context / 1024k input / 256k response at default 4k / 256k chain-of-thought, 30000 RPM / 5000000 TPM; Lite in the audio-understanding table; tool and caching matrix; 2.0 limits (224k input, 128k response) and 500 RPM of 2.1 Pro/Turbo for comparison.
-- https://docs.volcengine.com/docs/ark/deep-thinking?lang=zh — deep-thinking page (status 2026.10.09): `thinking.type` support (Lite only `enabled`/`disabled`), effort table (2.1 models default `high`, 2.0 models default `medium`, mapping `minimal`/`none`/`xhigh`/`max`), thinking-summary model list with `reasoning_content`/`encrypted_content` and return rules, latency and timeout notes, prompt optimization recommendations.
+- https://docs.volcengine.com/docs/ark/deep-thinking?lang=zh — deep-thinking page (status 2026.10.09): `thinking.type` support (Lite only `enabled`/`disabled`), effort table (2.1 models default `high`, 2.0 models default `medium`, mapping `minimal`/`none`/`xhigh`/`max`), thinking-summary model list with `reasoning_content`/`encrypted_content` and return rules, latency and timeout notes, prompt optimisation recommendations.
 - https://docs.volcengine.com/docs/ark/structured-output-beta?lang=zh — structured output (beta, status 2026.09.22): `json_schema`/`json_object`, schema restrictions, beta and TPM-package caveat, penalty warning, prompt recommendations (appendix 3).
 - https://docs.volcengine.com/docs/ark/model-pricing?lang=zh — pricing page (status 2026.10.10): `doubao-seed-2.1-lite` in the online, low-latency, low-priority and batch tables incl. audio columns; tiered 2.0-lite prices as contrast.
 - https://docs.volcengine.com/docs/ark/model-release-announcement?lang=zh — release announcements (status 2026.10.13): `doubao-seed-2-1-lite-260915` as 新发布 (newly released) under 202609, omni-modal (text, vision, audio) with 1M context, improved coding/agent tasks; `doubao-seed-2-1-pro-260628` under 202606 positioned for highly complex coding/agent tasks.

@@ -20,7 +20,7 @@ status: legacy
 ## Prompting Style
 - **Very prescriptive / literal.** GPT-4.1 "is trained to follow instructions more closely and more literally than its predecessors". Consequences:
   - Implicit rule inference is reduced — everything must be **explicitly** specified; the model "reads between the lines" less than GPT-4o did.
-  - If behaviour deviates, a single, clear corrective sentence is almost always enough: "a single sentence firmly and unequivocally clarifying your desired behavior is almost always sufficient".
+  - If behaviour deviates, a single, clear corrective sentence is almost always enough: "a single sentence firmly and unequivocally clarifying your desired behaviour is almost always sufficient".
   - Overridden absolute instructions can backfire: if you say e.g. "always call a tool", the model may invent (hallucinate) tool calls when information is missing. Fix: add an escalation clause, e.g. "If you don't have enough information, ask the user for what you need."
 - **System message fidelity:** In agentic settings the model sticks closely to both user and system prompts. With contradictory instructions it tends to follow the ones **closer to the end** of the prompt.
 - **Agentic prompting:** OpenAI recommends three fixed reminders in the agent system prompt; they reportedly increased its internal SWE-bench Verified score by ~20%:
@@ -58,7 +58,7 @@ status: legacy
   - To a **reasoning model** (e.g. the GPT-5 series): manually injected "think step by step" instructions and explicit planning reminders can be dropped or reduced, since reasoning happens internally; instead, control reasoning effort/parameters if needed (model-dependent).
   - Prompts heavily tuned to GPT-4.1's literal reading (very narrow absolute instructions) should be re-evaluated on the target model — other models interpret more freely.
 - **When migrating TO GPT-4.1:**
-  - Prompts optimised for older models (e.g. GPT-4o) may need adjustment, since GPT-4.1 follows more literally: "prompts optimized for prior models may require migration."
+  - Prompts optimised for older models (e.g. GPT-4o) may need adjustment, since GPT-4.1 follows more literally: "prompts optimised for prior models may require migration."
   - Make implicit assumptions explicit; sharpen vague behaviour with one clear corrective sentence.
   - Move tool descriptions from prompt text into the `tools` API field.
   - For long contexts, duplicate instructions at the start AND the end.

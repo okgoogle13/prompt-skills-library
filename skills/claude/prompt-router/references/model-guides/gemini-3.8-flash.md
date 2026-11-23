@@ -18,7 +18,7 @@ status: current
 - Summaries via `thinking_summaries: "auto"`, switch off with `"none"`.
 
 ## Prompting style
-- **Prompt briefly and directly.** "Be concise. Gemini 3.x responds best to direct, clear instructions." Per the docs, verbose prompt-engineering techniques from older models make the model "over-analyze" — strip carried-over step-by-step chains, role prose and repeated instructions.
+- **Prompt briefly and directly.** "Be concise. Gemini 3.x responds best to direct, clear instructions." Per the docs, verbose prompt-engineering techniques from older models make the model "over-analyse" — strip carried-over step-by-step chains, role prose and repeated instructions.
 - **Verbosity must be requested.** The default is low verbosity and directness; an explanatory or friendly tone belongs explicitly in the prompt.
 - **Long-context layout:** data first, specific instruction or question at the **end**, and begin the question with an anchor such as "Based on the preceding information...".
 - **No more sampling control:** `temperature`, `top_p`, `top_k` do not belong in the generation config. (For Gemini 3 in general, Google recommends leaving `temperature` at the default 1.0 — lowering it can cause looping or degraded performance in maths and reasoning.)

@@ -548,7 +548,7 @@
         "Removes duplicate instructions and irrelevant history without removing unique evidence or requirements",
         "Preserves conflicting source claims, source dates and uncertainty rather than silently reconciling them",
         "Distinguishes measured token savings from estimates or qualitative reduction",
-        "Does not invent a tokenizer result, token budget, model context-window limit or caching behavior",
+        "Does not invent a tokenizer result, token budget, model context-window limit or caching behaviour",
         "Does not execute the prompt task",
         "Global: reads no file under ~/.claude/plugins/",
         "Global: never lists, globs or greps the GUIDES folder",

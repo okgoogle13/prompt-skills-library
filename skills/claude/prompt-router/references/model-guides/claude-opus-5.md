@@ -19,12 +19,12 @@ successor: claude-opus-5-5
 - `max_tokens` is a hard limit over thinking **plus** response text — re-size for workloads that previously had no thinking. At `xhigh`/`max` start with ≥ 64k.
 
 ## Prompting style
-- **Explicit instead of implicit**: Opus 5 interprets prompts literally, does not silently generalize an instruction to other cases and does not infer unstated requirements. Spell out the scope.
+- **Explicit instead of implicit**: Opus 5 interprets prompts literally, does not silently generalise an instruction to other cases and does not infer unstated requirements. Spell out the scope.
 - **Remove verification instructions**: the model checks its work unprompted. Carried-over "double-check your answer" / "include a final verification step" lines cause over-verification — removing them lowers cost without losing quality.
 - **Specify length explicitly**: `effort` controls thinking volume, not visible response length — lowering it does not reliably shorten answers. Add a short concise instruction; in long system prompts, additionally add a `<tone_preference>` reminder at the end.
 - **Limit scope**: the model sometimes expands tasks with unrequested steps; narrow tasks need an explicit scope rule.
 - **Cap delegation**: Opus 5 delegates to subagents more readily than its predecessors — name criteria or set a hard upper limit.
-- **Remove progress scaffolding**: staged choreography ("summarize after every 3 tool calls") is superfluous; describe the cadence and form of updates instead.
+- **Remove progress scaffolding**: staged choreography ("summarise after every 3 tool calls") is superfluous; describe the cadence and form of updates instead.
 - For long agentic runs: give the complete task specification **up front** in one turn and let it run.
 - **Do not request reasoning in the response text**: prompts, skills and tool descriptions that have the model write out its thinking/reasoning — verbatim or in a fixed format (a `<thinking>`, `<reasoning>` or scratchpad section before the answer, a `reasoning`/`thinking`/`trace` field in JSON output or tool input, a reasoning log, reasoning "verbatim"/"in full") — can be refused with `stop_reason: "refusal"` and `stop_details.category: "reasoning_extraction"`. Instead, request a short justification, the evidence, or a summary of the steps taken; if the reasoning itself is needed, keep thinking on and read the thinking blocks with `display: "summarized"`. This category has no fallback model (change the prompt rather than resending), and a refusal before any output is billed.
 

@@ -13,7 +13,7 @@ successor: claude-opus-5-5
 ## Reasoning / Thinking
 - Type: **extended thinking only, off by default**. It is switched on manually with `thinking: {type: "enabled", budget_tokens: N}`; `thinking: {type: "adaptive"}` returns 400.
 - Opus 4.5 is the only extended-thinking model with the `effort` parameter: effort and `budget_tokens` work together — first choose the effort level for the task, then set the thinking budget according to the reasoning depth needed. Default `high`; `xhigh` and `max` are not listed for Opus 4.5.
-- `thinking.display` returns summarized thinking by default (`"summarized"`).
+- `thinking.display` returns summarised thinking by default (`"summarized"`).
 - Interleaved thinking (thinking between tool calls) needs a beta header in manual mode (`interleaved-thinking-2025-05-14`) and changes how the budget is counted.
 - With thinking active: `temperature`/`top_k` are incompatible, `top_p` only between 0.95 and 1; forced tool use (`tool_choice` `any`/`tool`) is not possible, only `auto`/`none`; no assistant prefill.
 - **Without extended thinking** Opus 4.5 is particularly sensitive to the word "think" and variants — use alternatives such as "consider", "evaluate" or "reason through".
@@ -23,7 +23,7 @@ successor: claude-opus-5-5
 - **Curb overengineering**: tendency toward extra files, unnecessary abstractions and unrequested flexibility — keep solutions minimal via instruction.
 - **Word choice with thinking off**: replace "think" and variants in prompts with "consider", "evaluate" or "reason through" (see above).
 - **Prefill is allowed** while thinking is off — a pattern that is rejected with 400 from Opus 4.6 onward.
-- **Give frontend specifications**: without design instructions the model falls back on generic patterns ("AI slop" aesthetic); specify typography, colors and interactions explicitly.
+- **Give frontend specifications**: without design instructions the model falls back on generic patterns ("AI slop" aesthetic); specify typography, colours and interactions explicitly.
 
 ## Strengths & weaknesses (prompt-relevant)
 - Strengths: improved vision, especially for image processing and data extraction across multiple images; more reliable reading of screenshots and UI elements in computer use; complex web apps with strong frontend design.

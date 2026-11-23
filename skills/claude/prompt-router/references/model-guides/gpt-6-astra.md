@@ -25,7 +25,7 @@ profile: Complex end-to-end work, computer use; asks too often, over-tests, over
 - **Spell out precedence.** Because Astra reacts more sensitively to instructions in skills and other files, the docs recommend the literal sentence: "The user's instructions take precedence over guidelines provided in a skill." Additionally require transparency — on a conflict the model should name the file and quote the conflicting passage. Review accessible files for behaviour-shaping instructions before migrating.
 - **Explicitly request prose**, otherwise Astra produces lists, tables and Markdown. Docs wording: "Default to using clear, concise paragraphs, each developing one main idea."
 - Style negative list from the docs: actively forbid "slop words" (e.g. "Bottom Line", "leverage", "it's worth noting"), contrastive framing ("X, not Y") and invented compound labels.
-- **Actively instruct delegation** rather than capping it: Astra delegates too rarely in multi-agent setups. Recommended prompt building block: "If at any point you can parallelize work by delegating tasks to another agent … you should do so."
+- **Actively instruct delegation** rather than capping it: Astra delegates too rarely in multi-agent setups. Recommended prompt building block: "If at any point you can parallelise work by delegating tasks to another agent … you should do so."
 - **Calibrate test scope** instead of writing "test thoroughly": "Do not write tests for reversible, low-impact changes", and widen test scope only when "new changes, failures, or unresolved concerns justify it".
 
 ## Strengths & Weaknesses (prompt-relevant)
