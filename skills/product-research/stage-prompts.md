@@ -1,13 +1,28 @@
----
 workflow: au-product-research
-version: 0.1.0-draft
-updated: 2026-11-23
+version: 0.2.0-draft
+updated: 2026-11-27
 source: prompt-skills-library
 ---
 
 # Sequenced & Iterative Shopping Prompts
 
 Fresh chats at every stage are optional, not mandatory. Run adjacent stages in one chat if it remains clean and focused. Start a fresh chat when switching purchases, changing tools, returning after a break, or noticing clutter, drift, or early-candidate anchoring.
+
+## Gate sequence
+
+```text
+G-2 Scoping interview
+G-1 Targeted fact extraction and preliminary answering
+G0 Problem definition
+G1 Requirements intake and research brief
+G2 Research scope
+G3 Evidence
+G4 Compatibility and safety
+G5 Decision
+G6 Implementation
+```
+
+Stage 0 corresponds to G-2 and G-1. Stage 1 corresponds to G0 and G1. Stage 2–3 corresponds to G2 and G3. Stage 4 corresponds to G4. Stage 5 corresponds to G5 and G6.
 
 ## Stage 0 — Interview Me
 
@@ -20,13 +35,16 @@ Run Stage 0 (Interview Me) for ONE new purchase only.
 
 Follow every rule in shopping-core.md.
 
-1. Ask only for missing required fields.
-2. Ask in groups of 3–5 related questions.
-3. Offer sensible defaults where appropriate, but label them as assumptions.
-4. Do not name, recommend, compare, or price any product, brand, or retailer during intake.
-5. Confirm the Purchase ID and delivery postcode.
-6. When complete, output the filled purchase brief as one Markdown code block using the attached template.
-7. Ask: “Shall I proceed to Stage 1, or do you want to edit the brief first?”
+1. Extract and classify all supplied material into facts, inferences, assumptions, contradictions, and unknowns.
+2. Answer only questions that can be answered from the supplied material.
+3. Correct risky assumptions early.
+4. Ask only for missing required fields.
+5. Ask in groups of 3–5 related questions.
+6. Offer sensible defaults where appropriate, but label them as assumptions.
+7. Do not name, recommend, compare, or price any product, brand, or retailer during intake.
+8. Confirm the Purchase ID and delivery postcode.
+9. When complete, output the filled purchase brief as one Markdown code block using the attached template.
+10. Ask: “Shall I proceed to Stage 1, or do you want to edit the brief first?”
 ```
 
 ## Stage 1 — Criteria framing and Australian risk check
